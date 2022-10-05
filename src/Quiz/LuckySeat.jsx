@@ -50,7 +50,7 @@ const LuckySeat = () => {
   const [luckyDatas, setLuckyDatas] = useState([]);
   const [singleLuckyData, setSingleLuckyData] = useState({});
 
-  //   console.log('singleLuckyData', singleLuckyData);
+  console.log('uploading', uploading);
 
   const getData = () => {
     let quizdataEmail = [];
@@ -96,6 +96,7 @@ const LuckySeat = () => {
           opting: '',
           url: '',
         });
+        setStep(1);
         setOpenModal(true);
       })
       .catch((error) => console.log('error', error));
@@ -422,9 +423,13 @@ const LuckySeat = () => {
                     <label for='docTag'>
                       <div className='doctag_lucky'>
                         <img src={pintag} alt='/' />
-                        <p>
-                          Attach your Physical Ticket or SMS to Claim Reward
-                        </p>
+                        {uploading ? (
+                          <p>File Uploading...</p>
+                        ) : (
+                          <p>
+                            Attach your Physical Ticket or SMS to Claim Reward
+                          </p>
+                        )}
                       </div>
                       <input
                         type='file'
@@ -438,11 +443,7 @@ const LuckySeat = () => {
                   ) : (
                     <div className='doctag_lucky'>
                       <img src={pintag} alt='/' />
-                      {uploading ? (
-                        <p>File Uploading</p>
-                      ) : (
-                        <p>Your File Attached</p>
-                      )}
+                      <p>Your File Attached</p>
                     </div>
                   )}
                 </div>

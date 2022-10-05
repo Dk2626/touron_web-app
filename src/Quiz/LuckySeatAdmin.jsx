@@ -55,6 +55,14 @@ const LuckySeatAdmin = () => {
     return () => (isMounted.current = false);
   }, [showLuck]);
 
+  const getLuckSeatData = () => {};
+
+  useEffect(() => {
+    isMounted.current = true;
+    getLuckSeatData();
+    return () => (isMounted.current = false);
+  }, []);
+
   const updateF = () => {
     firedb
       .ref('luckyseatdate/-ND7MDNABYcwk3euOeeK')
