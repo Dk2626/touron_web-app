@@ -52,6 +52,7 @@ import ReadyQns from './Quiz/ReadyQns';
 import QuizDash from './Quiz/QuizDash';
 import LuckySeat from './Quiz/LuckySeat';
 import LuckySeatAdmin from './Quiz/LuckySeatAdmin';
+import Quizzz from './Quiz/Quizzz';
 // import TotalSaleReport from './SalesReport/TotalSaleReport';
 
 const App = () => {
@@ -312,6 +313,14 @@ const App = () => {
                 element={
                   <AdminRoute>
                     <LuckySeatAdmin />
+                  </AdminRoute>
+                }
+              />
+              <Route
+                path='/quizzzz'
+                element={
+                  <AdminRoute>
+                    <Quizzz />
                   </AdminRoute>
                 }
               />
