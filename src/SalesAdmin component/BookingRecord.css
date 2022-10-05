@@ -1,0 +1,566 @@
+.bookingMain h5,
+.bookingTerm h6,
+.generalInput label,
+.generalInput h6,
+.generalInput input,
+.generalInput textarea,
+.generalButton button,
+.generalSelectt,
+.generalLi6 li,
+.generalLi5 li,
+.generalLi4 li,
+.generalLi3 li,
+.generalLi2 li,
+.generalLi1 li,
+.paymentMainnBtn button,
+.paymentTableHead h5,
+.paymentTableBody h5 {
+  font-family: 'andika';
+}
+
+.docHeading {
+  padding: 5px 0;
+  font-size: 24px;
+}
+.paymentMainn h3 {
+  font-family: 'newyorklargeblack';
+}
+
+.bookingMain {
+  display: flex;
+  box-shadow: 2px 2px 10px 5px #ccc;
+  padding: 1rem 1rem;
+  background-color: #ddeff7;
+}
+.bookingMain h5 {
+  padding: 0 0.5em;
+  border-right: 1px solid gray;
+  font-size: 18px;
+}
+.bookingMain h5:nth-child(5) {
+  border-right: none;
+}
+.bookingTermMain {
+  display: flex;
+  margin-top: 2em;
+  justify-content: space-evenly;
+}
+.bookingTerm {
+  box-shadow: 2px 2px 10px 5px #ccc;
+  padding: 1em;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 1em;
+}
+.bookingTerm {
+  height: 70vh;
+  flex-basis: 8%;
+}
+.renderTerm {
+  flex-basis: 85%;
+  position: relative;
+}
+.bookingTerm h6 {
+  cursor: pointer;
+  font-size: 14px;
+  padding-bottom: 0.5em;
+}
+.bb {
+  color: #0057ff;
+}
+.bc {
+  color: #000;
+}
+
+.bookingGeneral {
+  box-shadow: 2px 2px 10px 5px #ccc;
+  margin: 1em;
+  border-radius: 10px;
+  padding: 1em;
+  height: 95vh;
+}
+.bookingGenerall {
+  box-shadow: 2px 2px 10px 5px #ccc;
+  border-radius: 10px;
+  margin: 1em;
+  padding: 1em;
+  display: flex;
+  justify-content: space-evenly;
+}
+.bookingGeneral h3 {
+  color: #0057ff;
+}
+.bookingGeneralDetails {
+  display: flex;
+  flex-wrap: wrap;
+}
+.generalInput {
+  display: flex;
+  flex-direction: column;
+  margin: 1em 2em;
+  flex-basis: 18%;
+}
+
+.generalInput label {
+  color: rgb(99, 98, 98);
+}
+.generalInput textarea {
+  border: none;
+  outline: none;
+  border-bottom: 1px solid gray;
+}
+.generalInput input,
+.generalInput select {
+  border: none;
+  outline: none;
+  border-bottom: 1px solid gray;
+}
+
+.generalInput input:-webkit-autofill,
+.generalInput input:-webkit-autofill:hover,
+.generalInput input:-webkit-autofill:focus,
+.generalInput input:-webkit-autofill:active {
+  transition: background-color 5000s;
+  -webkit-text-fill-color: #000 !important;
+}
+.bookingPaymentDetails {
+  display: flex;
+  justify-content: space-evenly;
+  margin-top: 2em;
+}
+.bookingReminDetails {
+  display: flex;
+  justify-content: space-evenly;
+  margin-top: 2em;
+}
+/* .bookingArrowRight {
+  position: absolute;
+  top: 88%;
+  right: 0;
+  cursor: pointer;
+  background-color: #0057ff;
+  padding: 0.8em 1em;
+}
+.bookingArrowLeft {
+  position: absolute;
+  top: 88%;
+  left: 0;
+  cursor: pointer;
+  background-color: #0057ff;
+  padding: 0.8em 1em;
+} */
+.bookingEdit {
+  position: absolute;
+  top: 5%;
+  right: 5%;
+  cursor: pointer;
+}
+.bookingArrowIcon {
+  font-size: 1.5rem;
+  color: #0057ff;
+}
+.bookingBorder {
+  border-right: 1.5px solid #cad5e2;
+  height: 30px;
+}
+.bookingColor {
+  background-color: #6ec72d;
+  height: 10px;
+  width: 10px;
+  border-radius: 50%;
+  margin: 10px;
+}
+.bookingColorNon {
+  background-color: #f7cd2e;
+  height: 10px;
+  width: 10px;
+  border-radius: 50%;
+  margin: 10px;
+}
+.generalButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* width: 100%; */
+}
+.generalButton button {
+  border: none;
+  outline: none;
+  background-color: #0057ff;
+  padding: 0.5em 0.8em;
+  color: #fff;
+  border-radius: 10px;
+  margin-top: 10px;
+}
+.paymentHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  margin: 20px 0;
+}
+
+.b-table {
+  overflow: scroll;
+  overflow-x: hidden;
+  margin: 1em 0;
+}
+.b-table.scroll-table {
+  height: 60vh;
+}
+.paymentTableHead {
+  display: flex;
+  justify-content: space-evenly;
+  background-color: #ddeff7;
+  padding: 10px 0;
+  position: relative;
+}
+.paymentTableHead h5 {
+  font-size: 15px;
+  text-align: center;
+  text-transform: uppercase;
+}
+.paymentTableHead h5 {
+  flex-basis: 20%;
+}
+.paymentTableHead h5:nth-child(7),
+.paymentTableBody h5:nth-child(7) {
+  flex-basis: 10%;
+}
+
+.paymentTableBody {
+  /* position: fixed; */
+  position: sticky;
+  display: flex;
+  box-shadow: 2px 2px 10px 0px #ccc;
+  margin-top: 10px;
+  padding: 10px 0;
+  align-items: center;
+  justify-content: space-evenly;
+}
+.paymentTableBody h5 {
+  text-align: center;
+  font-size: 15px;
+}
+.paymentTableBody h5 {
+  flex-basis: 20%;
+}
+.paymentMainn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+.paymentMainnBtn button {
+  border: none;
+  outline: none;
+  background-color: #0057ff;
+  color: #fff;
+  padding: 10px 15px;
+  border-radius: 30px;
+}
+.paymentMainnForm {
+  position: absolute;
+  background-color: #fff;
+  top: 140%;
+  z-index: 20;
+  right: 0;
+  padding: 0.5em 3em;
+  box-shadow: 2px 2px 10px 0px #ccc;
+  border-radius: 10px;
+  width: 30%;
+}
+.updatePaymentMainnForm {
+  position: absolute;
+  background-color: #fff;
+  top: 100%;
+  z-index: 20;
+  right: 8%;
+  padding: 0.5em 3em;
+  box-shadow: 2px 2px 10px 0px #ccc;
+  border-radius: 10px;
+  width: 30%;
+}
+.generalInputt {
+  display: flex;
+  flex-direction: column;
+}
+.generalInputt label {
+  font-size: 12px;
+  margin-top: 12px;
+  color: #0057ff;
+}
+.generalInputt input {
+  border: none;
+  outline: none;
+  border-bottom: 1px solid #000;
+  font-size: 12px;
+}
+.generalInputt select {
+  border: none;
+  outline: none;
+  border-bottom: 1px solid #000;
+  font-size: 12px;
+}
+.generalInputtBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.generalInputtBtn button {
+  border: none;
+  outline: none;
+  background-color: #0057ff;
+  color: #fff;
+  padding: 0.8em 1em;
+  margin: 0.5em;
+  border-radius: 30px;
+  font-size: 10px;
+}
+.generalInputtBtnCan button {
+  border: none;
+  outline: none;
+  background-color: #fff;
+  color: #0057ff;
+  padding: 0.8em 1em;
+  margin: 0.5em;
+  border-radius: 30px;
+  font-size: 10px;
+  box-shadow: 2px 2px 10px 0px #ccc;
+}
+.generalbtns {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  margin-top: 20px;
+}
+.paymentEdit {
+  cursor: pointer;
+  color: #0057ff;
+  font-size: 18px;
+}
+.paymentDelete {
+  cursor: pointer;
+  color: red;
+  font-size: 18px;
+  margin-left: 5px;
+}
+.cancel-booking {
+  display: flex;
+  flex-direction: column;
+  padding: 1em;
+}
+.cancel-check {
+  padding: 1em 3em;
+}
+.cancel-button {
+  align-self: center;
+}
+.generalSelect {
+  font-size: 12px;
+  border-bottom: 1px solid black;
+  display: flex;
+  justify-content: space-between;
+}
+.generalSelectt {
+  font-size: 15px;
+  border-bottom: 1px solid black;
+  display: flex;
+  justify-content: space-between;
+}
+.generalInputtParti {
+  position: relative;
+}
+.generalLi {
+  background-color: #fff;
+  position: absolute;
+  z-index: 2;
+  padding: 10px;
+  border: 1px solid #ccc;
+  padding: 0;
+  width: 217.21px;
+  border-radius: 10px;
+  box-shadow: 2px 2px 10px 0px #ccc;
+}
+.generalLi1,
+.generalLi2,
+.generalLi3 {
+  background-color: #fff;
+  position: absolute;
+  z-index: 2;
+  padding: 10px;
+  border: 1px solid #ccc;
+  padding: 0;
+  width: 185.03px;
+  border-radius: 10px;
+  box-shadow: 2px 2px 10px 0px #ccc;
+}
+
+.generalLi4 {
+  background-color: #fff;
+  position: absolute;
+  bottom: 50%;
+  z-index: 2;
+  padding: 10px;
+  border: 1px solid #ccc;
+  padding: 0;
+  width: 185.03px;
+  border-radius: 10px;
+  box-shadow: 2px 2px 10px 0px #ccc;
+}
+.generalLi7 {
+  background-color: #fff;
+  position: absolute;
+  top: -500%;
+  left: 30%;
+  z-index: 2;
+  padding: 10px;
+  border: 1px solid #ccc;
+  padding: 0;
+  width: 185.03px;
+  border-radius: 10px;
+  box-shadow: 2px 2px 10px 0px #ccc;
+}
+.generalLi5,
+.generalLi6 {
+  background-color: #fff;
+  position: absolute;
+  z-index: 2;
+  padding: 10px;
+  border: 1px solid #ccc;
+  padding: 0;
+  width: 156.67px;
+  border-radius: 10px;
+  box-shadow: 2px 2px 10px 0px #ccc;
+}
+.generalLi li,
+.generalLi7 li {
+  font-size: 12px;
+  list-style: none;
+  padding: 4px;
+  cursor: pointer;
+  padding-left: 20px;
+}
+.generalLi1 li,
+.generalLi2 li,
+.generalLi3 li,
+.generalLi4 li,
+.generalLi5 li,
+.generalLi6 li {
+  font-size: 15px;
+  list-style: none;
+  padding: 4px;
+  cursor: pointer;
+  padding-left: 20px;
+}
+.generalLi li:nth-child(1),
+.generalLi1 li:nth-child(1),
+.generalLi2 li:nth-child(1),
+.generalLi3 li:nth-child(1),
+.generalLi4 li:nth-child(1),
+.generalLi5 li:nth-child(1),
+.generalLi6 li:nth-child(1) {
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+.generalLi li:nth-child(9),
+.generalLi1 li:nth-child(5),
+.generalLi2 li:nth-child(2),
+.generalLi3 li:nth-child(2),
+.generalLi4 li:nth-child(9),
+.generalLi5 li:nth-child(3),
+.generalLi6 li:nth-child(2) {
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+.generalLi li:hover,
+.generalLi1 li:hover,
+.generalLi2 li:hover,
+.generalLi3 li:hover,
+.generalLi4 li:hover,
+.generalLi5 li:hover,
+.generalLi6 li:hover,
+.generalLi7 li:hover {
+  color: #fff;
+  background-color: #0057ff;
+}
+.deletePaymentModal {
+  padding: 1em 2em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.deletePaymentModalflex {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.deletePaymentIcon {
+  font-size: 20px;
+  color: red;
+  margin-right: 5px;
+}
+.deletePaymentModalButton button:nth-child(1) {
+  border: none;
+  outline: none;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  padding: 0.5em 1em;
+  margin: 10px;
+  border-radius: 30px;
+}
+.deletePaymentModalButton button:nth-child(2) {
+  border: none;
+  outline: none;
+  background-color: #e21717;
+  border: 1px solid #e21717;
+  padding: 0.5em 1em;
+  margin: 10px;
+  border-radius: 30px;
+  color: #fff;
+}
+.deletePaymentModalButton button:nth-child(1):hover {
+  box-shadow: 2px 2px 10px 0px #ccc;
+}
+.deletePaymentModalButton button:nth-child(2):hover {
+  box-shadow: 2px 2px 10px 0px #e21717;
+}
+.payment-details {
+  width: 70%;
+  margin: 5em auto;
+  background-color: #ddeff7;
+}
+.single-pay {
+  display: flex;
+  padding: 15px 20px;
+  justify-content: space-between;
+  border-bottom: 1px solid #cad5e2;
+  margin: 0 20px;
+}
+
+.single-pay.final {
+  background-color: #6a1b4d;
+  /* padding: 0; */
+  padding: 15px 40px;
+  color: #fff;
+
+  margin: 0;
+}
+.single-pay h2 {
+  font-size: 1.1rem;
+  font-family: 'andika';
+}
+@media screen and (min-height: 722px) {
+  .bookingTerm {
+    height: 62vh;
+  }
+  .bookingGeneral {
+    height: 76vh;
+  }
+  .payment-details {
+    margin: 5.1em auto;
+  }
+}
