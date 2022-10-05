@@ -52,6 +52,7 @@ import ReadyQns from './Quiz/ReadyQns';
 import QuizDash from './Quiz/QuizDash';
 import LuckySeat from './Quiz/LuckySeat';
 import LuckySeatAdmin from './Quiz/LuckySeatAdmin';
+// import TotalSaleReport from './SalesReport/TotalSaleReport';
 
 const App = () => {
   const isMounted = useRef(false);
@@ -314,6 +315,14 @@ const App = () => {
                   </AdminRoute>
                 }
               />
+              {/* <Route
+                path='/totalsales'
+                element={
+                  <AdminRoute>
+                    <TotalSaleReport />
+                  </AdminRoute>
+                }
+              /> */}
             </Routes>
           </ScrollToTop>
         </ToastProvider>

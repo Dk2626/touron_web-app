@@ -9,7 +9,7 @@ import { MdChildCare } from 'react-icons/md';
 import { GrFormPrevious } from 'react-icons/gr';
 import { GrFormNext } from 'react-icons/gr';
 import { Link } from 'react-router-dom';
-import { Pie } from 'react-chartjs-2';
+// import { Pie } from 'react-chartjs-2';
 import { isAuthenticated } from '../../Login components/auth';
 import { ApiContext } from './../../Context/ApiContext';
 import { Progress } from 'reactstrap';
@@ -47,7 +47,6 @@ const SelfPlanTour = () => {
   const [activeCountry, setActiveCountry] = useState('');
   const [isLoggedin, setIsLoggedin] = useState(false);
   const { user } = isAuthenticated();
-
   const [cityDurations, setCityDurations] = useState({});
   const [loaded, setLoaded] = useState(false);
   const [submitLoaded, setSubmitLoaded] = useState(false);
@@ -71,7 +70,6 @@ const SelfPlanTour = () => {
       setLoaded(true);
       setCities([]);
       const cityResponse = await axios.get(`${API}/city/countryname/${c}`);
-
       setStep(2);
       setCities(cityResponse.data);
       setLoaded(false);
@@ -79,10 +77,10 @@ const SelfPlanTour = () => {
       console.log(err, 'err');
     }
   };
+
   // const getCountry = async () => {
   //   try {
   //     setLoaded(true);
-
   //     const countryResponse = await axios.get(`${API}/country`);
   //     setCountries(countryResponse.data);
   //     setLoaded(false);
@@ -90,43 +88,6 @@ const SelfPlanTour = () => {
   //     console.log(err, 'err');
   //   }
   // };
-  // const getStates = async () => {
-  //   try {
-  //     setLoaded(true);
-
-  //     const stateResponse = await axios.get(`${API}/state`);
-  //     setStates(stateResponse.data);
-  //     setLoaded(false);
-  //   } catch (err) {
-  //     console.log(err, 'err');
-  //   }
-  // };
-  const getDomesticCities = async (name) => {
-    try {
-      setLoaded(true);
-
-      const domesticResponse = await axios.get(
-        `${API}/statecity/statename/${name}`
-      );
-
-      setDCities(domesticResponse.data);
-      setLoaded(false);
-    } catch (err) {
-      console.log(err, 'err');
-    }
-  };
-
-  const getTour = async (city) => {
-    try {
-      setLoaded(true);
-
-      const tourResponse = await axios.get(`${API}/tour/cityname/${city}`);
-      setTours(tourResponse.data);
-      setLoaded(false);
-    } catch (err) {
-      console.log(err, 'err');
-    }
-  };
 
   useEffect(() => {
     setLoaded(true);
@@ -151,6 +112,17 @@ const SelfPlanTour = () => {
     };
   }, []);
 
+  // const getStates = async () => {
+  //   try {
+  //     setLoaded(true);
+  //     const stateResponse = await axios.get(`${API}/state`);
+  //     setStates(stateResponse.data);
+  //     setLoaded(false);
+  //   } catch (err) {
+  //     console.log(err, 'err');
+  //   }
+  // };
+
   useEffect(() => {
     setLoaded(true);
     const source = axios.CancelToken.source();
@@ -174,10 +146,33 @@ const SelfPlanTour = () => {
     };
   }, []);
 
+  const getDomesticCities = async (name) => {
+    try {
+      setLoaded(true);
+
+      const domesticResponse = await axios.get(
+        `${API}/statecity/statename/${name}`
+      );
+
+      setDCities(domesticResponse.data);
+      setLoaded(false);
+    } catch (err) {
+      console.log(err, 'err');
+    }
+  };
+
+  const getTour = async (city) => {
+    try {
+      setLoaded(true);
+      const tourResponse = await axios.get(`${API}/tour/cityname/${city}`);
+      setTours(tourResponse.data);
+      setLoaded(false);
+    } catch (err) {
+      console.log(err, 'err');
+    }
+  };
   // useEffect(() => {
   //   getCountry();
-  // }, []);
-  // useEffect(() => {
   //   getStates();
   // }, []);
 
@@ -185,7 +180,6 @@ const SelfPlanTour = () => {
     const v = moment().format('L');
     const r = Math.floor((Math.random() + 4) * 345334);
     const req = `TO-${v.slice(3, 5)}${v.slice(0, 2)}${v.slice(8)}-${r}`;
-
     setSubmitLoaded(true);
     firedb
       .ref(`self-planned-tours`)
@@ -842,24 +836,52 @@ const SelfPlanTour = () => {
                     </div>
                   ))}
                 </div>
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexDirection: 'column',
+                    marginTop: '10px',
+                  }}>
+                  <p>
+                    'Wander, Explore, Discover! – Quest Zone' -{' '}
+                    {(cityDurations.cityDays - 1) * 8}
+                  </p>
+                  <p>'Got to recharge the batteries! – Snooze Time' - {20}</p>
+                  <p>
+                    'Transit hours between tour spots – Road Trip' -{' '}
+                    {cityDurations.cityDays * 2}
+                  </p>
+                  <p>
+                    'A mug of hot coffee & a book? – Your Me-Time!' -{' '}
+                    {cityDurations.cityDays * 3}
+                  </p>
+                  <p>
+                    'Yummy in the Tummy – The Food Hour' -{' '}
+                    {cityDurations.tourDurations}
+                  </p>
+                </div>
               </div>
-              <Pie
-                data={state}
-                width={230}
-                height={80}
-                options={{
-                  // maintainAspectRatio: false,
-                  title: {
-                    display: true,
-                    text: 'How Our Time Is Spent in hours',
-                    fontSize: 20,
-                  },
-                  legend: {
-                    display: true,
-                    position: 'right',
-                  },
-                }}
-              />
+              {/* <div style={{ width: '30%' }}>
+                <Pie
+                  data={state}
+                  width={230}
+                  height={80}
+                  options={{
+                    // maintainAspectRatio: false,
+                    title: {
+                      display: true,
+                      text: 'How Our Time Is Spent in hours',
+                      fontSize: 20,
+                    },
+                    legend: {
+                      display: true,
+                      position: 'right',
+                    },
+                  }}
+                />
+              </div> */}
             </div>
             <div style={{ paddingBottom: 5 }} className='ack'>
               {submitLoaded ? (

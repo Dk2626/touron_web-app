@@ -468,9 +468,9 @@ const Quiz = () => {
               <video
                 src={luckyseatvideo}
                 ref={vidRef}
-                autoPlay
-                muted
+                controls
                 loop
+                autoPlay
                 type='video/mp4'
               />
             </div>
