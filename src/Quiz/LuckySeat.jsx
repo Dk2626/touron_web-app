@@ -13,7 +13,7 @@ import male from '../assests/Quiz/male.png';
 import pintag from '../assests/Quiz/pintag.png';
 import './Quiz.css';
 import { firedb, fireStorage } from '../firebase';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   EmailShareButton,
   EmailIcon,
@@ -29,6 +29,7 @@ import {
 
 const LuckySeat = () => {
   const isMounted = useRef(false);
+  let navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [user, setUser] = useState({
     name: '',
@@ -49,8 +50,6 @@ const LuckySeat = () => {
   const shareUrl = 'https://www.touron.in/quiz-win-prize';
   const [luckyDatas, setLuckyDatas] = useState([]);
   const [singleLuckyData, setSingleLuckyData] = useState({});
-
-  console.log('uploading', uploading);
 
   const getData = () => {
     let quizdataEmail = [];
@@ -96,6 +95,7 @@ const LuckySeat = () => {
           opting: '',
           url: '',
         });
+        // navigate('/');
         setStep(1);
         setOpenModal(true);
       })

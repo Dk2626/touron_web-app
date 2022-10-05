@@ -120,9 +120,11 @@ import parse from 'html-react-parser';
 // import quiz6 from '../assests/Quiz/quiz6.png';
 // import quiz7 from '../assests/Quiz/quiz7.png';
 // import quiz8 from '../assests/Quiz/quiz8.png';
+import luckyseatvideo from '../assests/Quiz/video/luckyseatvideo.mp4';
 
 const Quiz = () => {
   const isMounted = useRef(false);
+  const vidRef = useRef();
   const [step, setStep] = useState(1);
   const [store, setStore] = useState('');
   const [lucky, setLucky] = useState('');
@@ -453,16 +455,32 @@ const Quiz = () => {
     return () => (isMounted.current = false);
   }, [resortName]);
 
+  useEffect(() => {
+    vidRef.current.play();
+  }, []);
+
   const renderPage = () => {
     switch (step) {
       case 1:
         return (
           <div className='quizPg0'>
-            <div className='aniLogo'>
-              <img src={logo} alt='logo' />
+            <div className='quizzzz_video'>
+              <video
+                src={luckyseatvideo}
+                ref={vidRef}
+                autoPlay
+                muted
+                loop
+                type='video/mp4'
+              />
             </div>
-            <div className='aniLogoTitle'>
-              <img src={logotitle} alt='logotitle' />
+            <div className='quizzanilogo'>
+              <div className='aniLogo'>
+                <img src={logo} alt='logo' />
+              </div>
+              <div className='aniLogoTitle'>
+                <img src={logotitle} alt='logotitle' />
+              </div>
             </div>
             <div className='quizArrowMain0' onClick={() => setStep(step + 1)}>
               <BsArrowRight className='quizArrow2' />

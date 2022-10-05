@@ -55,7 +55,43 @@ const LuckySeatAdmin = () => {
     return () => (isMounted.current = false);
   }, [showLuck]);
 
-  const getLuckSeatData = () => {};
+  const getLuckSeatData = () => {
+    let datas = [];
+    firedb.ref('luckyseatdate').on('value', (data) => {
+      if (isMounted.current) {
+        data.forEach((d) => {
+          datas.push(d.val());
+        });
+      }
+      setFriValue({
+        ...friValue,
+        datef: datas[0].date,
+        seatf: datas[0].seat,
+        audinof: datas[0].audi,
+        movieNamef: datas[0].movieName,
+        showTimef: datas[0].showTime,
+        revealDatef: datas[0].revealDate,
+      });
+      setSatValue({
+        ...satValue,
+        dates: datas[1].date,
+        seats: datas[1].seat,
+        audinos: datas[1].audi,
+        movieNames: datas[1].movieName,
+        showTimes: datas[1].showTime,
+        revealDates: datas[1].revealDate,
+      });
+      setSunValue({
+        ...sunValue,
+        datesu: datas[2].date,
+        seatsu: datas[2].seat,
+        audinosu: datas[2].audi,
+        movieNamesu: datas[2].movieName,
+        showTimesu: datas[2].showTime,
+        revealDatesu: datas[2].revealDate,
+      });
+    });
+  };
 
   useEffect(() => {
     isMounted.current = true;
@@ -262,7 +298,9 @@ const LuckySeatAdmin = () => {
             />
           </div>
         </div>
-        <div onClick={updateF}>Update</div>
+        <div onClick={updateF} className='update_lucky_seeet_btnn'>
+          Update
+        </div>
       </div>
       <div>
         <div>
@@ -348,7 +386,9 @@ const LuckySeatAdmin = () => {
             />
           </div>
         </div>
-        <div onClick={updateS}>Update</div>
+        <div onClick={updateS} className='update_lucky_seeet_btnn'>
+          Update
+        </div>
       </div>
       <div>
         <div>
@@ -434,7 +474,9 @@ const LuckySeatAdmin = () => {
             />
           </div>
         </div>
-        <div onClick={updateSu}>Update</div>
+        <div onClick={updateSu} className='update_lucky_seeet_btnn'>
+          Update
+        </div>
       </div>
     </div>
   );
