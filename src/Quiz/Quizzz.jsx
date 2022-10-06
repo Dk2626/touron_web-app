@@ -1,17 +1,21 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import luckyseatvideo from '../assests/Quiz/video/luckyseatvideo.mp4';
+import './Quizzzz.css';
 
 const Quizzz = () => {
-  const videoRef = useRef(undefined);
-  useEffect(() => {
-    videoRef.current.defaultMuted = true;
-    console.log('sd');
-  });
-
   return (
     <div>
-      <div>
-        <video
+      <div style={{ width: '50%', height: '50%' }}>
+        <div
+          dangerouslySetInnerHTML={{
+            __html: `<video className="app__backgroundVideo" autoplay loop muted playsinline>
+          <source src=${luckyseatvideo} type="video/mp4" />
+          Your browser does not support the video tag.
+          </video>`,
+          }}
+        />
+      </div>
+      {/* <video
           style={{ width: '50%', height: '50%' }}
           ref={videoRef}
           loop
@@ -19,8 +23,7 @@ const Quizzz = () => {
           muted
           playsInline>
           <source src={luckyseatvideo} type='video/mp4' />
-        </video>
-      </div>
+        </video> */}
       <div>
         <h1>Video</h1>
       </div>
