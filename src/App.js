@@ -53,6 +53,7 @@ import QuizDash from './Quiz/QuizDash';
 import LuckySeat from './Quiz/LuckySeat';
 import LuckySeatAdmin from './Quiz/LuckySeatAdmin';
 import Quizzz from './Quiz/Quizzz';
+import BookingRecord from './SalesAdmin component/BookingRecord';
 // import TotalSaleReport from './SalesReport/TotalSaleReport';
 
 const App = () => {
@@ -321,6 +322,22 @@ const App = () => {
                 element={
                   <AdminRoute>
                     <Quizzz />
+                  </AdminRoute>
+                }
+              />
+              <Route
+                path='/bookingrecord'
+                element={
+                  <AdminRoute>
+                    <BookingRecord />
+                  </AdminRoute>
+                }
+              />
+              <Route
+                path='/bookingrecord/:surveyid/:name'
+                element={
+                  <AdminRoute>
+                    <BookingRecord />
                   </AdminRoute>
                 }
               />
