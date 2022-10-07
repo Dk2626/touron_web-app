@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import './LuckySeat.css';
 import '../Fonts/Fonts.css';
 import luckystar from '../assests/Quiz/luckyStar.png';
-import { BiCalendar } from 'react-icons/bi';
+import { BiCalendar, BiTimer } from 'react-icons/bi';
 import { IoIosArrowDropright } from 'react-icons/io';
 import { MdExitToApp, MdEmail } from 'react-icons/md';
 import { FiSend } from 'react-icons/fi';
@@ -48,8 +48,8 @@ const LuckySeat = () => {
   const [openExistModal, setOpenExistModal] = useState(false);
   const [exist, setExist] = useState(false);
   const shareUrl = 'https://www.touron.in/quiz-win-prize';
-  const [luckyDatas, setLuckyDatas] = useState([]);
-  const [singleLuckyData, setSingleLuckyData] = useState({});
+  // const [luckyDatas, setLuckyDatas] = useState([]);
+  const [singleArray, setSingleArray] = useState({});
 
   const getData = () => {
     let quizdataEmail = [];
@@ -124,23 +124,56 @@ const LuckySeat = () => {
     });
   };
 
-  const getLuckyData = () => {
-    let luckyData = [];
-    firedb.ref('luckyseatdate').on('value', (data) => {
-      if (isMounted.current) {
-        data.forEach((d) => {
-          luckyData.push(d.val());
-        });
-      }
-      setLuckyDatas(luckyData);
-    });
-  };
+  // const getLuckyData = () => {
+  //   let luckyData = [];
+  //   firedb.ref('luckyseatdate').on('value', (data) => {
+  //     if (isMounted.current) {
+  //       data.forEach((d) => {
+  //         luckyData.push(d.val());
+  //       });
+  //     }
+  //     setLuckyDatas(luckyData);
+  //   });
+  // };
 
-  useEffect(() => {
-    isMounted.current = true;
-    getLuckyData();
-    return () => (isMounted.current = false);
-  }, []);
+  // const getLuckyData = () => {
+  //   let luckyData = [];
+  //   firedb.ref('luckyseatday').on('value', (data) => {
+  //     if (isMounted.current) {
+  //       data.forEach((d) => {
+  //         luckyData.push(d.val());
+  //       });
+  //     }
+  //     setLuckyDatas(luckyData);
+  //   });
+  // };
+
+  // useEffect(() => {
+  //   isMounted.current = true;
+  //   getLuckyData();
+  //   return () => (isMounted.current = false);
+  // }, []);
+
+  const array = [
+    {
+      showTime: '11:45 AM',
+      seatNo: 'D7',
+      audiNo: '03',
+      movieName: 'PONNIYIN SELVAN',
+    },
+    {
+      showTime: '03:30 PM',
+      seatNo: 'J8',
+      audiNo: '03',
+      movieName: 'PONNIYIN SELVAN',
+    },
+    {
+      showTime: '07:15 PM',
+      seatNo: 'K5',
+      audiNo: '03',
+      movieName: 'PONNIYIN SELVAN',
+    },
+  ];
 
   const render = () => {
     switch (step) {
@@ -163,23 +196,32 @@ const LuckySeat = () => {
               <h5 className='lucky_seat_main_1_sub_h5'>LUCKY SEAT WINNER</h5>
               <p className='lucky_seat_main_1_sub_p'>Congratulations</p>
             </div>
-            <div>
+            <div
+              className='lucky_seat_month'
+              onClick={() => {
+                setStep(step + 1);
+              }}>
+              <BiCalendar className='lucky_seat_month_cal_icon' />
+              <p>8 OCT</p>
+            </div>
+            {/* <div>
               {luckyDatas.length !== 0 ? (
                 <>
                   {luckyDatas.map((luckyData, i) => {
-                    return (
-                      <div key={i}>
-                        <div
-                          className='lucky_seat_month'
-                          onClick={() => {
-                            setSingleLuckyData(luckyData);
-                            setStep(step + 1);
-                          }}>
-                          <BiCalendar className='lucky_seat_month_cal_icon' />
-                          <p>{luckyData.date}</p>
+                    if (i == 1)
+                      return (
+                        <div key={i}>
+                          <div
+                            className='lucky_seat_month'
+                            onClick={() => {
+                              setSingleLuckyData(luckyData);
+                              setStep(step + 1);
+                            }}>
+                            <BiCalendar className='lucky_seat_month_cal_icon' />
+                            <p>{luckyData.Date}</p>
+                          </div>
                         </div>
-                      </div>
-                    );
+                      );
                   })}
                 </>
               ) : (
@@ -187,20 +229,6 @@ const LuckySeat = () => {
                   <p className='lucky_seat_fetchingg'>Fetching data...</p>
                 </div>
               )}
-            </div>
-            {/* <div>
-              <div className='lucky_seat_month'>
-                <BiCalendar className='lucky_seat_month_cal_icon' />
-                <p>30 SEP</p>
-              </div>
-              <div className='lucky_seat_month'>
-                <BiCalendar className='lucky_seat_month_cal_icon' />
-                <p>1 OCT</p>
-              </div>
-              <div className='lucky_seat_month'>
-                <BiCalendar className='lucky_seat_month_cal_icon' />
-                <p>2 OCT</p>
-              </div>
             </div> */}
           </div>
         );
@@ -224,40 +252,83 @@ const LuckySeat = () => {
               <h5 className='lucky_seat_main_1_sub_h5'>LUCKY SEAT WINNER</h5>
               <p className='lucky_seat_main_1_sub_p'>Congratulations</p>
             </div>
-            {singleLuckyData.seat == '' ? (
-              <div>
-                <p className='lucku_seat_reveal'>
-                  It will be reveal here on {singleLuckyData.revealDate}
+            <div>
+              {array.map((a) => {
+                return (
+                  <div
+                    className='lucky_seat_month'
+                    onClick={() => {
+                      setStep(step + 1);
+                      setSingleArray(a);
+                    }}>
+                    <BiTimer className='lucky_seat_month_cal_icon' />
+                    <p>{a.showTime}</p>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        );
+      case 3:
+        return (
+          <div className='lucky_seat_main_1'>
+            <div className='luckyySendMainD'>
+              <MdExitToApp
+                className='prevquizluc'
+                onClick={() => setStep(step - 1)}
+              />
+              <FiSend
+                className='quizSendluc'
+                onClick={() => setOpenShareModal(true)}
+              />
+            </div>
+            <div className='lucky_seat_main_1_sub'>
+              <div className='lucky_seat_starImg'>
+                <img src={luckystar} alt='/' />
+              </div>
+              <h5 className='lucky_seat_main_1_sub_h5'>LUCKY SEAT WINNER</h5>
+              <p className='lucky_seat_main_1_sub_p'>Congratulations</p>
+            </div>
+            <div className='lucky_seat_main_1_subss'>
+              {/* <div className='lucky_seat_main_1_subss_1'>
+                <p>
+                  Seat#{' '}
+                  <span className='lucky_seat_main_1_subss_1_span'>
+                    {singleArray.seatNo}
+                  </span>
                 </p>
+                <IoIosArrowDropright className='lucky_seat_main_1_subss_icon' />
+              </div> */}
+              <div className='lucky_seat_main_1_subss_1'>
+                <p>
+                  Seat#{' '}
+                  <span className='lucky_seat_main_1_subss_1_span'>
+                    Reveal 9 OCT - 12PM
+                  </span>
+                </p>
+                <IoIosArrowDropright className='lucky_seat_main_1_subss_icon' />
               </div>
-            ) : (
-              <div className='lucky_seat_main_1_subss'>
-                <div className='lucky_seat_main_1_subss_1'>
-                  <p>Seat# {singleLuckyData.seat}</p>
-                  <IoIosArrowDropright className='lucky_seat_main_1_subss_icon' />
-                </div>
-                <div className='lucky_seat_main_1_subss_1'>
-                  <p>AUDI NO.{singleLuckyData.audi}</p>
-                  <IoIosArrowDropright className='lucky_seat_main_1_subss_icon' />
-                </div>
-                <div className='lucky_seat_main_1_subss_1'>
-                  <p>{singleLuckyData.movieName}</p>
-                  <IoIosArrowDropright className='lucky_seat_main_1_subss_icon' />
-                </div>
-                <div className='lucky_seat_main_1_subss_1'>
-                  <p>{singleLuckyData.showTime} SHOW</p>
-                  <IoIosArrowDropright className='lucky_seat_main_1_subss_icon' />
-                </div>
+              <div className='lucky_seat_main_1_subss_1'>
+                <p>AUDI NO. {singleArray.audiNo}</p>
+                <IoIosArrowDropright className='lucky_seat_main_1_subss_icon' />
               </div>
-            )}
+              <div className='lucky_seat_main_1_subss_1'>
+                <p>{singleArray.movieName}</p>
+                <IoIosArrowDropright className='lucky_seat_main_1_subss_icon' />
+              </div>
+              <div className='lucky_seat_main_1_subss_1'>
+                <p>{singleArray.showTime} SHOW</p>
+                <IoIosArrowDropright className='lucky_seat_main_1_subss_icon' />
+              </div>
+            </div>
             <button
               className='lucky_seat_main_1_subss_btn'
-              onClick={() => setStep(3)}>
+              onClick={() => setStep(step + 1)}>
               Claim reward
             </button>
           </div>
         );
-      case 3:
+      case 4:
         return (
           <div className='luckyySendMainDD'>
             <div className='luckyySendMainD'>

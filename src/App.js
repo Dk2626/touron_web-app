@@ -53,6 +53,7 @@ import QuizDash from './Quiz/QuizDash';
 import LuckySeat from './Quiz/LuckySeat';
 import LuckySeatAdmin from './Quiz/LuckySeatAdmin';
 import BookingRecord from './SalesAdmin component/BookingRecord';
+import LuckySeatAs from './Quiz/LuckySeatAs';
 // import TotalSaleReport from './SalesReport/TotalSaleReport';
 
 const App = () => {
@@ -313,6 +314,14 @@ const App = () => {
                 element={
                   <AdminRoute>
                     <LuckySeatAdmin />
+                  </AdminRoute>
+                }
+              />
+              <Route
+                path='/lucky-seat-as'
+                element={
+                  <AdminRoute>
+                    <LuckySeatAs />
                   </AdminRoute>
                 }
               />

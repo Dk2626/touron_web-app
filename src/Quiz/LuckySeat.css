@@ -65,7 +65,7 @@
   background-color: #0c247b;
   align-items: center;
   margin-left: 5px;
-  width: 250px;
+  width: 300px;
   justify-content: space-between;
   margin-bottom: 5px;
   padding: 7px;
@@ -80,6 +80,9 @@
   font-weight: bold;
   font-size: 16px;
   font-family: 'League Spartan', sans-serif;
+}
+.lucky_seat_main_1_subss_1_span {
+  color: yellow;
 }
 .lucky_seat_main_1_subss_icon {
   color: #fff;
