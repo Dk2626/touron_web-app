@@ -21,9 +21,9 @@ const SalesAdminMain = () => {
       case 4:
         return <BookingTable />;
       case 5:
-        return <FlightMail />;
-      case 6:
         return <HotelMail />;
+      case 6:
+        return <FlightMail />;
       default:
         return step;
     }

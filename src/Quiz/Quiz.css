@@ -491,16 +491,6 @@
   height: 2px;
   width: 250px;
 }
-/* .quizzzz_video {
-  width: 350px;
-  height: 300px;
-  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-  border-radius: 10px;
-}
-.quizzzz_video video {
-  width: 100%;
-  height: 100%;
-} */
 .quizzanilogo {
   display: flex;
   flex-direction: column;
