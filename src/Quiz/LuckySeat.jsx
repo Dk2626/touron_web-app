@@ -343,7 +343,7 @@ const LuckySeat = () => {
             </div>
             <div className='luckyPgg'>
               <div>
-                <p className='luckyHelloo'>Congarts!</p>
+                <p className='luckyHelloo'>Congrats!</p>
                 <p className='luckyHelloInn'>
                   This information will help us to connect with you if you've
                   won the lucky seat contest in PVR
