@@ -54,7 +54,7 @@ import LuckySeat from './Quiz/LuckySeat';
 import LuckySeatAdmin from './Quiz/LuckySeatAdmin';
 import BookingRecord from './SalesAdmin component/BookingRecord';
 import LuckySeatAs from './Quiz/LuckySeatAs';
-// import TotalSaleReport from './SalesReport/TotalSaleReport';
+import TotalSaleReport from './SalesReport/TotalSaleReport';
 
 const App = () => {
   const isMounted = useRef(false);
