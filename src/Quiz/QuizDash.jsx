@@ -32,7 +32,9 @@ const QuizDash = () => {
       <table className='quizDashMain'>
         <thead>
           <tr>
-            <th>Name</th>
+            <th>S.No</th>
+            <th>Date</th>
+            <th style={{ width: '150px' }}>Name</th>
             <th>Email</th>
             <th>Mobile</th>
             <th>Gender</th>
@@ -48,7 +50,9 @@ const QuizDash = () => {
               .map((final, i) => {
                 return (
                   <tr key={i}>
-                    <td>{final.name}</td>
+                    <td>{i + 1}</td>
+                    <td>{final.date ? final.date : '-'}</td>
+                    <td style={{ width: '150px' }}>{final.name}</td>
                     <td>{final.email}</td>
                     <td>{final.phone}</td>
                     <td>{final.gender}</td>

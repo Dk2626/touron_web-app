@@ -339,6 +339,7 @@ const Quiz = () => {
         opting,
         seconds: (end - start) / 1000,
         correct,
+        date: new Date().toLocaleDateString(),
       })
       .then(() => {
         setStore('');
