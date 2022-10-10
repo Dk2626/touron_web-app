@@ -188,7 +188,7 @@ const App = () => {
               <Route path='/privacypolicy' element={<Privacypolicy />} />
               <Route path='*' element={<NotFound />} />
               <Route path='/quiz-win-prize' element={<Quiz />} />
-              <Route path='/lucky-seat' element={<LuckySeat />} />
+              {/* <Route path='/lucky-seat' element={<LuckySeat />} /> */}
               <Route
                 path='/profile'
                 element={
@@ -309,7 +309,7 @@ const App = () => {
                   </AdminRoute>
                 }
               />
-              <Route
+              {/* <Route
                 path='/lucky-seat-admin'
                 element={
                   <AdminRoute>
@@ -324,7 +324,7 @@ const App = () => {
                     <LuckySeatAs />
                   </AdminRoute>
                 }
-              />
+              /> */}
               <Route
                 path='/bookingrecord'
                 element={
@@ -341,14 +341,14 @@ const App = () => {
                   </AdminRoute>
                 }
               />
-              {/* <Route
+              <Route
                 path='/totalsales'
                 element={
                   <AdminRoute>
                     <TotalSaleReport />
                   </AdminRoute>
                 }
-              /> */}
+              />
             </Routes>
           </ScrollToTop>
         </ToastProvider>
