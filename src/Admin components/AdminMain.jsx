@@ -20,6 +20,7 @@ import GaiaSuggestions from './GaiaSuggestions';
 import Particulars from './Particulars';
 import PaymentType from './PaymentType';
 import Vendor from './Vendor';
+import EmployeePhoto from './EmployeePhoto';
 
 const AdminSidebarData = [
   {
@@ -103,6 +104,11 @@ const AdminSidebarData = [
     step: 16,
     icon: <AiIcons.AiOutlineTag />,
   },
+  {
+    title: 'Employee Photo',
+    step: 17,
+    icon: <AiIcons.AiOutlineTag />,
+  },
 ];
 
 const AdminMain = () => {
@@ -142,6 +148,8 @@ const AdminMain = () => {
         return <PaymentType />;
       case 16:
         return <Vendor />;
+      case 17:
+        return <EmployeePhoto />;
       default:
         return step;
     }

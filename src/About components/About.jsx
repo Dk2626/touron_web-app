@@ -1,14 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './About.css';
 import intro from '../assests/intro.png';
 import team0 from '../assests/teams/vikash.jpg';
-import team1 from '../assests/teams/keerthi.jpg';
-import team2 from '../assests/teams/kirthika.jpeg';
-import team3 from '../assests/teams/ganesh.jpeg';
-import team4 from '../assests/teams/sam.jpg';
-import team5 from '../assests/teams/vicky.jpg';
-import team6 from '../assests/teams/dk.jpg';
-
+// import team1 from '../assests/teams/keerthi.jpg';
+// import team2 from '../assests/teams/kirthika.jpeg';
+// import team3 from '../assests/teams/ganesh.jpeg';
+// import team4 from '../assests/teams/sam.jpg';
+// import team5 from '../assests/teams/vicky.jpg';
+// import team6 from '../assests/teams/dk.jpg';
 import { Link } from 'react-router-dom';
 import { AiOutlineFundProjectionScreen, AiOutlineLike } from 'react-icons/ai';
 import { FaSuitcase, FaAward } from 'react-icons/fa';
@@ -16,47 +15,50 @@ import Navbar from '../Home components/Navbar/Navbar';
 import Footer from '../Home components/Footer/Footer';
 import axios from 'axios';
 import { API } from './../backend';
+import { firedb } from '../firebase';
 
-const teams = [
-  {
-    img: team1,
-    name: 'Keerthi',
-    desg: 'Co Founder & CFO',
-  },
-  {
-    img: team2,
-    name: 'Kirthika Jayagopi',
-    desg: 'Travel Associate',
-  },
-  {
-    img: team3,
-    name: 'Ganesh',
-    desg: 'Travel Associate',
-  },
-  {
-    img: team4,
-    name: 'Samyuktha',
-    desg: 'Travel Consultant',
-  },
-  {
-    img: team5,
-    name: 'Vicky',
-    desg: 'Junior Software Engineer',
-  },
-  {
-    img: team6,
-    name: 'Dinesh',
-    desg: 'Junior Software Engineer',
-  },
-];
+// const teams = [
+//   {
+//     img: team1,
+//     name: 'Keerthi',
+//     desg: 'Co Founder & CFO',
+//   },
+//   {
+//     img: team2,
+//     name: 'Kirthika Jayagopi',
+//     desg: 'Travel Associate',
+//   },
+//   {
+//     img: team3,
+//     name: 'Ganesh',
+//     desg: 'Travel Associate',
+//   },
+//   {
+//     img: team4,
+//     name: 'Samyuktha',
+//     desg: 'Travel Consultant',
+//   },
+//   {
+//     img: team5,
+//     name: 'Vicky',
+//     desg: 'Junior Software Engineer',
+//   },
+//   {
+//     img: team6,
+//     name: 'Dinesh',
+//     desg: 'Junior Software Engineer',
+//   },
+// ];
 
 export default function About() {
+  const isMounted = useRef(false);
   const [data, setData] = useState({
     certifiedCountries: 0,
     successfulTours: 0,
     happyTravellers: 0,
   });
   const { certifiedCountries, successfulTours, happyTravellers } = data;
+  const [empDetails, setEmpDetails] = useState([]);
 
   //   const getStats = async () => {
   //     try {
@@ -102,6 +104,30 @@ export default function About() {
     return () => {
       source.cancel();
     };
+  }, []);
+
+  const getEmpPhoto = () => {
+    let emp = [];
+    firedb.ref('employeephotodetails').on('value', (snapshot) => {
+      if (isMounted.current) {
+        if (snapshot.val() != null)
+          snapshot.forEach((d) => {
+            emp.push({
+              id: d.key,
+              name: d.val().name,
+              designation: d.val().designation,
+              img: d.val().img,
+            });
+          });
+      }
+      setEmpDetails(emp);
+    });
+  };
+
+  useEffect(() => {
+    isMounted.current = true;
+    getEmpPhoto();
+    return () => (isMounted.current = false);
   }, []);
 
   return (
@@ -215,21 +241,23 @@ export default function About() {
           working hard to put together your perfect holiday. Say Hello to the
           Team!
         </p>
-        <div className='team_content'>
-          {teams.map((t, i) => {
-            return (
-              <div key={i} className='team_content1'>
-                <div className='team_img'>
-                  <img src={t.img} alt='teamimage' />
+        {empDetails && (
+          <div className='team_content'>
+            {empDetails.map((t, i) => {
+              return (
+                <div key={i} className='team_content1'>
+                  <div className='team_img'>
+                    <img src={t.img} alt='teamimage' />
+                  </div>
+                  <div className='teamk'>
+                    <div className='team_desti'>{t.name}</div>
+                    <div className='team_name'>{t.designation}</div>
+                  </div>
                 </div>
-                <div className='teamk'>
-                  <div className='team_desti'>{t.name}</div>
-                  <div className='team_name'>{t.desg}</div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
+        )}
       </div>
       <Footer />
     </div>
