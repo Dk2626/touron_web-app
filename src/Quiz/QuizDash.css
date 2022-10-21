@@ -32,3 +32,26 @@
 .quizDashMain tbody tr {
   border-bottom: 1px solid #cad5e2;
 }
+.quizDashMainHomeDate {
+  align-self: flex-end;
+  padding: 20px;
+  padding-right: 60px;
+  display: flex;
+  align-items: center;
+}
+.quizDashMainHomeDate h6 {
+  color: #0c247b;
+  margin-right: 10px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: bold;
+}
+.quizDashMainHomeDateRe {
+  padding: 40px;
+}
+.quizDashMainHomeDateRe h6 {
+  color: #0c247b;
+  margin-right: 10px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: bold;
+  font-size: 20px;
+}
