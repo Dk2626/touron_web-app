@@ -16,6 +16,10 @@ import { firedb } from '../firebase';
 import '../SalesAdmin component/SalesRequest.css';
 import './TotalSaleReport.css';
 import { IoIosArrowDown } from 'react-icons/io';
+import ReactExport from 'react-export-excel';
+const ExcelFile = ReactExport.ExcelFile;
+const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
+const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
 ChartJS.register(
   ArcElement,
   Tooltip,
@@ -58,6 +62,7 @@ const TotalSaleReport = () => {
   const [showRequestValue, setShowRequestValue] = useState(false);
   const [requestValueYear, setRequestValueYear] = useState('');
   const [showRequestValueYear, setShowRequestValueYear] = useState(false);
+  const [exportYear, setExportYear] = useState('');
   const [reqData, setReqData] = useState([
     {
       name: 'January',
@@ -829,6 +834,405 @@ const TotalSaleReport = () => {
     },
   };
 
+  const getExcel = () => {
+    const person = ['Vikash', 'Kirthika', 'Ganesh', 'Bharathwaaj', 'Santhosh'];
+    let months = [
+      {
+        name: 'January',
+        val: [],
+      },
+      {
+        name: 'Feburary',
+        val: [],
+      },
+      {
+        name: 'March',
+        val: [],
+      },
+      {
+        name: 'April',
+        val: [],
+      },
+      {
+        name: 'May',
+        val: [],
+      },
+      {
+        name: 'June',
+        val: [],
+      },
+      {
+        name: 'July',
+        val: [],
+      },
+      {
+        name: 'August',
+        val: [],
+      },
+      {
+        name: 'September',
+        val: [],
+      },
+      {
+        name: 'October',
+        val: [],
+      },
+      {
+        name: 'November',
+        val: [],
+      },
+      {
+        name: 'December',
+        val: [],
+      },
+    ];
+
+    bookingDetails.forEach((c, i) => {
+      months.forEach((m, index) => {
+        person.forEach((s) => {
+          if (
+            index === moment(c.general.onwardDate).month() &&
+            c.general.salesHandleName === s &&
+            exportYear === moment(c.general.onwardDate).format('YYYY') &&
+            // marginBookingValueYear ===
+            //   moment(c.general.onwardDate).format("YYYY") &&
+            c.general.isBookingCancelled === false
+          ) {
+            m.val.push(c);
+          }
+        });
+      });
+    });
+
+    // jan
+    const VikashJan = months[0].val.filter(
+      (f) => f.general.salesHandleName == 'Vikash'
+    );
+    const KirthikaJan = months[0].val.filter(
+      (f) => f.general.salesHandleName == 'Kirthika'
+    );
+    const GaneshJan = months[0].val.filter(
+      (f) => f.general.salesHandleName == 'Ganesh'
+    );
+    const BharathJan = months[0].val.filter(
+      (f) => f.general.salesHandleName == 'Bharathwaaj'
+    );
+    const SanthoshJan = months[0].val.filter(
+      (f) => f.general.salesHandleName == 'Santhosh'
+    );
+    const AllJan = months[0].val;
+
+    // feb
+    const VikashFeb = months[1].val.filter(
+      (f) => f.general.salesHandleName == 'Vikash'
+    );
+    const KirthikaFeb = months[1].val.filter(
+      (f) => f.general.salesHandleName == 'Kirthika'
+    );
+    const GaneshFeb = months[1].val.filter(
+      (f) => f.general.salesHandleName == 'Ganesh'
+    );
+    const BharathFeb = months[1].val.filter(
+      (f) => f.general.salesHandleName == 'Bharathwaaj'
+    );
+    const SanthoshFeb = months[1].val.filter(
+      (f) => f.general.salesHandleName == 'Santhosh'
+    );
+    const AllFeb = months[1].val;
+
+    // mar
+    const VikashMar = months[2].val.filter(
+      (f) => f.general.salesHandleName == 'Vikash'
+    );
+    const KirthikaMar = months[2].val.filter(
+      (f) => f.general.salesHandleName == 'Kirthika'
+    );
+    const GaneshMar = months[2].val.filter(
+      (f) => f.general.salesHandleName == 'Ganesh'
+    );
+    const BharathMar = months[2].val.filter(
+      (f) => f.general.salesHandleName == 'Bharathwaaj'
+    );
+    const SanthoshMar = months[2].val.filter(
+      (f) => f.general.salesHandleName == 'Santhosh'
+    );
+    const AllMar = months[2].val;
+
+    // aprl
+    const VikashAprl = months[3].val.filter(
+      (f) => f.general.salesHandleName == 'Vikash'
+    );
+    const KirthikaAprl = months[3].val.filter(
+      (f) => f.general.salesHandleName == 'Kirthika'
+    );
+    const GaneshAprl = months[3].val.filter(
+      (f) => f.general.salesHandleName == 'Ganesh'
+    );
+    const BharathAprl = months[3].val.filter(
+      (f) => f.general.salesHandleName == 'Bharathwaaj'
+    );
+    const SanthoshAprl = months[3].val.filter(
+      (f) => f.general.salesHandleName == 'Santhosh'
+    );
+    const AllAprl = months[3].val;
+
+    // may
+    const VikashMay = months[4].val.filter(
+      (f) => f.general.salesHandleName == 'Vikash'
+    );
+    const KirthikaMay = months[4].val.filter(
+      (f) => f.general.salesHandleName == 'Kirthika'
+    );
+    const GaneshMay = months[4].val.filter(
+      (f) => f.general.salesHandleName == 'Ganesh'
+    );
+    const BharathMay = months[4].val.filter(
+      (f) => f.general.salesHandleName == 'Bharathwaaj'
+    );
+    const SanthoshMay = months[4].val.filter(
+      (f) => f.general.salesHandleName == 'Santhosh'
+    );
+    const AllMay = months[4].val;
+
+    // jun
+    const VikashJune = months[5].val.filter(
+      (f) => f.general.salesHandleName == 'Vikash'
+    );
+    const KirthikaJune = months[5].val.filter(
+      (f) => f.general.salesHandleName == 'Kirthika'
+    );
+    const GaneshJune = months[5].val.filter(
+      (f) => f.general.salesHandleName == 'Ganesh'
+    );
+    const BharathJune = months[5].val.filter(
+      (f) => f.general.salesHandleName == 'Bharathwaaj'
+    );
+    const SanthoshJune = months[5].val.filter(
+      (f) => f.general.salesHandleName == 'Santhosh'
+    );
+    const AllJune = months[5].val;
+
+    //  jul
+    const VikashJuly = months[6].val.filter(
+      (f) => f.general.salesHandleName == 'Vikash'
+    );
+    const KirthikaJuly = months[6].val.filter(
+      (f) => f.general.salesHandleName == 'Kirthika'
+    );
+    const GaneshJuly = months[6].val.filter(
+      (f) => f.general.salesHandleName == 'Ganesh'
+    );
+    const BharathJuly = months[6].val.filter(
+      (f) => f.general.salesHandleName == 'Bharathwaaj'
+    );
+    const SanthoshJuly = months[6].val.filter(
+      (f) => f.general.salesHandleName == 'Santhosh'
+    );
+    const AllJuly = months[6].val;
+
+    //  aug
+    const VikashAug = months[7].val.filter(
+      (f) => f.general.salesHandleName == 'Vikash'
+    );
+    const KirthikaAug = months[7].val.filter(
+      (f) => f.general.salesHandleName == 'Kirthika'
+    );
+    const GaneshAug = months[7].val.filter(
+      (f) => f.general.salesHandleName == 'Ganesh'
+    );
+    const BharathAug = months[7].val.filter(
+      (f) => f.general.salesHandleName == 'Bharathwaaj'
+    );
+    const SanthoshAug = months[7].val.filter(
+      (f) => f.general.salesHandleName == 'Santhosh'
+    );
+    const AllAug = months[7].val;
+
+    //  sep
+    const VikashSep = months[8].val.filter(
+      (f) => f.general.salesHandleName == 'Vikash'
+    );
+    const KirthikaSep = months[8].val.filter(
+      (f) => f.general.salesHandleName == 'Kirthika'
+    );
+    const GaneshSep = months[8].val.filter(
+      (f) => f.general.salesHandleName == 'Ganesh'
+    );
+    const BharathSep = months[8].val.filter(
+      (f) => f.general.salesHandleName == 'Bharathwaaj'
+    );
+    const SanthoshSep = months[8].val.filter(
+      (f) => f.general.salesHandleName == 'Santhosh'
+    );
+    const AllSep = months[8].val;
+
+    //  oct
+    const VikashOct = months[9].val.filter(
+      (f) => f.general.salesHandleName == 'Vikash'
+    );
+    const KirthikaOct = months[9].val.filter(
+      (f) => f.general.salesHandleName == 'Kirthika'
+    );
+    const GaneshOct = months[9].val.filter(
+      (f) => f.general.salesHandleName == 'Ganesh'
+    );
+    const BharathOct = months[9].val.filter(
+      (f) => f.general.salesHandleName == 'Bharathwaaj'
+    );
+    const SanthoshOct = months[9].val.filter(
+      (f) => f.general.salesHandleName == 'Santhosh'
+    );
+    const AllOct = months[9].val;
+
+    //  nov
+    const VikashNov = months[10].val.filter(
+      (f) => f.general.salesHandleName == 'Vikash'
+    );
+    const KirthikaNov = months[10].val.filter(
+      (f) => f.general.salesHandleName == 'Kirthika'
+    );
+    const GaneshNov = months[10].val.filter(
+      (f) => f.general.salesHandleName == 'Ganesh'
+    );
+    const BharathNov = months[10].val.filter(
+      (f) => f.general.salesHandleName == 'Bharathwaaj'
+    );
+    const SanthoshNov = months[10].val.filter(
+      (f) => f.general.salesHandleName == 'Santhosh'
+    );
+    const AllNov = months[10].val;
+
+    //  dec
+    const VikashDec = months[11].val.filter(
+      (f) => f.general.salesHandleName == 'Vikash'
+    );
+    const KirthikaDec = months[11].val.filter(
+      (f) => f.general.salesHandleName == 'Kirthika'
+    );
+    const GaneshDec = months[11].val.filter(
+      (f) => f.general.salesHandleName == 'Ganesh'
+    );
+    const BharathDec = months[11].val.filter(
+      (f) => f.general.salesHandleName == 'Bharathwaaj'
+    );
+    const SanthoshDec = months[11].val.filter(
+      (f) => f.general.salesHandleName == 'Santhosh'
+    );
+    const AllDec = months[11].val;
+
+    let a = [
+      {
+        name: 'Vikash',
+        year: exportYear,
+        jan: VikashJan.length === 0 ? 0 : getMarginAmountExcel(VikashJan),
+        feb: VikashFeb.length === 0 ? 0 : getMarginAmountExcel(VikashFeb),
+        mar: VikashMar.length === 0 ? 0 : getMarginAmountExcel(VikashMar),
+        apr: VikashAprl.length === 0 ? 0 : getMarginAmountExcel(VikashAprl),
+        may: VikashMay.length === 0 ? 0 : getMarginAmountExcel(VikashMay),
+        jun: VikashJune.length === 0 ? 0 : getMarginAmountExcel(VikashJune),
+        jul: VikashJuly.length === 0 ? 0 : getMarginAmountExcel(VikashJuly),
+        aug: VikashAug.length === 0 ? 0 : getMarginAmountExcel(VikashAug),
+        sep: VikashSep.length === 0 ? 0 : getMarginAmountExcel(VikashSep),
+        oct: VikashOct.length === 0 ? 0 : getMarginAmountExcel(VikashOct),
+        nov: VikashNov.length === 0 ? 0 : getMarginAmountExcel(VikashNov),
+        dec: VikashDec.length === 0 ? 0 : getMarginAmountExcel(VikashDec),
+      },
+      {
+        name: 'Kirthika',
+        year: exportYear,
+        jan: KirthikaJan.length === 0 ? 0 : getMarginAmountExcel(KirthikaJan),
+        feb: KirthikaFeb.length === 0 ? 0 : getMarginAmountExcel(KirthikaFeb),
+        mar: KirthikaMar.length === 0 ? 0 : getMarginAmountExcel(KirthikaMar),
+        apr: KirthikaAprl.length === 0 ? 0 : getMarginAmountExcel(KirthikaAprl),
+        may: KirthikaMay.length === 0 ? 0 : getMarginAmountExcel(KirthikaMay),
+        jun: KirthikaJune.length === 0 ? 0 : getMarginAmountExcel(KirthikaJune),
+        jul: KirthikaJuly.length === 0 ? 0 : getMarginAmountExcel(KirthikaJuly),
+        aug: KirthikaAug.length === 0 ? 0 : getMarginAmountExcel(KirthikaAug),
+        sep: KirthikaSep.length === 0 ? 0 : getMarginAmountExcel(KirthikaSep),
+        oct: KirthikaOct.length === 0 ? 0 : getMarginAmountExcel(KirthikaOct),
+        nov: KirthikaNov.length === 0 ? 0 : getMarginAmountExcel(KirthikaNov),
+        dec: KirthikaDec.length === 0 ? 0 : getMarginAmountExcel(KirthikaDec),
+      },
+      {
+        name: 'Ganesh',
+        year: exportYear,
+        jan: GaneshJan.length === 0 ? 0 : getMarginAmountExcel(GaneshJan),
+        feb: GaneshFeb.length === 0 ? 0 : getMarginAmountExcel(GaneshFeb),
+        mar: GaneshMar.length === 0 ? 0 : getMarginAmountExcel(GaneshMar),
+        apr: GaneshAprl.length === 0 ? 0 : getMarginAmountExcel(GaneshAprl),
+        may: GaneshMay.length === 0 ? 0 : getMarginAmountExcel(GaneshMay),
+        jun: GaneshJune.length === 0 ? 0 : getMarginAmountExcel(GaneshJune),
+        jul: GaneshJuly.length === 0 ? 0 : getMarginAmountExcel(GaneshJuly),
+        aug: GaneshAug.length === 0 ? 0 : getMarginAmountExcel(GaneshAug),
+        sep: GaneshSep.length === 0 ? 0 : getMarginAmountExcel(GaneshSep),
+        oct: GaneshOct.length === 0 ? 0 : getMarginAmountExcel(GaneshOct),
+        nov: GaneshNov.length === 0 ? 0 : getMarginAmountExcel(GaneshNov),
+        dec: GaneshDec.length === 0 ? 0 : getMarginAmountExcel(GaneshDec),
+      },
+      {
+        name: 'Bharathwaaj',
+        year: exportYear,
+        jan: BharathJan.length === 0 ? 0 : getMarginAmountExcel(BharathJan),
+        feb: BharathFeb.length === 0 ? 0 : getMarginAmountExcel(BharathFeb),
+        mar: BharathMar.length === 0 ? 0 : getMarginAmountExcel(BharathMar),
+        apr: BharathAprl.length === 0 ? 0 : getMarginAmountExcel(BharathAprl),
+        may: BharathMay.length === 0 ? 0 : getMarginAmountExcel(BharathMay),
+        jun: BharathJune.length === 0 ? 0 : getMarginAmountExcel(BharathJune),
+        jul: BharathJuly.length === 0 ? 0 : getMarginAmountExcel(BharathJuly),
+        aug: BharathAug.length === 0 ? 0 : getMarginAmountExcel(BharathAug),
+        sep: BharathSep.length === 0 ? 0 : getMarginAmountExcel(BharathSep),
+        oct: BharathOct.length === 0 ? 0 : getMarginAmountExcel(BharathOct),
+        nov: BharathNov.length === 0 ? 0 : getMarginAmountExcel(BharathNov),
+        dec: BharathDec.length === 0 ? 0 : getMarginAmountExcel(BharathDec),
+      },
+      {
+        name: 'Santhosh',
+        year: exportYear,
+        jan: SanthoshJan.length === 0 ? 0 : getMarginAmountExcel(SanthoshJan),
+        feb: SanthoshFeb.length === 0 ? 0 : getMarginAmountExcel(SanthoshFeb),
+        mar: SanthoshMar.length === 0 ? 0 : getMarginAmountExcel(SanthoshMar),
+        apr: SanthoshAprl.length === 0 ? 0 : getMarginAmountExcel(SanthoshAprl),
+        may: SanthoshMay.length === 0 ? 0 : getMarginAmountExcel(SanthoshMay),
+        jun: SanthoshJune.length === 0 ? 0 : getMarginAmountExcel(SanthoshJune),
+        jul: SanthoshJuly.length === 0 ? 0 : getMarginAmountExcel(SanthoshJuly),
+        aug: SanthoshAug.length === 0 ? 0 : getMarginAmountExcel(SanthoshAug),
+        sep: SanthoshSep.length === 0 ? 0 : getMarginAmountExcel(SanthoshSep),
+        oct: SanthoshOct.length === 0 ? 0 : getMarginAmountExcel(SanthoshOct),
+        nov: SanthoshNov.length === 0 ? 0 : getMarginAmountExcel(SanthoshNov),
+        dec: SanthoshDec.length === 0 ? 0 : getMarginAmountExcel(SanthoshDec),
+      },
+      {
+        name: 'All',
+        year: exportYear,
+        jan: AllJan.length === 0 ? 0 : getMarginAmountExcel(AllJan),
+        feb: AllFeb.length === 0 ? 0 : getMarginAmountExcel(AllFeb),
+        mar: AllMar.length === 0 ? 0 : getMarginAmountExcel(AllMar),
+        apr: AllAprl.length === 0 ? 0 : getMarginAmountExcel(AllAprl),
+        may: AllMay.length === 0 ? 0 : getMarginAmountExcel(AllMay),
+        jun: AllJune.length === 0 ? 0 : getMarginAmountExcel(AllJune),
+        jul: AllJuly.length === 0 ? 0 : getMarginAmountExcel(AllJuly),
+        aug: AllAug.length === 0 ? 0 : getMarginAmountExcel(AllAug),
+        sep: AllSep.length === 0 ? 0 : getMarginAmountExcel(AllSep),
+        oct: AllOct.length === 0 ? 0 : getMarginAmountExcel(AllOct),
+        nov: AllNov.length === 0 ? 0 : getMarginAmountExcel(AllNov),
+        dec: AllDec.length === 0 ? 0 : getMarginAmountExcel(AllDec),
+      },
+    ];
+    return a;
+  };
+
+  const getMarginAmountExcel = (data) => {
+    let value = 0;
+    if (data) {
+      data.forEach((d) => {
+        if (d.general.finalMargin !== '') {
+          value = value + parseInt(d.general.finalMargin);
+        }
+      });
+      return value;
+    }
+  };
+
   return (
     <div>
       <div style={{ textAlign: 'center', margin: '10px' }}>
@@ -1308,14 +1712,14 @@ const TotalSaleReport = () => {
           <div className='booking--header'>
             <h1 className='booking__count--header'>Margin Value</h1>
 
-            {/* {exportYear.length == 4 ? (
+            {exportYear.length == 4 ? (
               <>
                 <div>
                   <ExcelFile
                     element={
                       <button className='exports'>Export to Excel</button>
                     }>
-                    <ExcelSheet data={getExcel()} name='Queries'>
+                    <ExcelSheet data={getExcel} name='Queries'>
                       <ExcelColumn label='Name' value='name' />
                       <ExcelColumn label='Year' value='year' />
                       <ExcelColumn label='Jan' value='jan' />
@@ -1345,7 +1749,7 @@ const TotalSaleReport = () => {
                   onChange={(e) => setExportYear(e.target.value)}
                 />
               </div>
-            )} */}
+            )}
 
             <div className='month'>
               <label>Show For</label>
