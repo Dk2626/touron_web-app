@@ -51,25 +51,6 @@ export default function Contact() {
 
   const { name, email, comments, mobileNumber } = values;
 
-  // const getAllBookingDetail = () => {
-  //   firedb.ref('bookingdetails1').on('value', (data) => {
-  //     data.forEach((d) => {
-  //       if (
-  //         d.val().general.isBookingCancelled == true &&
-  //         d.val().general.onwardDate.slice(0, 4) == '2022' &&
-  //         d.val().surveyId == 'TO-050522-000400'
-  //       ) {
-  //         console.log('d', d.val());
-  //         console.log('d', d.key);
-  //       }
-  //     });
-  //   });
-  // };
-
-  // useEffect(() => {
-  //   getAllBookingDetail();
-  // }, []);
-
   return (
     <>
       <Navbar />

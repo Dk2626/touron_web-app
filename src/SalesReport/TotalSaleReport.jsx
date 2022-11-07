@@ -835,7 +835,14 @@ const TotalSaleReport = () => {
   };
 
   const getExcel = () => {
-    const person = ['Vikash', 'Kirthika', 'Ganesh', 'Bharathwaaj', 'Santhosh'];
+    const person = [
+      'Vikash',
+      'Kirthika',
+      'Ganesh',
+      'Bharathwaaj',
+      'Santhosh',
+      'Nagasrinivasakumar',
+    ];
     let months = [
       {
         name: 'January',
@@ -920,6 +927,9 @@ const TotalSaleReport = () => {
     const SanthoshJan = months[0].val.filter(
       (f) => f.general.salesHandleName == 'Santhosh'
     );
+    const SriniJan = months[0].val.filter(
+      (f) => f.general.salesHandleName == 'Nagasrinivasakumar'
+    );
     const AllJan = months[0].val;
 
     // feb
@@ -937,6 +947,9 @@ const TotalSaleReport = () => {
     );
     const SanthoshFeb = months[1].val.filter(
       (f) => f.general.salesHandleName == 'Santhosh'
+    );
+    const SriniFeb = months[1].val.filter(
+      (f) => f.general.salesHandleName == 'Nagasrinivasakumar'
     );
     const AllFeb = months[1].val;
 
@@ -956,6 +969,9 @@ const TotalSaleReport = () => {
     const SanthoshMar = months[2].val.filter(
       (f) => f.general.salesHandleName == 'Santhosh'
     );
+    const SriniMar = months[2].val.filter(
+      (f) => f.general.salesHandleName == 'Nagasrinivasakumar'
+    );
     const AllMar = months[2].val;
 
     // aprl
@@ -973,6 +989,9 @@ const TotalSaleReport = () => {
     );
     const SanthoshAprl = months[3].val.filter(
       (f) => f.general.salesHandleName == 'Santhosh'
+    );
+    const SriniAprl = months[3].val.filter(
+      (f) => f.general.salesHandleName == 'Nagasrinivasakumar'
     );
     const AllAprl = months[3].val;
 
@@ -992,6 +1011,9 @@ const TotalSaleReport = () => {
     const SanthoshMay = months[4].val.filter(
       (f) => f.general.salesHandleName == 'Santhosh'
     );
+    const SriniMay = months[4].val.filter(
+      (f) => f.general.salesHandleName == 'Nagasrinivasakumar'
+    );
     const AllMay = months[4].val;
 
     // jun
@@ -1009,6 +1031,9 @@ const TotalSaleReport = () => {
     );
     const SanthoshJune = months[5].val.filter(
       (f) => f.general.salesHandleName == 'Santhosh'
+    );
+    const SriniJune = months[5].val.filter(
+      (f) => f.general.salesHandleName == 'Nagasrinivasakumar'
     );
     const AllJune = months[5].val;
 
@@ -1028,6 +1053,9 @@ const TotalSaleReport = () => {
     const SanthoshJuly = months[6].val.filter(
       (f) => f.general.salesHandleName == 'Santhosh'
     );
+    const SriniJuly = months[6].val.filter(
+      (f) => f.general.salesHandleName == 'Nagasrinivasakumar'
+    );
     const AllJuly = months[6].val;
 
     //  aug
@@ -1045,6 +1073,9 @@ const TotalSaleReport = () => {
     );
     const SanthoshAug = months[7].val.filter(
       (f) => f.general.salesHandleName == 'Santhosh'
+    );
+    const SriniAug = months[7].val.filter(
+      (f) => f.general.salesHandleName == 'Nagasrinivasakumar'
     );
     const AllAug = months[7].val;
 
@@ -1064,6 +1095,9 @@ const TotalSaleReport = () => {
     const SanthoshSep = months[8].val.filter(
       (f) => f.general.salesHandleName == 'Santhosh'
     );
+    const SriniSep = months[8].val.filter(
+      (f) => f.general.salesHandleName == 'Nagasrinivasakumar'
+    );
     const AllSep = months[8].val;
 
     //  oct
@@ -1081,6 +1115,9 @@ const TotalSaleReport = () => {
     );
     const SanthoshOct = months[9].val.filter(
       (f) => f.general.salesHandleName == 'Santhosh'
+    );
+    const SriniOct = months[9].val.filter(
+      (f) => f.general.salesHandleName == 'Nagasrinivasakumar'
     );
     const AllOct = months[9].val;
 
@@ -1100,6 +1137,9 @@ const TotalSaleReport = () => {
     const SanthoshNov = months[10].val.filter(
       (f) => f.general.salesHandleName == 'Santhosh'
     );
+    const SriniNov = months[10].val.filter(
+      (f) => f.general.salesHandleName == 'Nagasrinivasakumar'
+    );
     const AllNov = months[10].val;
 
     //  dec
@@ -1117,6 +1157,9 @@ const TotalSaleReport = () => {
     );
     const SanthoshDec = months[11].val.filter(
       (f) => f.general.salesHandleName == 'Santhosh'
+    );
+    const SriniDec = months[11].val.filter(
+      (f) => f.general.salesHandleName == 'Nagasrinivasakumar'
     );
     const AllDec = months[11].val;
 
@@ -1200,6 +1243,22 @@ const TotalSaleReport = () => {
         oct: SanthoshOct.length === 0 ? 0 : getMarginAmountExcel(SanthoshOct),
         nov: SanthoshNov.length === 0 ? 0 : getMarginAmountExcel(SanthoshNov),
         dec: SanthoshDec.length === 0 ? 0 : getMarginAmountExcel(SanthoshDec),
+      },
+      {
+        name: 'Nagasrinivasakumar',
+        year: exportYear,
+        jan: SriniJan.length === 0 ? 0 : getMarginAmountExcel(SriniJan),
+        feb: SriniFeb.length === 0 ? 0 : getMarginAmountExcel(SriniFeb),
+        mar: SriniMar.length === 0 ? 0 : getMarginAmountExcel(SriniMar),
+        apr: SriniAprl.length === 0 ? 0 : getMarginAmountExcel(SriniAprl),
+        may: SriniMay.length === 0 ? 0 : getMarginAmountExcel(SriniMay),
+        jun: SriniJune.length === 0 ? 0 : getMarginAmountExcel(SriniJune),
+        jul: SriniJuly.length === 0 ? 0 : getMarginAmountExcel(SriniJuly),
+        aug: SriniAug.length === 0 ? 0 : getMarginAmountExcel(SriniAug),
+        sep: SriniSep.length === 0 ? 0 : getMarginAmountExcel(SriniSep),
+        oct: SriniOct.length === 0 ? 0 : getMarginAmountExcel(SriniOct),
+        nov: SriniNov.length === 0 ? 0 : getMarginAmountExcel(SriniNov),
+        dec: SriniDec.length === 0 ? 0 : getMarginAmountExcel(SriniDec),
       },
       {
         name: 'All',
