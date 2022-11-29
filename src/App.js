@@ -52,8 +52,8 @@ import ReadyQns from './Quiz/ReadyQns';
 import QuizDash from './Quiz/QuizDash';
 import LuckySeat from './Quiz/LuckySeat';
 import LuckySeatAdmin from './Quiz/LuckySeatAdmin';
-import BookingRecord from './SalesAdmin component/BookingRecord';
 import LuckySeatAs from './Quiz/LuckySeatAs';
+import BookingRecord from './SalesAdmin component/BookingRecord';
 import TotalSaleReport from './SalesReport/TotalSaleReport';
 
 const App = () => {

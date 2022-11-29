@@ -20,6 +20,9 @@ const BookingTable = () => {
   const [currentPage, setCurrentpage] = useState(0);
   const [search, setSearch] = useState('');
 
+  console.log('first', search);
+  console.log('first', typeof search);
+
   useEffect(() => {
     isMounted.current = true;
     setLoading1(true);
@@ -298,7 +301,7 @@ const BookingTable = () => {
     if (search) {
       let srh = {};
       Object.keys(bookingDetails).forEach((b, i) => {
-        const { general } = bookingDetails[b];
+        const { general, surveyId } = bookingDetails[b];
         if (
           general.customerName
             ?.toString()
@@ -306,6 +309,11 @@ const BookingTable = () => {
             .toLowerCase()
             .includes(search.trim().toLowerCase()) ||
           general.destination
+            ?.toString()
+            .trim()
+            .toLowerCase()
+            .includes(search.trim().toLowerCase()) ||
+          surveyId
             ?.toString()
             .trim()
             .toLowerCase()
@@ -490,7 +498,7 @@ const BookingTable = () => {
           </select>
         </div>
         <div className='month'>
-          <label>Search by Name or Destination:</label>
+          <label>Search by Name / Dest / Id:</label>
           <input type='text' onChange={(e) => setSearch(e.target.value)} />
         </div>
       </div>
