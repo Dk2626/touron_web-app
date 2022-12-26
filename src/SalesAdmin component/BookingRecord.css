@@ -90,6 +90,17 @@
   display: flex;
   justify-content: space-evenly;
 }
+.bookingGenerall_upld_main {
+  display: flex;
+  flex-wrap: wrap;
+}
+.bookingGenerall_upld {
+  box-shadow: 2px 2px 10px 5px #ccc;
+  border-radius: 10px;
+  margin: 1em;
+  padding: 1em;
+  width: 45%;
+}
 .bookingGeneral h3 {
   color: #0057ff;
 }
@@ -552,6 +563,45 @@
 .single-pay h2 {
   font-size: 1.1rem;
   font-family: 'andika';
+}
+.bookingGenerall_upld__btn {
+  display: flex;
+  align-items: center;
+}
+.booking_doc_file_c {
+  display: none;
+}
+.booking_doc_file_l {
+  background-color: #5da3fa;
+  color: #fff;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 10px;
+  margin-left: 10px;
+  margin-bottom: 0px;
+}
+.bookingGenerall_upld__btn__save {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
+.bookingGenerall_upld__btn__save button {
+  outline: none;
+  border: none;
+  background-color: #5da3fa;
+  color: #fff;
+  border-radius: 10px;
+  padding: 10px 20px;
+}
+.booking_doc_file_flex {
+  display: flex;
+  align-items: center;
+  margin: 10px;
+}
+.booking_doc_file_flex_icon {
+  cursor: pointer;
+  color: #e21717;
+  margin-left: 10px;
 }
 @media screen and (min-height: 722px) {
   .bookingTerm {

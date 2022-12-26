@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { firedb } from '../firebase';
+import { firedb, fireStorage } from '../firebase';
 import './BookingRecord.css';
 import { BiEdit } from 'react-icons/bi';
+import { MdDelete } from 'react-icons/md';
 import { FiAlertTriangle } from 'react-icons/fi';
 import { IoIosArrowDown } from 'react-icons/io';
 import { AiFillEdit } from 'react-icons/ai';
@@ -48,9 +49,22 @@ const BookingRecord = () => {
   const [payParticulars, setPayParticulars] = useState('');
   const [recvType, setRecvType] = useState('');
   const [genVendorName, setGenVendorName] = useState('');
+  const [uploading, setUploading] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [flights, setFlights] = useState([]);
+  const [hotels, setHotels] = useState([]);
+  const [visa, setVisa] = useState([]);
+  const [tourReports, setTourReports] = useState([]);
+  const [vouchers, setVouchers] = useState([]);
+  const [docId, setDocId] = useState('');
 
-  console.log(`travellerDocuments`, travellerDocuments);
-  console.log(`childrenDocuments`, childrenDocuments);
+  // console.log('flights', flights);
+  // console.log('hotels', hotels);
+
+  // console.log('uploading', uploading);
+
+  // console.log(`travellerDocuments`, travellerDocuments);
+  // console.log(`childrenDocuments`, childrenDocuments);
 
   const getDocuments = (email, destination, onwardDate) => {
     console.log(`object`, email, destination, onwardDate);
@@ -845,6 +859,228 @@ const BookingRecord = () => {
     paymentTypes();
     vendors();
   }, []);
+
+  const uploadFlight = (e) => {
+    setUploading(true);
+    const file = e.target.files[0];
+    const ref = fireStorage.ref(`onBoard/${file.name}`);
+    const task = ref.put(file);
+    task.on('state_changed', (taskSnapshot) => {
+      const per =
+        (taskSnapshot.bytesTransferred / taskSnapshot.totalBytes) * 100;
+      setProgress(Math.round(per));
+    });
+    task.then(() => {
+      ref.getDownloadURL().then((url) => {
+        setProgress(0);
+        setUploading(false);
+        setFlights([
+          ...flights,
+          {
+            id: uuidv4(),
+            name: file.name,
+            url: url,
+          },
+        ]);
+      });
+    });
+  };
+  const uploadHotel = (e) => {
+    setUploading(true);
+    const file = e.target.files[0];
+    const ref = fireStorage.ref(`onBoard/${file.name}`);
+    const task = ref.put(file);
+    task.on('state_changed', (taskSnapshot) => {
+      const per =
+        (taskSnapshot.bytesTransferred / taskSnapshot.totalBytes) * 100;
+      setProgress(Math.round(per));
+    });
+    task.then(() => {
+      ref.getDownloadURL().then((url) => {
+        setProgress(0);
+        setUploading(false);
+        setHotels([
+          ...hotels,
+          {
+            id: uuidv4(),
+            name: file.name,
+            url: url,
+          },
+        ]);
+      });
+    });
+  };
+
+  const uploadVisa = (e) => {
+    setUploading(true);
+    const file = e.target.files[0];
+    const ref = fireStorage.ref(`onBoard/${file.name}`);
+    const task = ref.put(file);
+    task.on('state_changed', (taskSnapshot) => {
+      const per =
+        (taskSnapshot.bytesTransferred / taskSnapshot.totalBytes) * 100;
+      setProgress(Math.round(per));
+    });
+    task.then(() => {
+      ref.getDownloadURL().then((url) => {
+        setProgress(0);
+        setUploading(false);
+        setVisa([
+          ...visa,
+          {
+            id: uuidv4(),
+            name: file.name,
+            url: url,
+          },
+        ]);
+      });
+    });
+  };
+
+  const uploadTourReport = (e) => {
+    setUploading(true);
+    const file = e.target.files[0];
+    const ref = fireStorage.ref(`onBoard/${file.name}`);
+    const task = ref.put(file);
+    task.on('state_changed', (taskSnapshot) => {
+      const per =
+        (taskSnapshot.bytesTransferred / taskSnapshot.totalBytes) * 100;
+      setProgress(Math.round(per));
+    });
+    task.then(() => {
+      ref.getDownloadURL().then((url) => {
+        setProgress(0);
+        setUploading(false);
+        setTourReports([
+          ...tourReports,
+          {
+            id: uuidv4(),
+            name: file.name,
+            url: url,
+          },
+        ]);
+      });
+    });
+  };
+
+  const uploadVoucher = (e) => {
+    setUploading(true);
+    const file = e.target.files[0];
+    const ref = fireStorage.ref(`onBoard/${file.name}`);
+    const task = ref.put(file);
+    task.on('state_changed', (taskSnapshot) => {
+      const per =
+        (taskSnapshot.bytesTransferred / taskSnapshot.totalBytes) * 100;
+      setProgress(Math.round(per));
+    });
+    task.then(() => {
+      ref.getDownloadURL().then((url) => {
+        setProgress(0);
+        setUploading(false);
+        setVouchers([
+          ...vouchers,
+          {
+            id: uuidv4(),
+            name: file.name,
+            url: url,
+          },
+        ]);
+      });
+    });
+  };
+
+  const saveOnBoard = () => {
+    firedb
+      .ref('onBoardDoc')
+      .push({
+        customerName,
+        email,
+        phoneNumber,
+        bookingValue,
+        destination,
+        onwardDate,
+        returnDate,
+        tourType,
+        flights: flights.length === 0 ? '' : flights,
+        hotels: hotels.length === 0 ? '' : hotels,
+        visa: visa.length === 0 ? '' : visa,
+        tourReports: tourReports.length === 0 ? '' : tourReports,
+        vouchers: vouchers.length === 0 ? '' : vouchers,
+      })
+      .then(() => {
+        setStep(1);
+      })
+      .catch((error) => console.log('error', error));
+  };
+
+  const updateOnBoard = () => {
+    firedb
+      .ref(`onBoardDoc/${docId}`)
+      .update({
+        customerName,
+        email,
+        phoneNumber,
+        bookingValue,
+        destination,
+        onwardDate,
+        returnDate,
+        tourType,
+        flights: flights.length === 0 ? '' : flights,
+        hotels: hotels.length === 0 ? '' : hotels,
+        visa: visa.length === 0 ? '' : visa,
+        tourReports: tourReports.length === 0 ? '' : tourReports,
+        vouchers: vouchers.length === 0 ? '' : vouchers,
+      })
+      .then(() => {
+        setStep(1);
+      })
+      .catch((error) => console.log('error', error));
+  };
+
+  const getOnBoard = () => {
+    firedb.ref('onBoardDoc').on('value', (data) => {
+      data.forEach((d) => {
+        console.log('d', d.val());
+        if (
+          d.val().email === email &&
+          d.val().destination === destination &&
+          d.val().onwardDate === onwardDate
+        ) {
+          setDocId(d.key);
+          setFlights(d.val().flights);
+          setHotels(d.val().hotels);
+          setVisa(d.val().visa);
+          setTourReports(d.val().tourReports);
+          setVouchers(d.val().vouchers);
+        }
+      });
+    });
+  };
+
+  useEffect(() => {
+    getOnBoard();
+  }, [step]);
+
+  const removeFlight = (id) => {
+    const current = flights.filter((flight) => flight.id !== id);
+    setFlights(current);
+  };
+  const removeHotel = (id) => {
+    const current = hotels.filter((hotel) => hotel.id !== id);
+    setHotels(current);
+  };
+  const removeVisa = (id) => {
+    const current = visa.filter((visa) => visa.id !== id);
+    setVisa(current);
+  };
+  const removeTourReports = (id) => {
+    const current = tourReports.filter((tourReport) => tourReport.id !== id);
+    setTourReports(current);
+  };
+  const removeVouchers = (id) => {
+    const current = vouchers.filter((voucher) => voucher.id !== id);
+    setVouchers(current);
+  };
 
   const renderItems = (step) => {
     switch (step) {
@@ -2404,70 +2640,252 @@ const BookingRecord = () => {
             )}
           </div>
         );
+      // case 5:
+      //   return (
+      //     <div className='bookingGenerall'>
+      //       {travellerDocuments.length > 0 && (
+      //         <div>
+      //           {travellerDocuments.map((d, i) => {
+      //             const { documents, name } = d;
+      //             return (
+      //               <div>
+      //                 <h5 className='docHeading'>Documents for {name}</h5>
+      //                 <div>
+      //                   {documents?.map((file, index) => {
+      //                     return (
+      //                       <div
+      //                         style={{
+      //                           display: 'flex',
+      //                           flexDirection: 'column',
+      //                         }}>
+      //                         <a
+      //                           target='_blank'
+      //                           href={file.fileUrl}
+      //                           style={{ fontFamily: 'Andika', paddingTop: 5 }}>
+      //                           {index + 1}.{file.fileName}
+      //                         </a>
+      //                       </div>
+      //                     );
+      //                   })}
+      //                 </div>
+      //               </div>
+      //             );
+      //           })}
+      //         </div>
+      //       )}
+
+      //       {childrenDocuments.length > 0 && (
+      //         <div>
+      //           {childrenDocuments.map((d, i) => {
+      //             const { documentsc, namec } = d;
+      //             return (
+      //               <div>
+      //                 <h5 className='docHeading'>Documents for {namec}</h5>
+      //                 <div>
+      //                   {documentsc?.map((file, index) => {
+      //                     return (
+      //                       <div
+      //                         style={{
+      //                           display: 'flex',
+      //                           flexDirection: 'column',
+      //                         }}>
+      //                         <a
+      //                           target='_blank'
+      //                           href={file.fileUrl}
+      //                           style={{ fontFamily: 'Andika', paddingTop: 5 }}>
+      //                           {index + 1}.{file.fileName}
+      //                         </a>
+      //                       </div>
+      //                     );
+      //                   })}
+      //                 </div>
+      //               </div>
+      //             );
+      //           })}
+      //         </div>
+      //       )}
+      //     </div>
+      //   );
       case 5:
         return (
-          <div className='bookingGenerall'>
-            {travellerDocuments.length > 0 && (
+          <div>
+            <div className='bookingGenerall_upld__btn__save'>
+              <button onClick={docId ? updateOnBoard : saveOnBoard}>
+                {docId ? 'Update' : 'Save'}
+              </button>
+            </div>
+            {uploading && (
               <div>
-                {travellerDocuments.map((d, i) => {
-                  const { documents, name } = d;
-                  return (
-                    <div>
-                      <h5 className='docHeading'>Documents for {name}</h5>
-                      <div>
-                        {documents?.map((file, index) => {
-                          return (
-                            <div
-                              style={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                              }}>
-                              <a
-                                target='_blank'
-                                href={file.fileUrl}
-                                style={{ fontFamily: 'Andika', paddingTop: 5 }}>
-                                {index + 1}.{file.fileName}
-                              </a>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  );
-                })}
+                <h6>File uploading {progress}%</h6>
               </div>
             )}
-
-            {childrenDocuments.length > 0 && (
-              <div>
-                {childrenDocuments.map((d, i) => {
-                  const { documentsc, namec } = d;
-                  return (
-                    <div>
-                      <h5 className='docHeading'>Documents for {namec}</h5>
-                      <div>
-                        {documentsc?.map((file, index) => {
-                          return (
-                            <div
-                              style={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                              }}>
-                              <a
-                                target='_blank'
-                                href={file.fileUrl}
-                                style={{ fontFamily: 'Andika', paddingTop: 5 }}>
-                                {index + 1}.{file.fileName}
-                              </a>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  );
-                })}
+            <div className='bookingGenerall_upld_main'>
+              <div className='bookingGenerall_upld'>
+                <div className='bookingGenerall_upld__btn'>
+                  <div>Flights</div>
+                  <input
+                    type='file'
+                    id='booking_doc_file'
+                    className='booking_doc_file_c'
+                    onChange={(e) => {
+                      uploadFlight(e);
+                    }}
+                  />
+                  <label
+                    htmlFor='booking_doc_file'
+                    className='booking_doc_file_l'>
+                    Choose file
+                  </label>
+                </div>
+                {flights.length !== 0 && (
+                  <div>
+                    {flights.map((file, i) => {
+                      return (
+                        <div className='booking_doc_file_flex'>
+                          <h6>{file.name}</h6>
+                          <MdDelete
+                            onClick={() => removeFlight(file.id)}
+                            className='booking_doc_file_flex_icon'
+                          />
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
-            )}
+              <div className='bookingGenerall_upld'>
+                <div className='bookingGenerall_upld__btn'>
+                  <div>Hotels</div>
+                  <input
+                    type='file'
+                    id='booking_doc_file_'
+                    className='booking_doc_file_c'
+                    onChange={(e) => {
+                      uploadHotel(e);
+                    }}
+                  />
+                  <label
+                    htmlFor='booking_doc_file_'
+                    className='booking_doc_file_l'>
+                    Choose file
+                  </label>
+                </div>
+                {hotels.length !== 0 && (
+                  <div>
+                    {hotels.map((file, i) => {
+                      return (
+                        <div className='booking_doc_file_flex'>
+                          <h6>{file.name}</h6>
+                          <MdDelete
+                            onClick={() => removeHotel(file.id)}
+                            className='booking_doc_file_flex_icon'
+                          />
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+              <div className='bookingGenerall_upld'>
+                <div className='bookingGenerall_upld__btn'>
+                  <div>Visa</div>
+                  <input
+                    type='file'
+                    id='booking_doc_file__'
+                    className='booking_doc_file_c'
+                    onChange={(e) => {
+                      uploadVisa(e);
+                    }}
+                  />
+                  <label
+                    htmlFor='booking_doc_file__'
+                    className='booking_doc_file_l'>
+                    Choose file
+                  </label>
+                </div>
+                {visa.length !== 0 && (
+                  <div>
+                    {visa.map((file, i) => {
+                      return (
+                        <div className='booking_doc_file_flex'>
+                          <h6>{file.name}</h6>
+                          <MdDelete
+                            onClick={() => removeVisa(file.id)}
+                            className='booking_doc_file_flex_icon'
+                          />
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+              <div className='bookingGenerall_upld'>
+                <div className='bookingGenerall_upld__btn'>
+                  <div>Tour Reports</div>
+                  <input
+                    type='file'
+                    id='booking_doc_file___'
+                    className='booking_doc_file_c'
+                    onChange={(e) => {
+                      uploadTourReport(e);
+                    }}
+                  />
+                  <label
+                    htmlFor='booking_doc_file___'
+                    className='booking_doc_file_l'>
+                    Choose file
+                  </label>
+                </div>
+                {tourReports.length !== 0 && (
+                  <div>
+                    {tourReports.map((file, i) => {
+                      return (
+                        <div className='booking_doc_file_flex'>
+                          <h6>{file.name}</h6>
+                          <MdDelete
+                            onClick={() => removeTourReports(file.id)}
+                            className='booking_doc_file_flex_icon'
+                          />
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+              <div className='bookingGenerall_upld'>
+                <div className='bookingGenerall_upld__btn'>
+                  <div>Vouchers</div>
+                  <input
+                    type='file'
+                    id='booking_doc_file____'
+                    className='booking_doc_file_c'
+                    onChange={(e) => {
+                      uploadVoucher(e);
+                    }}
+                  />
+                  <label
+                    htmlFor='booking_doc_file____'
+                    className='booking_doc_file_l'>
+                    Choose file
+                  </label>
+                </div>
+                {vouchers.length !== 0 && (
+                  <div>
+                    {vouchers.map((file, i) => {
+                      return (
+                        <div className='booking_doc_file_flex'>
+                          <h6>{file.name}</h6>
+                          <MdDelete
+                            onClick={() => removeVouchers(file.id)}
+                            className='booking_doc_file_flex_icon'
+                          />
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         );
       default:
@@ -2621,8 +3039,18 @@ const BookingRecord = () => {
             className={step === 4 ? 'bb' : 'bc'}>
             Reminders
           </h6>
+          <div className='bookingBorder'></div>
+          <div
+            className={step === 5 ? 'bookingColor' : 'bookingColorNon'}></div>
+          <h6
+            onClick={() => {
+              if (isNewRecord) setStep(5);
+            }}
+            className={step === 5 ? 'bb' : 'bc'}>
+            Documents
+          </h6>
 
-          {travellerDocuments?.length > 0 && (
+          {/* {travellerDocuments?.length > 0 && (
             <>
               <div className='bookingBorder'></div>
 
@@ -2638,7 +3066,7 @@ const BookingRecord = () => {
                 Documents
               </h6>
             </>
-          )}
+          )} */}
         </div>
         <div className='renderTerm'>
           {detailsLoaded ? (

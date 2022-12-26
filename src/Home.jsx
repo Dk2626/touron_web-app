@@ -19,6 +19,7 @@ import Testimonials from './Home components/Testimonials/Testimonials';
 import CelebritySection from './Home components/CelebritySection/CelebritySection';
 import Footer from './Home components/Footer/Footer';
 import SelfPlanTour from './Tour Categories/SelfPlan Tour/SelfPlanTour';
+import ResortCon from './Resort components/ResortCon';
 
 const Home = () => {
   const [popup, setPopup] = useState(false);
@@ -203,6 +204,9 @@ const Home = () => {
         <Testimonials />
         <CelebritySection />
       </div>
+      {/* <div>
+        <ResortCon />
+      </div> */}
       <Footer />
     </div>
   );

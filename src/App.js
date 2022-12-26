@@ -50,11 +50,13 @@ import ViewResort from './Resort/ViewResort';
 import Quiz from './Quiz/Quiz';
 import ReadyQns from './Quiz/ReadyQns';
 import QuizDash from './Quiz/QuizDash';
-import LuckySeat from './Quiz/LuckySeat';
-import LuckySeatAdmin from './Quiz/LuckySeatAdmin';
-import LuckySeatAs from './Quiz/LuckySeatAs';
 import BookingRecord from './SalesAdmin component/BookingRecord';
 import TotalSaleReport from './SalesReport/TotalSaleReport';
+import ResortMain from './Resort components/ResortMain';
+// import LuckySeat from './Quiz/LuckySeat';
+// import LuckySeatAdmin from './Quiz/LuckySeatAdmin';
+// import LuckySeatAs from './Quiz/LuckySeatAs';
+// import ExporyallQuaries from './Export all quaries/ExportAllQuaries';
 
 const App = () => {
   const isMounted = useRef(false);
@@ -188,6 +190,7 @@ const App = () => {
               <Route path='/privacypolicy' element={<Privacypolicy />} />
               <Route path='*' element={<NotFound />} />
               <Route path='/quiz-win-prize' element={<Quiz />} />
+              <Route path='/resorts' element={<ResortMain />} />
               {/* <Route path='/lucky-seat' element={<LuckySeat />} /> */}
               <Route
                 path='/profile'
@@ -322,6 +325,14 @@ const App = () => {
                 element={
                   <AdminRoute>
                     <LuckySeatAs />
+                  </AdminRoute>
+                }
+              /> */}
+              {/* <Route
+                path='/export-all-quaries'
+                element={
+                  <AdminRoute>
+                    <ExporyallQuaries />
                   </AdminRoute>
                 }
               /> */}
