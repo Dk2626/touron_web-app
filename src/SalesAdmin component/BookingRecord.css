@@ -603,6 +603,9 @@
   color: #e21717;
   margin-left: 10px;
 }
+.uploading_filesss {
+  margin-left: 30px;
+}
 @media screen and (min-height: 722px) {
   .bookingTerm {
     height: 62vh;

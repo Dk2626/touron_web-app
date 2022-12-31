@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import { firedb, fireStorage } from '../firebase';
 import './BookingRecord.css';
 import { BiEdit } from 'react-icons/bi';
@@ -16,6 +16,7 @@ import numeral from 'numeral';
 import { ApiContext } from './../Context/ApiContext';
 
 const BookingRecord = () => {
+  const isMounted = useRef(false);
   const { surveyid } = useParams();
   const [surveyId, setSurveyId] = useState('');
   const [travellerDocuments, setTravellerDocuments] = useState([]);
@@ -49,8 +50,18 @@ const BookingRecord = () => {
   const [payParticulars, setPayParticulars] = useState('');
   const [recvType, setRecvType] = useState('');
   const [genVendorName, setGenVendorName] = useState('');
-  const [uploading, setUploading] = useState(false);
-  const [progress, setProgress] = useState(0);
+  // const [uploading, setUploading] = useState(false);
+  // const [progress, setProgress] = useState(0);
+  const [uploading1, setUploading1] = useState(false);
+  const [progress1, setProgress1] = useState(0);
+  const [uploading2, setUploading2] = useState(false);
+  const [progress2, setProgress2] = useState(0);
+  const [uploading3, setUploading3] = useState(false);
+  const [progress3, setProgress3] = useState(0);
+  const [uploading4, setUploading4] = useState(false);
+  const [progress4, setProgress4] = useState(0);
+  const [uploading5, setUploading5] = useState(false);
+  const [progress5, setProgress5] = useState(0);
   const [flights, setFlights] = useState([]);
   const [hotels, setHotels] = useState([]);
   const [visa, setVisa] = useState([]);
@@ -861,19 +872,19 @@ const BookingRecord = () => {
   }, []);
 
   const uploadFlight = (e) => {
-    setUploading(true);
+    setUploading1(true);
     const file = e.target.files[0];
     const ref = fireStorage.ref(`onBoard/${file.name}`);
     const task = ref.put(file);
     task.on('state_changed', (taskSnapshot) => {
       const per =
         (taskSnapshot.bytesTransferred / taskSnapshot.totalBytes) * 100;
-      setProgress(Math.round(per));
+      setProgress1(Math.round(per));
     });
     task.then(() => {
       ref.getDownloadURL().then((url) => {
-        setProgress(0);
-        setUploading(false);
+        setProgress1(0);
+        setUploading1(false);
         setFlights([
           ...flights,
           {
@@ -886,19 +897,19 @@ const BookingRecord = () => {
     });
   };
   const uploadHotel = (e) => {
-    setUploading(true);
+    setUploading2(true);
     const file = e.target.files[0];
     const ref = fireStorage.ref(`onBoard/${file.name}`);
     const task = ref.put(file);
     task.on('state_changed', (taskSnapshot) => {
       const per =
         (taskSnapshot.bytesTransferred / taskSnapshot.totalBytes) * 100;
-      setProgress(Math.round(per));
+      setProgress2(Math.round(per));
     });
     task.then(() => {
       ref.getDownloadURL().then((url) => {
-        setProgress(0);
-        setUploading(false);
+        setProgress2(0);
+        setUploading2(false);
         setHotels([
           ...hotels,
           {
@@ -912,19 +923,19 @@ const BookingRecord = () => {
   };
 
   const uploadVisa = (e) => {
-    setUploading(true);
+    setUploading3(true);
     const file = e.target.files[0];
     const ref = fireStorage.ref(`onBoard/${file.name}`);
     const task = ref.put(file);
     task.on('state_changed', (taskSnapshot) => {
       const per =
         (taskSnapshot.bytesTransferred / taskSnapshot.totalBytes) * 100;
-      setProgress(Math.round(per));
+      setProgress3(Math.round(per));
     });
     task.then(() => {
       ref.getDownloadURL().then((url) => {
-        setProgress(0);
-        setUploading(false);
+        setProgress3(0);
+        setUploading3(false);
         setVisa([
           ...visa,
           {
@@ -938,19 +949,19 @@ const BookingRecord = () => {
   };
 
   const uploadTourReport = (e) => {
-    setUploading(true);
+    setUploading4(true);
     const file = e.target.files[0];
     const ref = fireStorage.ref(`onBoard/${file.name}`);
     const task = ref.put(file);
     task.on('state_changed', (taskSnapshot) => {
       const per =
         (taskSnapshot.bytesTransferred / taskSnapshot.totalBytes) * 100;
-      setProgress(Math.round(per));
+      setProgress4(Math.round(per));
     });
     task.then(() => {
       ref.getDownloadURL().then((url) => {
-        setProgress(0);
-        setUploading(false);
+        setProgress4(0);
+        setUploading4(false);
         setTourReports([
           ...tourReports,
           {
@@ -964,19 +975,19 @@ const BookingRecord = () => {
   };
 
   const uploadVoucher = (e) => {
-    setUploading(true);
+    setUploading5(true);
     const file = e.target.files[0];
     const ref = fireStorage.ref(`onBoard/${file.name}`);
     const task = ref.put(file);
     task.on('state_changed', (taskSnapshot) => {
       const per =
         (taskSnapshot.bytesTransferred / taskSnapshot.totalBytes) * 100;
-      setProgress(Math.round(per));
+      setProgress5(Math.round(per));
     });
     task.then(() => {
       ref.getDownloadURL().then((url) => {
-        setProgress(0);
-        setUploading(false);
+        setProgress5(0);
+        setUploading5(false);
         setVouchers([
           ...vouchers,
           {
@@ -1039,26 +1050,29 @@ const BookingRecord = () => {
 
   const getOnBoard = () => {
     firedb.ref('onBoardDoc').on('value', (data) => {
-      data.forEach((d) => {
-        console.log('d', d.val());
-        if (
-          d.val().email === email &&
-          d.val().destination === destination &&
-          d.val().onwardDate === onwardDate
-        ) {
-          setDocId(d.key);
-          setFlights(d.val().flights);
-          setHotels(d.val().hotels);
-          setVisa(d.val().visa);
-          setTourReports(d.val().tourReports);
-          setVouchers(d.val().vouchers);
-        }
-      });
+      if (isMounted.current) {
+        data.forEach((d) => {
+          if (
+            d.val().email === email &&
+            d.val().destination === destination &&
+            d.val().onwardDate === onwardDate
+          ) {
+            setDocId(d.key);
+            setFlights(d.val().flights);
+            setHotels(d.val().hotels);
+            setVisa(d.val().visa);
+            setTourReports(d.val().tourReports);
+            setVouchers(d.val().vouchers);
+          }
+        });
+      }
     });
   };
 
   useEffect(() => {
+    isMounted.current = true;
     getOnBoard();
+    return () => (isMounted.current = false);
   }, [step]);
 
   const removeFlight = (id) => {
@@ -2714,11 +2728,11 @@ const BookingRecord = () => {
                 {docId ? 'Update' : 'Save'}
               </button>
             </div>
-            {uploading && (
+            {/* {uploading1 && (
               <div>
-                <h6>File uploading {progress}%</h6>
+                <h6>File uploading {progress1}%</h6>
               </div>
-            )}
+            )} */}
             <div className='bookingGenerall_upld_main'>
               <div className='bookingGenerall_upld'>
                 <div className='bookingGenerall_upld__btn'>
@@ -2736,6 +2750,11 @@ const BookingRecord = () => {
                     className='booking_doc_file_l'>
                     Choose file
                   </label>
+                  {uploading1 && (
+                    <div className='uploading_filesss'>
+                      <h6>File uploading {progress1}%</h6>
+                    </div>
+                  )}
                 </div>
                 {flights.length !== 0 && (
                   <div>
@@ -2769,6 +2788,11 @@ const BookingRecord = () => {
                     className='booking_doc_file_l'>
                     Choose file
                   </label>
+                  {uploading2 && (
+                    <div className='uploading_filesss'>
+                      <h6>File uploading {progress2}%</h6>
+                    </div>
+                  )}
                 </div>
                 {hotels.length !== 0 && (
                   <div>
@@ -2802,6 +2826,11 @@ const BookingRecord = () => {
                     className='booking_doc_file_l'>
                     Choose file
                   </label>
+                  {uploading3 && (
+                    <div className='uploading_filesss'>
+                      <h6>File uploading {progress3}%</h6>
+                    </div>
+                  )}
                 </div>
                 {visa.length !== 0 && (
                   <div>
@@ -2835,6 +2864,11 @@ const BookingRecord = () => {
                     className='booking_doc_file_l'>
                     Choose file
                   </label>
+                  {uploading4 && (
+                    <div className='uploading_filesss'>
+                      <h6>File uploading {progress4}%</h6>
+                    </div>
+                  )}
                 </div>
                 {tourReports.length !== 0 && (
                   <div>
@@ -2868,6 +2902,11 @@ const BookingRecord = () => {
                     className='booking_doc_file_l'>
                     Choose file
                   </label>
+                  {uploading5 && (
+                    <div className='uploading_filesss'>
+                      <h6>File uploading {progress5}%</h6>
+                    </div>
+                  )}
                 </div>
                 {vouchers.length !== 0 && (
                   <div>
