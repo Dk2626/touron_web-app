@@ -53,6 +53,8 @@ import QuizDash from './Quiz/QuizDash';
 import BookingRecord from './SalesAdmin component/BookingRecord';
 import TotalSaleReport from './SalesReport/TotalSaleReport';
 import ResortMain from './Resort components/ResortMain';
+import SuperAdminRoute from './Login components/SuperAdminRoute';
+import AccessDenied from './AccessDenied/AccessDenied';
 // import LuckySeat from './Quiz/LuckySeat';
 // import LuckySeatAdmin from './Quiz/LuckySeatAdmin';
 // import LuckySeatAs from './Quiz/LuckySeatAs';
@@ -189,6 +191,7 @@ const App = () => {
               <Route path='/termsCondition' element={<TermsCondition />} />
               <Route path='/privacypolicy' element={<Privacypolicy />} />
               <Route path='*' element={<NotFound />} />
+              <Route path='/access-denied' element={<AccessDenied />} />
               <Route path='/quiz-win-prize' element={<Quiz />} />
               <Route path='/resorts' element={<ResortMain />} />
               {/* <Route path='/lucky-seat' element={<LuckySeat />} /> */}
@@ -267,9 +270,9 @@ const App = () => {
               <Route
                 path='/admin'
                 element={
-                  <AdminRoute>
+                  <SuperAdminRoute>
                     <AdminMain />
-                  </AdminRoute>
+                  </SuperAdminRoute>
                 }
               />
               <Route

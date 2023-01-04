@@ -22,7 +22,7 @@ const AdminRoute = ({ children }) => {
     return <LoaderAni />;
   } else {
     const auth = isAdminUser();
-    return auth ? children : <Navigate to='/login' />;
+    return auth ? children : <Navigate to='/access-denied' />;
   }
 };
 
