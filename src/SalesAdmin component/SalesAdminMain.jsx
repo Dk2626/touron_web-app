@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import BookingTable from './BookingTable';
 import SalesRequest from './SalesRequest';
 import SalesSelfPlan from './SalesSelfPlan';
@@ -9,6 +9,28 @@ import './SalesAdminMain.css';
 
 const SalesAdminMain = () => {
   const [step, setStep] = useState(1);
+
+  const isAdminUser = () => {
+    const authToken = localStorage.getItem('authToken');
+    if (authToken === null) {
+      return false;
+    } else {
+      const sa = [
+        'dineshkumar.devadasan@touron.in',
+        'vikashmanoharan@touron.in',
+        'sandy@touron.in',
+      ];
+      return sa.includes(JSON.parse(authToken).user.email);
+    }
+  };
+
+  useEffect(() => {
+    if (isAdminUser()) {
+      setStep(1);
+    } else {
+      setStep(4);
+    }
+  }, []);
 
   const renderSale = () => {
     switch (step) {
@@ -33,37 +55,41 @@ const SalesAdminMain = () => {
     <div className='salessadminmainn'>
       <div className='salessadminmainndivide1'>
         <ul className='salessadminmainndivide1Ul'>
-          <li
-            onClick={() => setStep(1)}
-            className={
-              step == 1
-                ? 'salessadminmainndivide1Li'
-                : 'salessadminmainndivide1LiN'
-            }>
-            Request
-          </li>
-          <li
-            onClick={() => setStep(2)}
-            className={
-              step == 2
-                ? 'salessadminmainndivide1Li'
-                : 'salessadminmainndivide1LiN'
-            }>
-            Self Plan
-          </li>
-          <li
-            onClick={() => setStep(3)}
-            className={
-              step == 3
-                ? 'salessadminmainndivide1Li'
-                : 'salessadminmainndivide1LiN'
-            }>
-            Year Statistics
-          </li>
+          {isAdminUser() && (
+            <>
+              <li
+                onClick={() => setStep(1)}
+                className={
+                  step === 1
+                    ? 'salessadminmainndivide1Li'
+                    : 'salessadminmainndivide1LiN'
+                }>
+                Request
+              </li>
+              <li
+                onClick={() => setStep(2)}
+                className={
+                  step === 2
+                    ? 'salessadminmainndivide1Li'
+                    : 'salessadminmainndivide1LiN'
+                }>
+                Self Plan
+              </li>
+              <li
+                onClick={() => setStep(3)}
+                className={
+                  step === 3
+                    ? 'salessadminmainndivide1Li'
+                    : 'salessadminmainndivide1LiN'
+                }>
+                Year Statistics
+              </li>
+            </>
+          )}
           <li
             onClick={() => setStep(4)}
             className={
-              step == 4
+              step === 4
                 ? 'salessadminmainndivide1Li'
                 : 'salessadminmainndivide1LiN'
             }>
@@ -72,7 +98,7 @@ const SalesAdminMain = () => {
           <li
             onClick={() => setStep(5)}
             className={
-              step == 5
+              step === 5
                 ? 'salessadminmainndivide1Li'
                 : 'salessadminmainndivide1LiN'
             }>
@@ -81,7 +107,7 @@ const SalesAdminMain = () => {
           <li
             onClick={() => setStep(6)}
             className={
-              step == 6
+              step === 6
                 ? 'salessadminmainndivide1Li'
                 : 'salessadminmainndivide1LiN'
             }>

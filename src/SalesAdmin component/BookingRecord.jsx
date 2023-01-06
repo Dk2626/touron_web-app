@@ -5,7 +5,7 @@ import { BiEdit } from 'react-icons/bi';
 import { MdDelete } from 'react-icons/md';
 import { FiAlertTriangle } from 'react-icons/fi';
 import { IoIosArrowDown } from 'react-icons/io';
-import { AiFillEdit } from 'react-icons/ai';
+import { AiFillEdit, AiOutlineArrowUp } from 'react-icons/ai';
 import { MdDeleteForever } from 'react-icons/md';
 import { useParams } from 'react-router-dom';
 import { Input, Modal, Spinner } from 'reactstrap';
@@ -68,8 +68,15 @@ const BookingRecord = () => {
   const [tourReports, setTourReports] = useState([]);
   const [vouchers, setVouchers] = useState([]);
   const [docId, setDocId] = useState('');
+  const [flightPdfs, setFlightsPdfs] = useState([]);
+  const [hotelPdfs, setHotelPdfs] = useState([]);
+  const [visaPdfs, setVisaPdfs] = useState([]);
+  const [tourReportsPdfs, setTourReportsPdfs] = useState([]);
+  const [vouchersPdfs, setVouchersPdfs] = useState([]);
 
-  // console.log('flights', flights);
+  console.log('flightPdfs', flightPdfs);
+
+  console.log('flights', flights);
   // console.log('hotels', hotels);
 
   // console.log('uploading', uploading);
@@ -78,7 +85,6 @@ const BookingRecord = () => {
   // console.log(`childrenDocuments`, childrenDocuments);
 
   const getDocuments = (email, destination, onwardDate) => {
-    console.log(`object`, email, destination, onwardDate);
     firedb
       .ref(`onBoard`)
       .orderByChild('email')
@@ -89,7 +95,7 @@ const BookingRecord = () => {
           setTravellerDocuments([]);
           setChildrenDocuments([]);
         } else {
-          console.log(`data.val()`, data.val());
+          // console.log(`data.val()`, data.val());
           data.forEach((d) => {
             if (
               d.val().destination === destination &&
@@ -871,134 +877,202 @@ const BookingRecord = () => {
     vendors();
   }, []);
 
-  const uploadFlight = (e) => {
-    setUploading1(true);
-    const file = e.target.files[0];
-    const ref = fireStorage.ref(`onBoard/${file.name}`);
-    const task = ref.put(file);
-    task.on('state_changed', (taskSnapshot) => {
-      const per =
-        (taskSnapshot.bytesTransferred / taskSnapshot.totalBytes) * 100;
-      setProgress1(Math.round(per));
-    });
-    task.then(() => {
-      ref.getDownloadURL().then((url) => {
-        setProgress1(0);
-        setUploading1(false);
-        setFlights([
-          ...flights,
-          {
-            id: uuidv4(),
-            name: file.name,
-            url: url,
-          },
-        ]);
-      });
-    });
+  const chooseFlight = (e) => {
+    for (let i = 0; i < e.target.files.length; i++) {
+      const filess = e.target.files[i];
+      setFlightsPdfs((prevState) => [...prevState, filess]);
+    }
   };
-  const uploadHotel = (e) => {
-    setUploading2(true);
-    const file = e.target.files[0];
-    const ref = fireStorage.ref(`onBoard/${file.name}`);
-    const task = ref.put(file);
-    task.on('state_changed', (taskSnapshot) => {
-      const per =
-        (taskSnapshot.bytesTransferred / taskSnapshot.totalBytes) * 100;
-      setProgress2(Math.round(per));
-    });
-    task.then(() => {
-      ref.getDownloadURL().then((url) => {
-        setProgress2(0);
-        setUploading2(false);
-        setHotels([
-          ...hotels,
-          {
-            id: uuidv4(),
-            name: file.name,
-            url: url,
-          },
-        ]);
+  const chooseHotel = (e) => {
+    for (let i = 0; i < e.target.files.length; i++) {
+      const filess = e.target.files[i];
+      setHotelPdfs((prevState) => [...prevState, filess]);
+    }
+  };
+  const chooseVisa = (e) => {
+    for (let i = 0; i < e.target.files.length; i++) {
+      const filess = e.target.files[i];
+      setVisaPdfs((prevState) => [...prevState, filess]);
+    }
+  };
+  const chooseTourReport = (e) => {
+    for (let i = 0; i < e.target.files.length; i++) {
+      const filess = e.target.files[i];
+      setTourReportsPdfs((prevState) => [...prevState, filess]);
+    }
+  };
+  const chooseVoucher = (e) => {
+    for (let i = 0; i < e.target.files.length; i++) {
+      const filess = e.target.files[i];
+      setVouchersPdfs((prevState) => [...prevState, filess]);
+    }
+  };
+
+  const uploadFlight = () => {
+    flightPdfs.map((file) => {
+      setUploading1(true);
+      const ref = fireStorage.ref(`onBoard/${file.name}`);
+      const task = ref.put(file);
+      task.on('state_changed', (taskSnapshot) => {
+        const per =
+          (taskSnapshot.bytesTransferred / taskSnapshot.totalBytes) * 100;
+        setProgress1(Math.round(per));
+      });
+      task.then(() => {
+        ref.getDownloadURL().then((url) => {
+          setProgress1(0);
+          setUploading1(false);
+          setFlights((prevState) => [
+            ...prevState,
+            {
+              id: uuidv4(),
+              name: file.name,
+              url: url,
+            },
+          ]);
+        });
       });
     });
+    setFlightsPdfs([]);
+  };
+
+  const uploadHotel = (e) => {
+    hotelPdfs.map((file) => {
+      setUploading2(true);
+      const ref = fireStorage.ref(`onBoard/${file.name}`);
+      const task = ref.put(file);
+      task.on('state_changed', (taskSnapshot) => {
+        const per =
+          (taskSnapshot.bytesTransferred / taskSnapshot.totalBytes) * 100;
+        setProgress2(Math.round(per));
+      });
+      task.then(() => {
+        ref.getDownloadURL().then((url) => {
+          setProgress2(0);
+          setUploading2(false);
+          setHotels((prevState) => [
+            ...prevState,
+            {
+              id: uuidv4(),
+              name: file.name,
+              url: url,
+            },
+          ]);
+        });
+      });
+    });
+    setHotelPdfs([]);
   };
 
   const uploadVisa = (e) => {
-    setUploading3(true);
-    const file = e.target.files[0];
-    const ref = fireStorage.ref(`onBoard/${file.name}`);
-    const task = ref.put(file);
-    task.on('state_changed', (taskSnapshot) => {
-      const per =
-        (taskSnapshot.bytesTransferred / taskSnapshot.totalBytes) * 100;
-      setProgress3(Math.round(per));
-    });
-    task.then(() => {
-      ref.getDownloadURL().then((url) => {
-        setProgress3(0);
-        setUploading3(false);
-        setVisa([
-          ...visa,
-          {
-            id: uuidv4(),
-            name: file.name,
-            url: url,
-          },
-        ]);
+    visaPdfs.map((file) => {
+      setUploading3(true);
+      const ref = fireStorage.ref(`onBoard/${file.name}`);
+      const task = ref.put(file);
+      task.on('state_changed', (taskSnapshot) => {
+        const per =
+          (taskSnapshot.bytesTransferred / taskSnapshot.totalBytes) * 100;
+        setProgress3(Math.round(per));
+      });
+      task.then(() => {
+        ref.getDownloadURL().then((url) => {
+          setProgress3(0);
+          setUploading3(false);
+          setVisa((prevState) => [
+            ...prevState,
+            {
+              id: uuidv4(),
+              name: file.name,
+              url: url,
+            },
+          ]);
+        });
       });
     });
+    setVisaPdfs([]);
   };
 
   const uploadTourReport = (e) => {
-    setUploading4(true);
-    const file = e.target.files[0];
-    const ref = fireStorage.ref(`onBoard/${file.name}`);
-    const task = ref.put(file);
-    task.on('state_changed', (taskSnapshot) => {
-      const per =
-        (taskSnapshot.bytesTransferred / taskSnapshot.totalBytes) * 100;
-      setProgress4(Math.round(per));
-    });
-    task.then(() => {
-      ref.getDownloadURL().then((url) => {
-        setProgress4(0);
-        setUploading4(false);
-        setTourReports([
-          ...tourReports,
-          {
-            id: uuidv4(),
-            name: file.name,
-            url: url,
-          },
-        ]);
+    tourReportsPdfs.map((file) => {
+      setUploading4(true);
+      const ref = fireStorage.ref(`onBoard/${file.name}`);
+      const task = ref.put(file);
+      task.on('state_changed', (taskSnapshot) => {
+        const per =
+          (taskSnapshot.bytesTransferred / taskSnapshot.totalBytes) * 100;
+        setProgress4(Math.round(per));
+      });
+      task.then(() => {
+        ref.getDownloadURL().then((url) => {
+          setProgress4(0);
+          setUploading4(false);
+          setTourReports((prevState) => [
+            ...prevState,
+            {
+              id: uuidv4(),
+              name: file.name,
+              url: url,
+            },
+          ]);
+        });
       });
     });
+    setTourReportsPdfs([]);
   };
 
   const uploadVoucher = (e) => {
-    setUploading5(true);
-    const file = e.target.files[0];
-    const ref = fireStorage.ref(`onBoard/${file.name}`);
-    const task = ref.put(file);
-    task.on('state_changed', (taskSnapshot) => {
-      const per =
-        (taskSnapshot.bytesTransferred / taskSnapshot.totalBytes) * 100;
-      setProgress5(Math.round(per));
-    });
-    task.then(() => {
-      ref.getDownloadURL().then((url) => {
-        setProgress5(0);
-        setUploading5(false);
-        setVouchers([
-          ...vouchers,
-          {
-            id: uuidv4(),
-            name: file.name,
-            url: url,
-          },
-        ]);
+    vouchersPdfs.map((file) => {
+      setUploading5(true);
+      const ref = fireStorage.ref(`onBoard/${file.name}`);
+      const task = ref.put(file);
+      task.on('state_changed', (taskSnapshot) => {
+        const per =
+          (taskSnapshot.bytesTransferred / taskSnapshot.totalBytes) * 100;
+        setProgress5(Math.round(per));
+      });
+      task.then(() => {
+        ref.getDownloadURL().then((url) => {
+          setProgress5(0);
+          setUploading5(false);
+          setVouchers((prevState) => [
+            ...prevState,
+            {
+              id: uuidv4(),
+              name: file.name,
+              url: url,
+            },
+          ]);
+        });
       });
     });
+    setVouchersPdfs([]);
   };
+
+  // const uploadVoucher = (e) => {
+  //   setUploading5(true);
+  //   const file = e.target.files[0];
+  //   const ref = fireStorage.ref(`onBoard/${file.name}`);
+  //   const task = ref.put(file);
+  //   task.on('state_changed', (taskSnapshot) => {
+  //     const per =
+  //       (taskSnapshot.bytesTransferred / taskSnapshot.totalBytes) * 100;
+  //     setProgress5(Math.round(per));
+  //   });
+  //   task.then(() => {
+  //     ref.getDownloadURL().then((url) => {
+  //       setProgress5(0);
+  //       setUploading5(false);
+  //       setVouchers([
+  //         ...vouchers,
+  //         {
+  //           id: uuidv4(),
+  //           name: file.name,
+  //           url: url,
+  //         },
+  //       ]);
+  //     });
+  //   });
+  // };
 
   const saveOnBoard = () => {
     firedb
@@ -1094,6 +1168,32 @@ const BookingRecord = () => {
   const removeVouchers = (id) => {
     const current = vouchers.filter((voucher) => voucher.id !== id);
     setVouchers(current);
+  };
+
+  const swapFlight = (id) => {
+    const swap = flights.filter((flight) => flight.id === id);
+    const remaining = flights.filter((flight) => flight.id !== id);
+    setFlights([...swap, ...remaining]);
+  };
+  const swapHotel = (id) => {
+    const swap = hotels.filter((hotel) => hotel.id === id);
+    const remaining = hotels.filter((hotel) => hotel.id !== id);
+    setHotels([...swap, ...remaining]);
+  };
+  const swapVisa = (id) => {
+    const swap = visa.filter((visa) => visa.id === id);
+    const remaining = visa.filter((visa) => visa.id !== id);
+    setVisa([...swap, ...remaining]);
+  };
+  const swapTourReports = (id) => {
+    const swap = tourReports.filter((tourReport) => tourReport.id === id);
+    const remaining = tourReports.filter((tourReport) => tourReport.id !== id);
+    setTourReports([...swap, ...remaining]);
+  };
+  const swapVouchers = (id) => {
+    const swap = vouchers.filter((voucher) => voucher.id === id);
+    const remaining = vouchers.filter((voucher) => voucher.id !== id);
+    setVouchers([...swap, ...remaining]);
   };
 
   const renderItems = (step) => {
@@ -2737,19 +2837,30 @@ const BookingRecord = () => {
               <div className='bookingGenerall_upld'>
                 <div className='bookingGenerall_upld__btn'>
                   <div>Flights</div>
-                  <input
-                    type='file'
-                    id='booking_doc_file'
-                    className='booking_doc_file_c'
-                    onChange={(e) => {
-                      uploadFlight(e);
-                    }}
-                  />
-                  <label
-                    htmlFor='booking_doc_file'
-                    className='booking_doc_file_l'>
-                    Choose file
-                  </label>
+                  {flightPdfs.length === 0 ? (
+                    <>
+                      <input
+                        type='file'
+                        multiple
+                        id='booking_doc_file'
+                        className='booking_doc_file_c'
+                        onChange={(e) => {
+                          chooseFlight(e);
+                        }}
+                      />
+                      <label
+                        htmlFor='booking_doc_file'
+                        className='booking_doc_file_l'>
+                        Choose file
+                      </label>
+                    </>
+                  ) : (
+                    <label
+                      className='booking_doc_file_l'
+                      onClick={uploadFlight}>
+                      Upload
+                    </label>
+                  )}
                   {uploading1 && (
                     <div className='uploading_filesss'>
                       <h6>File uploading {progress1}%</h6>
@@ -2766,6 +2877,12 @@ const BookingRecord = () => {
                             onClick={() => removeFlight(file.id)}
                             className='booking_doc_file_flex_icon'
                           />
+                          {i !== 0 && (
+                            <AiOutlineArrowUp
+                              onClick={() => swapFlight(file.id)}
+                              className='booking_doc_file_flex_flex_icon'
+                            />
+                          )}
                         </div>
                       );
                     })}
@@ -2775,19 +2892,28 @@ const BookingRecord = () => {
               <div className='bookingGenerall_upld'>
                 <div className='bookingGenerall_upld__btn'>
                   <div>Hotels</div>
-                  <input
-                    type='file'
-                    id='booking_doc_file_'
-                    className='booking_doc_file_c'
-                    onChange={(e) => {
-                      uploadHotel(e);
-                    }}
-                  />
-                  <label
-                    htmlFor='booking_doc_file_'
-                    className='booking_doc_file_l'>
-                    Choose file
-                  </label>
+                  {hotelPdfs.length === 0 ? (
+                    <>
+                      <input
+                        type='file'
+                        multiple
+                        id='booking_doc_file_'
+                        className='booking_doc_file_c'
+                        onChange={(e) => {
+                          chooseHotel(e);
+                        }}
+                      />
+                      <label
+                        htmlFor='booking_doc_file_'
+                        className='booking_doc_file_l'>
+                        Choose file
+                      </label>
+                    </>
+                  ) : (
+                    <label className='booking_doc_file_l' onClick={uploadHotel}>
+                      Upload
+                    </label>
+                  )}
                   {uploading2 && (
                     <div className='uploading_filesss'>
                       <h6>File uploading {progress2}%</h6>
@@ -2804,6 +2930,12 @@ const BookingRecord = () => {
                             onClick={() => removeHotel(file.id)}
                             className='booking_doc_file_flex_icon'
                           />
+                          {i !== 0 && (
+                            <AiOutlineArrowUp
+                              onClick={() => swapHotel(file.id)}
+                              className='booking_doc_file_flex_flex_icon'
+                            />
+                          )}
                         </div>
                       );
                     })}
@@ -2813,19 +2945,29 @@ const BookingRecord = () => {
               <div className='bookingGenerall_upld'>
                 <div className='bookingGenerall_upld__btn'>
                   <div>Visa</div>
-                  <input
-                    type='file'
-                    id='booking_doc_file__'
-                    className='booking_doc_file_c'
-                    onChange={(e) => {
-                      uploadVisa(e);
-                    }}
-                  />
-                  <label
-                    htmlFor='booking_doc_file__'
-                    className='booking_doc_file_l'>
-                    Choose file
-                  </label>
+                  {visaPdfs.length === 0 ? (
+                    <>
+                      <input
+                        type='file'
+                        multiple
+                        id='booking_doc_file__'
+                        className='booking_doc_file_c'
+                        onChange={(e) => {
+                          chooseVisa(e);
+                        }}
+                      />
+                      <label
+                        htmlFor='booking_doc_file__'
+                        className='booking_doc_file_l'>
+                        Choose file
+                      </label>
+                    </>
+                  ) : (
+                    <label className='booking_doc_file_l' onClick={uploadVisa}>
+                      Upload
+                    </label>
+                  )}
+
                   {uploading3 && (
                     <div className='uploading_filesss'>
                       <h6>File uploading {progress3}%</h6>
@@ -2842,6 +2984,12 @@ const BookingRecord = () => {
                             onClick={() => removeVisa(file.id)}
                             className='booking_doc_file_flex_icon'
                           />
+                          {i !== 0 && (
+                            <AiOutlineArrowUp
+                              onClick={() => swapVisa(file.id)}
+                              className='booking_doc_file_flex_flex_icon'
+                            />
+                          )}
                         </div>
                       );
                     })}
@@ -2851,19 +2999,31 @@ const BookingRecord = () => {
               <div className='bookingGenerall_upld'>
                 <div className='bookingGenerall_upld__btn'>
                   <div>Tour Reports</div>
-                  <input
-                    type='file'
-                    id='booking_doc_file___'
-                    className='booking_doc_file_c'
-                    onChange={(e) => {
-                      uploadTourReport(e);
-                    }}
-                  />
-                  <label
-                    htmlFor='booking_doc_file___'
-                    className='booking_doc_file_l'>
-                    Choose file
-                  </label>
+                  {tourReportsPdfs.length === 0 ? (
+                    <>
+                      <input
+                        type='file'
+                        multiple
+                        id='booking_doc_file___'
+                        className='booking_doc_file_c'
+                        onChange={(e) => {
+                          chooseTourReport(e);
+                        }}
+                      />
+                      <label
+                        htmlFor='booking_doc_file___'
+                        className='booking_doc_file_l'>
+                        Choose file
+                      </label>
+                    </>
+                  ) : (
+                    <label
+                      className='booking_doc_file_l'
+                      onClick={uploadTourReport}>
+                      Upload
+                    </label>
+                  )}
+
                   {uploading4 && (
                     <div className='uploading_filesss'>
                       <h6>File uploading {progress4}%</h6>
@@ -2880,6 +3040,12 @@ const BookingRecord = () => {
                             onClick={() => removeTourReports(file.id)}
                             className='booking_doc_file_flex_icon'
                           />
+                          {i !== 0 && (
+                            <AiOutlineArrowUp
+                              onClick={() => swapTourReports(file.id)}
+                              className='booking_doc_file_flex_flex_icon'
+                            />
+                          )}
                         </div>
                       );
                     })}
@@ -2889,19 +3055,31 @@ const BookingRecord = () => {
               <div className='bookingGenerall_upld'>
                 <div className='bookingGenerall_upld__btn'>
                   <div>Vouchers</div>
-                  <input
-                    type='file'
-                    id='booking_doc_file____'
-                    className='booking_doc_file_c'
-                    onChange={(e) => {
-                      uploadVoucher(e);
-                    }}
-                  />
-                  <label
-                    htmlFor='booking_doc_file____'
-                    className='booking_doc_file_l'>
-                    Choose file
-                  </label>
+                  {vouchersPdfs.length === 0 ? (
+                    <>
+                      <input
+                        type='file'
+                        multiple
+                        id='booking_doc_file____'
+                        className='booking_doc_file_c'
+                        onChange={(e) => {
+                          chooseVoucher(e);
+                        }}
+                      />
+                      <label
+                        htmlFor='booking_doc_file____'
+                        className='booking_doc_file_l'>
+                        Choose file
+                      </label>
+                    </>
+                  ) : (
+                    <label
+                      className='booking_doc_file_l'
+                      onClick={uploadVoucher}>
+                      Upload
+                    </label>
+                  )}
+
                   {uploading5 && (
                     <div className='uploading_filesss'>
                       <h6>File uploading {progress5}%</h6>
@@ -2918,6 +3096,12 @@ const BookingRecord = () => {
                             onClick={() => removeVouchers(file.id)}
                             className='booking_doc_file_flex_icon'
                           />
+                          {i !== 0 && (
+                            <AiOutlineArrowUp
+                              onClick={() => swapVouchers(file.id)}
+                              className='booking_doc_file_flex_flex_icon'
+                            />
+                          )}
                         </div>
                       );
                     })}

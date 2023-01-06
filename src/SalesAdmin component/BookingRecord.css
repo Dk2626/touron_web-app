@@ -603,6 +603,11 @@
   color: #e21717;
   margin-left: 10px;
 }
+.booking_doc_file_flex_flex_icon {
+  cursor: pointer;
+  color: #3dbe29;
+  margin-left: 10px;
+}
 .uploading_filesss {
   margin-left: 30px;
 }
