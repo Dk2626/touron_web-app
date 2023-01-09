@@ -73,10 +73,8 @@ const BookingRecord = () => {
   const [visaPdfs, setVisaPdfs] = useState([]);
   const [tourReportsPdfs, setTourReportsPdfs] = useState([]);
   const [vouchersPdfs, setVouchersPdfs] = useState([]);
+  const [pdfUrl, setPdfUrl] = useState(null);
 
-  console.log('flightPdfs', flightPdfs);
-
-  console.log('flights', flights);
   // console.log('hotels', hotels);
 
   // console.log('uploading', uploading);
@@ -2872,7 +2870,11 @@ const BookingRecord = () => {
                     {flights.map((file, i) => {
                       return (
                         <div className='booking_doc_file_flex'>
-                          <h6>{file.name}</h6>
+                          <h6
+                            onClick={() => setPdfUrl(file.url)}
+                            className='booking_doc_file_flex_h6'>
+                            {file.name}
+                          </h6>
                           <MdDelete
                             onClick={() => removeFlight(file.id)}
                             className='booking_doc_file_flex_icon'
@@ -2925,7 +2927,11 @@ const BookingRecord = () => {
                     {hotels.map((file, i) => {
                       return (
                         <div className='booking_doc_file_flex'>
-                          <h6>{file.name}</h6>
+                          <h6
+                            onClick={() => setPdfUrl(file.url)}
+                            className='booking_doc_file_flex_h6'>
+                            {file.name}
+                          </h6>
                           <MdDelete
                             onClick={() => removeHotel(file.id)}
                             className='booking_doc_file_flex_icon'
@@ -2979,7 +2985,11 @@ const BookingRecord = () => {
                     {visa.map((file, i) => {
                       return (
                         <div className='booking_doc_file_flex'>
-                          <h6>{file.name}</h6>
+                          <h6
+                            onClick={() => setPdfUrl(file.url)}
+                            className='booking_doc_file_flex_h6'>
+                            {file.name}
+                          </h6>
                           <MdDelete
                             onClick={() => removeVisa(file.id)}
                             className='booking_doc_file_flex_icon'
@@ -3035,7 +3045,11 @@ const BookingRecord = () => {
                     {tourReports.map((file, i) => {
                       return (
                         <div className='booking_doc_file_flex'>
-                          <h6>{file.name}</h6>
+                          <h6
+                            onClick={() => setPdfUrl(file.url)}
+                            className='booking_doc_file_flex_h6'>
+                            {file.name}
+                          </h6>
                           <MdDelete
                             onClick={() => removeTourReports(file.id)}
                             className='booking_doc_file_flex_icon'
@@ -3091,7 +3105,11 @@ const BookingRecord = () => {
                     {vouchers.map((file, i) => {
                       return (
                         <div className='booking_doc_file_flex'>
-                          <h6>{file.name}</h6>
+                          <h6
+                            onClick={() => setPdfUrl(file.url)}
+                            className='booking_doc_file_flex_h6'>
+                            {file.name}
+                          </h6>
                           <MdDelete
                             onClick={() => removeVouchers(file.id)}
                             className='booking_doc_file_flex_icon'
@@ -3118,6 +3136,22 @@ const BookingRecord = () => {
 
   return (
     <div className='bookingRecord'>
+      {pdfUrl && (
+        <div className='pdf_Popup'>
+          <div className='pdf_Popup_con'>
+            <embed
+              type='application/pdf'
+              src={pdfUrl}
+              className='pdf_Popup_con_main'
+            />
+            <div
+              className='pdf_Popup_con_main_close'
+              onClick={() => setPdfUrl(null)}>
+              x
+            </div>
+          </div>
+        </div>
+      )}
       <Modal
         className='modal-dialog-centered modal-danger'
         contentClassName='bg-gradient-danger'

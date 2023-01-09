@@ -598,6 +598,9 @@
   align-items: center;
   margin: 10px;
 }
+.booking_doc_file_flex_h6 {
+  cursor: pointer;
+}
 .booking_doc_file_flex_icon {
   cursor: pointer;
   color: #e21717;
@@ -611,6 +614,44 @@
 .uploading_filesss {
   margin-left: 30px;
 }
+.pdf_Popup {
+  height: 100vh;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  z-index: 9999;
+}
+.pdf_Popup_con {
+  width: 80%;
+  height: 90vh;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 3px;
+}
+.pdf_Popup_con_main {
+  width: 100%;
+  height: 100%;
+}
+.pdf_Popup_con_main_close {
+  position: absolute;
+  top: -15px;
+  right: -15px;
+  background-color: #e21717;
+  color: #fff;
+  cursor: pointer;
+  height: 30px;
+  width: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
 @media screen and (min-height: 722px) {
   .bookingTerm {
     height: 62vh;
