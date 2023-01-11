@@ -5,7 +5,11 @@ import { BiEdit } from 'react-icons/bi';
 import { MdDelete } from 'react-icons/md';
 import { FiAlertTriangle } from 'react-icons/fi';
 import { IoIosArrowDown } from 'react-icons/io';
-import { AiFillEdit, AiOutlineArrowUp } from 'react-icons/ai';
+import {
+  AiFillEdit,
+  AiOutlineArrowUp,
+  AiOutlineArrowDown,
+} from 'react-icons/ai';
 import { MdDeleteForever } from 'react-icons/md';
 import { useParams } from 'react-router-dom';
 import { Input, Modal, Spinner } from 'reactstrap';
@@ -1168,31 +1172,102 @@ const BookingRecord = () => {
     setVouchers(current);
   };
 
-  const swapFlight = (id) => {
-    const swap = flights.filter((flight) => flight.id === id);
-    const remaining = flights.filter((flight) => flight.id !== id);
-    setFlights([...swap, ...remaining]);
+  const swapFlightUp = (i) => {
+    let data = [...flights];
+    let temp = data[i];
+    data[i] = data[i - 1];
+    data[i - 1] = temp;
+    setFlights(data);
   };
-  const swapHotel = (id) => {
-    const swap = hotels.filter((hotel) => hotel.id === id);
-    const remaining = hotels.filter((hotel) => hotel.id !== id);
-    setHotels([...swap, ...remaining]);
+  const swapFlightDown = (i) => {
+    let data = [...flights];
+    let temp = data[i];
+    data[i] = data[i + 1];
+    data[i + 1] = temp;
+    setFlights(data);
   };
-  const swapVisa = (id) => {
-    const swap = visa.filter((visa) => visa.id === id);
-    const remaining = visa.filter((visa) => visa.id !== id);
-    setVisa([...swap, ...remaining]);
+  const swapHotelUp = (i) => {
+    let data = [...hotels];
+    let temp = data[i];
+    data[i] = data[i - 1];
+    data[i - 1] = temp;
+    setHotels(data);
   };
-  const swapTourReports = (id) => {
-    const swap = tourReports.filter((tourReport) => tourReport.id === id);
-    const remaining = tourReports.filter((tourReport) => tourReport.id !== id);
-    setTourReports([...swap, ...remaining]);
+  const swapHotelDown = (i) => {
+    let data = [...hotels];
+    let temp = data[i];
+    data[i] = data[i + 1];
+    data[i + 1] = temp;
+    setHotels(data);
   };
-  const swapVouchers = (id) => {
-    const swap = vouchers.filter((voucher) => voucher.id === id);
-    const remaining = vouchers.filter((voucher) => voucher.id !== id);
-    setVouchers([...swap, ...remaining]);
+  const swapVisatUp = (i) => {
+    let data = [...visa];
+    let temp = data[i];
+    data[i] = data[i - 1];
+    data[i - 1] = temp;
+    setVisa(data);
   };
+  const swapVisaDown = (i) => {
+    let data = [...visa];
+    let temp = data[i];
+    data[i] = data[i + 1];
+    data[i + 1] = temp;
+    setVisa(data);
+  };
+  const swapTourReportsUp = (i) => {
+    let data = [...tourReports];
+    let temp = data[i];
+    data[i] = data[i - 1];
+    data[i - 1] = temp;
+    setTourReports(data);
+  };
+  const swapTourReportsDown = (i) => {
+    let data = [...tourReports];
+    let temp = data[i];
+    data[i] = data[i + 1];
+    data[i + 1] = temp;
+    setTourReports(data);
+  };
+  const swapVouchersUp = (i) => {
+    let data = [...vouchers];
+    let temp = data[i];
+    data[i] = data[i - 1];
+    data[i - 1] = temp;
+    setVouchers(data);
+  };
+  const swapVouchersDown = (i) => {
+    let data = [...vouchers];
+    let temp = data[i];
+    data[i] = data[i + 1];
+    data[i + 1] = temp;
+    setVouchers(data);
+  };
+
+  // const swapFlight = (id) => {
+  //   const swap = flights.filter((flight) => flight.id === id);
+  //   const remaining = flights.filter((flight) => flight.id !== id);
+  //   setFlights([...swap, ...remaining]);
+  // };
+  // const swapHotel = (id) => {
+  //   const swap = hotels.filter((hotel) => hotel.id === id);
+  //   const remaining = hotels.filter((hotel) => hotel.id !== id);
+  //   setHotels([...swap, ...remaining]);
+  // };
+  // const swapVisa = (id) => {
+  //   const swap = visa.filter((visa) => visa.id === id);
+  //   const remaining = visa.filter((visa) => visa.id !== id);
+  //   setVisa([...swap, ...remaining]);
+  // };
+  // const swapTourReports = (id) => {
+  //   const swap = tourReports.filter((tourReport) => tourReport.id === id);
+  //   const remaining = tourReports.filter((tourReport) => tourReport.id !== id);
+  //   setTourReports([...swap, ...remaining]);
+  // };
+  // const swapVouchers = (id) => {
+  //   const swap = vouchers.filter((voucher) => voucher.id === id);
+  //   const remaining = vouchers.filter((voucher) => voucher.id !== id);
+  //   setVouchers([...swap, ...remaining]);
+  // };
 
   const renderItems = (step) => {
     switch (step) {
@@ -2879,9 +2954,15 @@ const BookingRecord = () => {
                             onClick={() => removeFlight(file.id)}
                             className='booking_doc_file_flex_icon'
                           />
-                          {i !== 0 && (
+                          {i !== 0 && i !== flights.length - 1 && (
                             <AiOutlineArrowUp
-                              onClick={() => swapFlight(file.id)}
+                              onClick={() => swapFlightUp(i)}
+                              className='booking_doc_file_flex_flex_icon'
+                            />
+                          )}
+                          {i !== 0 && i !== flights.length - 1 && (
+                            <AiOutlineArrowDown
+                              onClick={() => swapFlightDown(i)}
                               className='booking_doc_file_flex_flex_icon'
                             />
                           )}
@@ -2936,9 +3017,15 @@ const BookingRecord = () => {
                             onClick={() => removeHotel(file.id)}
                             className='booking_doc_file_flex_icon'
                           />
-                          {i !== 0 && (
+                          {i !== 0 && i !== hotels.length - 1 && (
                             <AiOutlineArrowUp
-                              onClick={() => swapHotel(file.id)}
+                              onClick={() => swapHotelUp(i)}
+                              className='booking_doc_file_flex_flex_icon'
+                            />
+                          )}
+                          {i !== 0 && i !== hotels.length - 1 && (
+                            <AiOutlineArrowDown
+                              onClick={() => swapHotelDown(i)}
                               className='booking_doc_file_flex_flex_icon'
                             />
                           )}
@@ -2994,9 +3081,15 @@ const BookingRecord = () => {
                             onClick={() => removeVisa(file.id)}
                             className='booking_doc_file_flex_icon'
                           />
-                          {i !== 0 && (
+                          {i !== 0 && i !== visa.length - 1 && (
                             <AiOutlineArrowUp
-                              onClick={() => swapVisa(file.id)}
+                              onClick={() => swapVisatUp(i)}
+                              className='booking_doc_file_flex_flex_icon'
+                            />
+                          )}
+                          {i !== 0 && i !== visa.length - 1 && (
+                            <AiOutlineArrowDown
+                              onClick={() => swapVisaDown(i)}
                               className='booking_doc_file_flex_flex_icon'
                             />
                           )}
@@ -3054,9 +3147,15 @@ const BookingRecord = () => {
                             onClick={() => removeTourReports(file.id)}
                             className='booking_doc_file_flex_icon'
                           />
-                          {i !== 0 && (
+                          {i !== 0 && i !== tourReports.length - 1 && (
                             <AiOutlineArrowUp
-                              onClick={() => swapTourReports(file.id)}
+                              onClick={() => swapTourReportsUp(i)}
+                              className='booking_doc_file_flex_flex_icon'
+                            />
+                          )}
+                          {i !== 0 && i !== tourReports.length - 1 && (
+                            <AiOutlineArrowDown
+                              onClick={() => swapTourReportsDown(i)}
                               className='booking_doc_file_flex_flex_icon'
                             />
                           )}
@@ -3114,9 +3213,15 @@ const BookingRecord = () => {
                             onClick={() => removeVouchers(file.id)}
                             className='booking_doc_file_flex_icon'
                           />
-                          {i !== 0 && (
+                          {i !== 0 && i !== vouchers.length - 1 && (
                             <AiOutlineArrowUp
-                              onClick={() => swapVouchers(file.id)}
+                              onClick={() => swapVouchersUp(i)}
+                              className='booking_doc_file_flex_flex_icon'
+                            />
+                          )}
+                          {i !== 0 && i !== vouchers.length - 1 && (
+                            <AiOutlineArrowDown
+                              onClick={() => swapVouchersDown(i)}
                               className='booking_doc_file_flex_flex_icon'
                             />
                           )}
