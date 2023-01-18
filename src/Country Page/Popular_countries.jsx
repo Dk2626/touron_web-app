@@ -26,18 +26,18 @@ export default function Popular_countries() {
     }
   };
 
-  //   const getCountries = async () => {
-  //     try {
-  //       const countryResponse = await axios.get(
-  //         `${API}/country?page=${page}&pageSize=${pageSize}`
-  //       );
-  //       setCountries(countryResponse.data);
-  //       const allCountryResponse = await axios.get(`${API}/country`);
-  //       setAllCountries(allCountryResponse.data);
-  //     } catch (err) {
-  //       console.log(err, "err");
-  //     }
-  //   };
+  // const getCountries = async () => {
+  //   try {
+  //     const countryResponse = await axios.get(
+  //       `${API}/country?page=${page}&pageSize=${pageSize}`
+  //     );
+  //     setCountries(countryResponse.data);
+  //     const allCountryResponse = await axios.get(`${API}/country`);
+  //     setAllCountries(allCountryResponse.data);
+  //   } catch (err) {
+  //     console.log(err, 'err');
+  //   }
+  // };
 
   useEffect(() => {
     const source = axios.CancelToken.source();
@@ -79,9 +79,9 @@ export default function Popular_countries() {
     setPageSize(pageSize);
   };
 
-  //   useEffect(() => {
-  //     getCountries();
-  //   }, [pageSize, page]);
+  // useEffect(() => {
+  //   getCountries();
+  // }, [pageSize, page]);
 
   return (
     <>

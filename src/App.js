@@ -183,7 +183,10 @@ const App = () => {
                 path='/tourdetails/:countryname/:cityname/:tourname/:tourid'
                 element={<TourInner />}
               />
-              <Route path='/popular_countries' element={Popular_countries} />
+              <Route
+                path='/popular_countries'
+                element={<Popular_countries />}
+              />
               <Route
                 path='/countrydetails/:countryname'
                 element={<CountryInner />}
