@@ -63,6 +63,7 @@ const TotalSaleReport = () => {
   const [requestValueYear, setRequestValueYear] = useState('');
   const [showRequestValueYear, setShowRequestValueYear] = useState(false);
   const [exportYear, setExportYear] = useState('');
+  // const [exportYearSales, setExportYearSales] = useState('');
   const [reqData, setReqData] = useState([
     {
       name: 'January',
@@ -1292,6 +1293,464 @@ const TotalSaleReport = () => {
     }
   };
 
+  // const getExcelSales = () => {
+  //   const person = [
+  //     'Vikash',
+  //     'Kirthika',
+  //     'Ganesh',
+  //     'Bharathwaaj',
+  //     'Santhosh',
+  //     'Nagasrinivasakumar',
+  //   ];
+  //   let months = [
+  //     {
+  //       name: 'January',
+  //       val: [],
+  //     },
+  //     {
+  //       name: 'Feburary',
+  //       val: [],
+  //     },
+  //     {
+  //       name: 'March',
+  //       val: [],
+  //     },
+  //     {
+  //       name: 'April',
+  //       val: [],
+  //     },
+  //     {
+  //       name: 'May',
+  //       val: [],
+  //     },
+  //     {
+  //       name: 'June',
+  //       val: [],
+  //     },
+  //     {
+  //       name: 'July',
+  //       val: [],
+  //     },
+  //     {
+  //       name: 'August',
+  //       val: [],
+  //     },
+  //     {
+  //       name: 'September',
+  //       val: [],
+  //     },
+  //     {
+  //       name: 'October',
+  //       val: [],
+  //     },
+  //     {
+  //       name: 'November',
+  //       val: [],
+  //     },
+  //     {
+  //       name: 'December',
+  //       val: [],
+  //     },
+  //   ];
+
+  //   bookingDetails.forEach((c, i) => {
+  //     months.forEach((m, index) => {
+  //       person.forEach((s) => {
+  //         if (
+  //           index === moment(c.general.bookedDate).month() &&
+  //           c.general.salesHandleName === s &&
+  //           exportYearSales === moment(c.general.bookedDate).format('YYYY') &&
+  //           // marginBookingValueYear ===
+  //           //   moment(c.general.onwardDate).format("YYYY") &&
+  //           c.general.isBookingCancelled === false
+  //         ) {
+  //           m.val.push(c);
+  //         }
+  //       });
+  //     });
+  //   });
+
+  //   // jan
+  //   const VikashJan = months[0].val.filter(
+  //     (f) => f.general.salesHandleName == 'Vikash'
+  //   );
+  //   const KirthikaJan = months[0].val.filter(
+  //     (f) => f.general.salesHandleName == 'Kirthika'
+  //   );
+  //   const GaneshJan = months[0].val.filter(
+  //     (f) => f.general.salesHandleName == 'Ganesh'
+  //   );
+  //   const BharathJan = months[0].val.filter(
+  //     (f) => f.general.salesHandleName == 'Bharathwaaj'
+  //   );
+  //   const SanthoshJan = months[0].val.filter(
+  //     (f) => f.general.salesHandleName == 'Santhosh'
+  //   );
+  //   const SriniJan = months[0].val.filter(
+  //     (f) => f.general.salesHandleName == 'Nagasrinivasakumar'
+  //   );
+  //   const AllJan = months[0].val;
+
+  //   // feb
+  //   const VikashFeb = months[1].val.filter(
+  //     (f) => f.general.salesHandleName == 'Vikash'
+  //   );
+  //   const KirthikaFeb = months[1].val.filter(
+  //     (f) => f.general.salesHandleName == 'Kirthika'
+  //   );
+  //   const GaneshFeb = months[1].val.filter(
+  //     (f) => f.general.salesHandleName == 'Ganesh'
+  //   );
+  //   const BharathFeb = months[1].val.filter(
+  //     (f) => f.general.salesHandleName == 'Bharathwaaj'
+  //   );
+  //   const SanthoshFeb = months[1].val.filter(
+  //     (f) => f.general.salesHandleName == 'Santhosh'
+  //   );
+  //   const SriniFeb = months[1].val.filter(
+  //     (f) => f.general.salesHandleName == 'Nagasrinivasakumar'
+  //   );
+  //   const AllFeb = months[1].val;
+
+  //   // mar
+  //   const VikashMar = months[2].val.filter(
+  //     (f) => f.general.salesHandleName == 'Vikash'
+  //   );
+  //   const KirthikaMar = months[2].val.filter(
+  //     (f) => f.general.salesHandleName == 'Kirthika'
+  //   );
+  //   const GaneshMar = months[2].val.filter(
+  //     (f) => f.general.salesHandleName == 'Ganesh'
+  //   );
+  //   const BharathMar = months[2].val.filter(
+  //     (f) => f.general.salesHandleName == 'Bharathwaaj'
+  //   );
+  //   const SanthoshMar = months[2].val.filter(
+  //     (f) => f.general.salesHandleName == 'Santhosh'
+  //   );
+  //   const SriniMar = months[2].val.filter(
+  //     (f) => f.general.salesHandleName == 'Nagasrinivasakumar'
+  //   );
+  //   const AllMar = months[2].val;
+
+  //   // aprl
+  //   const VikashAprl = months[3].val.filter(
+  //     (f) => f.general.salesHandleName == 'Vikash'
+  //   );
+  //   const KirthikaAprl = months[3].val.filter(
+  //     (f) => f.general.salesHandleName == 'Kirthika'
+  //   );
+  //   const GaneshAprl = months[3].val.filter(
+  //     (f) => f.general.salesHandleName == 'Ganesh'
+  //   );
+  //   const BharathAprl = months[3].val.filter(
+  //     (f) => f.general.salesHandleName == 'Bharathwaaj'
+  //   );
+  //   const SanthoshAprl = months[3].val.filter(
+  //     (f) => f.general.salesHandleName == 'Santhosh'
+  //   );
+  //   const SriniAprl = months[3].val.filter(
+  //     (f) => f.general.salesHandleName == 'Nagasrinivasakumar'
+  //   );
+  //   const AllAprl = months[3].val;
+
+  //   // may
+  //   const VikashMay = months[4].val.filter(
+  //     (f) => f.general.salesHandleName == 'Vikash'
+  //   );
+  //   const KirthikaMay = months[4].val.filter(
+  //     (f) => f.general.salesHandleName == 'Kirthika'
+  //   );
+  //   const GaneshMay = months[4].val.filter(
+  //     (f) => f.general.salesHandleName == 'Ganesh'
+  //   );
+  //   const BharathMay = months[4].val.filter(
+  //     (f) => f.general.salesHandleName == 'Bharathwaaj'
+  //   );
+  //   const SanthoshMay = months[4].val.filter(
+  //     (f) => f.general.salesHandleName == 'Santhosh'
+  //   );
+  //   const SriniMay = months[4].val.filter(
+  //     (f) => f.general.salesHandleName == 'Nagasrinivasakumar'
+  //   );
+  //   const AllMay = months[4].val;
+
+  //   // jun
+  //   const VikashJune = months[5].val.filter(
+  //     (f) => f.general.salesHandleName == 'Vikash'
+  //   );
+  //   const KirthikaJune = months[5].val.filter(
+  //     (f) => f.general.salesHandleName == 'Kirthika'
+  //   );
+  //   const GaneshJune = months[5].val.filter(
+  //     (f) => f.general.salesHandleName == 'Ganesh'
+  //   );
+  //   const BharathJune = months[5].val.filter(
+  //     (f) => f.general.salesHandleName == 'Bharathwaaj'
+  //   );
+  //   const SanthoshJune = months[5].val.filter(
+  //     (f) => f.general.salesHandleName == 'Santhosh'
+  //   );
+  //   const SriniJune = months[5].val.filter(
+  //     (f) => f.general.salesHandleName == 'Nagasrinivasakumar'
+  //   );
+  //   const AllJune = months[5].val;
+
+  //   //  jul
+  //   const VikashJuly = months[6].val.filter(
+  //     (f) => f.general.salesHandleName == 'Vikash'
+  //   );
+  //   const KirthikaJuly = months[6].val.filter(
+  //     (f) => f.general.salesHandleName == 'Kirthika'
+  //   );
+  //   const GaneshJuly = months[6].val.filter(
+  //     (f) => f.general.salesHandleName == 'Ganesh'
+  //   );
+  //   const BharathJuly = months[6].val.filter(
+  //     (f) => f.general.salesHandleName == 'Bharathwaaj'
+  //   );
+  //   const SanthoshJuly = months[6].val.filter(
+  //     (f) => f.general.salesHandleName == 'Santhosh'
+  //   );
+  //   const SriniJuly = months[6].val.filter(
+  //     (f) => f.general.salesHandleName == 'Nagasrinivasakumar'
+  //   );
+  //   const AllJuly = months[6].val;
+
+  //   //  aug
+  //   const VikashAug = months[7].val.filter(
+  //     (f) => f.general.salesHandleName == 'Vikash'
+  //   );
+  //   const KirthikaAug = months[7].val.filter(
+  //     (f) => f.general.salesHandleName == 'Kirthika'
+  //   );
+  //   const GaneshAug = months[7].val.filter(
+  //     (f) => f.general.salesHandleName == 'Ganesh'
+  //   );
+  //   const BharathAug = months[7].val.filter(
+  //     (f) => f.general.salesHandleName == 'Bharathwaaj'
+  //   );
+  //   const SanthoshAug = months[7].val.filter(
+  //     (f) => f.general.salesHandleName == 'Santhosh'
+  //   );
+  //   const SriniAug = months[7].val.filter(
+  //     (f) => f.general.salesHandleName == 'Nagasrinivasakumar'
+  //   );
+  //   const AllAug = months[7].val;
+
+  //   //  sep
+  //   const VikashSep = months[8].val.filter(
+  //     (f) => f.general.salesHandleName == 'Vikash'
+  //   );
+  //   const KirthikaSep = months[8].val.filter(
+  //     (f) => f.general.salesHandleName == 'Kirthika'
+  //   );
+  //   const GaneshSep = months[8].val.filter(
+  //     (f) => f.general.salesHandleName == 'Ganesh'
+  //   );
+  //   const BharathSep = months[8].val.filter(
+  //     (f) => f.general.salesHandleName == 'Bharathwaaj'
+  //   );
+  //   const SanthoshSep = months[8].val.filter(
+  //     (f) => f.general.salesHandleName == 'Santhosh'
+  //   );
+  //   const SriniSep = months[8].val.filter(
+  //     (f) => f.general.salesHandleName == 'Nagasrinivasakumar'
+  //   );
+  //   const AllSep = months[8].val;
+
+  //   //  oct
+  //   const VikashOct = months[9].val.filter(
+  //     (f) => f.general.salesHandleName == 'Vikash'
+  //   );
+  //   const KirthikaOct = months[9].val.filter(
+  //     (f) => f.general.salesHandleName == 'Kirthika'
+  //   );
+  //   const GaneshOct = months[9].val.filter(
+  //     (f) => f.general.salesHandleName == 'Ganesh'
+  //   );
+  //   const BharathOct = months[9].val.filter(
+  //     (f) => f.general.salesHandleName == 'Bharathwaaj'
+  //   );
+  //   const SanthoshOct = months[9].val.filter(
+  //     (f) => f.general.salesHandleName == 'Santhosh'
+  //   );
+  //   const SriniOct = months[9].val.filter(
+  //     (f) => f.general.salesHandleName == 'Nagasrinivasakumar'
+  //   );
+  //   const AllOct = months[9].val;
+
+  //   //  nov
+  //   const VikashNov = months[10].val.filter(
+  //     (f) => f.general.salesHandleName == 'Vikash'
+  //   );
+  //   const KirthikaNov = months[10].val.filter(
+  //     (f) => f.general.salesHandleName == 'Kirthika'
+  //   );
+  //   const GaneshNov = months[10].val.filter(
+  //     (f) => f.general.salesHandleName == 'Ganesh'
+  //   );
+  //   const BharathNov = months[10].val.filter(
+  //     (f) => f.general.salesHandleName == 'Bharathwaaj'
+  //   );
+  //   const SanthoshNov = months[10].val.filter(
+  //     (f) => f.general.salesHandleName == 'Santhosh'
+  //   );
+  //   const SriniNov = months[10].val.filter(
+  //     (f) => f.general.salesHandleName == 'Nagasrinivasakumar'
+  //   );
+  //   const AllNov = months[10].val;
+
+  //   //  dec
+  //   const VikashDec = months[11].val.filter(
+  //     (f) => f.general.salesHandleName == 'Vikash'
+  //   );
+  //   const KirthikaDec = months[11].val.filter(
+  //     (f) => f.general.salesHandleName == 'Kirthika'
+  //   );
+  //   const GaneshDec = months[11].val.filter(
+  //     (f) => f.general.salesHandleName == 'Ganesh'
+  //   );
+  //   const BharathDec = months[11].val.filter(
+  //     (f) => f.general.salesHandleName == 'Bharathwaaj'
+  //   );
+  //   const SanthoshDec = months[11].val.filter(
+  //     (f) => f.general.salesHandleName == 'Santhosh'
+  //   );
+  //   const SriniDec = months[11].val.filter(
+  //     (f) => f.general.salesHandleName == 'Nagasrinivasakumar'
+  //   );
+  //   const AllDec = months[11].val;
+
+  //   let a = [
+  //     {
+  //       name: 'Vikash',
+  //       year: exportYear,
+  //       jan: VikashJan.length === 0 ? 0 : getSalesAmountExcel(VikashJan),
+  //       feb: VikashFeb.length === 0 ? 0 : getSalesAmountExcel(VikashFeb),
+  //       mar: VikashMar.length === 0 ? 0 : getSalesAmountExcel(VikashMar),
+  //       apr: VikashAprl.length === 0 ? 0 : getSalesAmountExcel(VikashAprl),
+  //       may: VikashMay.length === 0 ? 0 : getSalesAmountExcel(VikashMay),
+  //       jun: VikashJune.length === 0 ? 0 : getSalesAmountExcel(VikashJune),
+  //       jul: VikashJuly.length === 0 ? 0 : getSalesAmountExcel(VikashJuly),
+  //       aug: VikashAug.length === 0 ? 0 : getSalesAmountExcel(VikashAug),
+  //       sep: VikashSep.length === 0 ? 0 : getSalesAmountExcel(VikashSep),
+  //       oct: VikashOct.length === 0 ? 0 : getSalesAmountExcel(VikashOct),
+  //       nov: VikashNov.length === 0 ? 0 : getSalesAmountExcel(VikashNov),
+  //       dec: VikashDec.length === 0 ? 0 : getSalesAmountExcel(VikashDec),
+  //     },
+  //     {
+  //       name: 'Kirthika',
+  //       year: exportYear,
+  //       jan: KirthikaJan.length === 0 ? 0 : getSalesAmountExcel(KirthikaJan),
+  //       feb: KirthikaFeb.length === 0 ? 0 : getSalesAmountExcel(KirthikaFeb),
+  //       mar: KirthikaMar.length === 0 ? 0 : getSalesAmountExcel(KirthikaMar),
+  //       apr: KirthikaAprl.length === 0 ? 0 : getSalesAmountExcel(KirthikaAprl),
+  //       may: KirthikaMay.length === 0 ? 0 : getSalesAmountExcel(KirthikaMay),
+  //       jun: KirthikaJune.length === 0 ? 0 : getSalesAmountExcel(KirthikaJune),
+  //       jul: KirthikaJuly.length === 0 ? 0 : getSalesAmountExcel(KirthikaJuly),
+  //       aug: KirthikaAug.length === 0 ? 0 : getSalesAmountExcel(KirthikaAug),
+  //       sep: KirthikaSep.length === 0 ? 0 : getSalesAmountExcel(KirthikaSep),
+  //       oct: KirthikaOct.length === 0 ? 0 : getSalesAmountExcel(KirthikaOct),
+  //       nov: KirthikaNov.length === 0 ? 0 : getSalesAmountExcel(KirthikaNov),
+  //       dec: KirthikaDec.length === 0 ? 0 : getSalesAmountExcel(KirthikaDec),
+  //     },
+  //     {
+  //       name: 'Ganesh',
+  //       year: exportYear,
+  //       jan: GaneshJan.length === 0 ? 0 : getSalesAmountExcel(GaneshJan),
+  //       feb: GaneshFeb.length === 0 ? 0 : getSalesAmountExcel(GaneshFeb),
+  //       mar: GaneshMar.length === 0 ? 0 : getSalesAmountExcel(GaneshMar),
+  //       apr: GaneshAprl.length === 0 ? 0 : getSalesAmountExcel(GaneshAprl),
+  //       may: GaneshMay.length === 0 ? 0 : getSalesAmountExcel(GaneshMay),
+  //       jun: GaneshJune.length === 0 ? 0 : getSalesAmountExcel(GaneshJune),
+  //       jul: GaneshJuly.length === 0 ? 0 : getSalesAmountExcel(GaneshJuly),
+  //       aug: GaneshAug.length === 0 ? 0 : getSalesAmountExcel(GaneshAug),
+  //       sep: GaneshSep.length === 0 ? 0 : getSalesAmountExcel(GaneshSep),
+  //       oct: GaneshOct.length === 0 ? 0 : getSalesAmountExcel(GaneshOct),
+  //       nov: GaneshNov.length === 0 ? 0 : getSalesAmountExcel(GaneshNov),
+  //       dec: GaneshDec.length === 0 ? 0 : getSalesAmountExcel(GaneshDec),
+  //     },
+  //     {
+  //       name: 'Bharathwaaj',
+  //       year: exportYear,
+  //       jan: BharathJan.length === 0 ? 0 : getSalesAmountExcel(BharathJan),
+  //       feb: BharathFeb.length === 0 ? 0 : getSalesAmountExcel(BharathFeb),
+  //       mar: BharathMar.length === 0 ? 0 : getSalesAmountExcel(BharathMar),
+  //       apr: BharathAprl.length === 0 ? 0 : getSalesAmountExcel(BharathAprl),
+  //       may: BharathMay.length === 0 ? 0 : getSalesAmountExcel(BharathMay),
+  //       jun: BharathJune.length === 0 ? 0 : getSalesAmountExcel(BharathJune),
+  //       jul: BharathJuly.length === 0 ? 0 : getSalesAmountExcel(BharathJuly),
+  //       aug: BharathAug.length === 0 ? 0 : getSalesAmountExcel(BharathAug),
+  //       sep: BharathSep.length === 0 ? 0 : getSalesAmountExcel(BharathSep),
+  //       oct: BharathOct.length === 0 ? 0 : getSalesAmountExcel(BharathOct),
+  //       nov: BharathNov.length === 0 ? 0 : getSalesAmountExcel(BharathNov),
+  //       dec: BharathDec.length === 0 ? 0 : getSalesAmountExcel(BharathDec),
+  //     },
+  //     {
+  //       name: 'Santhosh',
+  //       year: exportYear,
+  //       jan: SanthoshJan.length === 0 ? 0 : getSalesAmountExcel(SanthoshJan),
+  //       feb: SanthoshFeb.length === 0 ? 0 : getSalesAmountExcel(SanthoshFeb),
+  //       mar: SanthoshMar.length === 0 ? 0 : getSalesAmountExcel(SanthoshMar),
+  //       apr: SanthoshAprl.length === 0 ? 0 : getSalesAmountExcel(SanthoshAprl),
+  //       may: SanthoshMay.length === 0 ? 0 : getSalesAmountExcel(SanthoshMay),
+  //       jun: SanthoshJune.length === 0 ? 0 : getSalesAmountExcel(SanthoshJune),
+  //       jul: SanthoshJuly.length === 0 ? 0 : getSalesAmountExcel(SanthoshJuly),
+  //       aug: SanthoshAug.length === 0 ? 0 : getSalesAmountExcel(SanthoshAug),
+  //       sep: SanthoshSep.length === 0 ? 0 : getSalesAmountExcel(SanthoshSep),
+  //       oct: SanthoshOct.length === 0 ? 0 : getSalesAmountExcel(SanthoshOct),
+  //       nov: SanthoshNov.length === 0 ? 0 : getSalesAmountExcel(SanthoshNov),
+  //       dec: SanthoshDec.length === 0 ? 0 : getSalesAmountExcel(SanthoshDec),
+  //     },
+  //     {
+  //       name: 'Nagasrinivasakumar',
+  //       year: exportYear,
+  //       jan: SriniJan.length === 0 ? 0 : getSalesAmountExcel(SriniJan),
+  //       feb: SriniFeb.length === 0 ? 0 : getSalesAmountExcel(SriniFeb),
+  //       mar: SriniMar.length === 0 ? 0 : getSalesAmountExcel(SriniMar),
+  //       apr: SriniAprl.length === 0 ? 0 : getSalesAmountExcel(SriniAprl),
+  //       may: SriniMay.length === 0 ? 0 : getSalesAmountExcel(SriniMay),
+  //       jun: SriniJune.length === 0 ? 0 : getSalesAmountExcel(SriniJune),
+  //       jul: SriniJuly.length === 0 ? 0 : getSalesAmountExcel(SriniJuly),
+  //       aug: SriniAug.length === 0 ? 0 : getSalesAmountExcel(SriniAug),
+  //       sep: SriniSep.length === 0 ? 0 : getSalesAmountExcel(SriniSep),
+  //       oct: SriniOct.length === 0 ? 0 : getSalesAmountExcel(SriniOct),
+  //       nov: SriniNov.length === 0 ? 0 : getSalesAmountExcel(SriniNov),
+  //       dec: SriniDec.length === 0 ? 0 : getSalesAmountExcel(SriniDec),
+  //     },
+  //     {
+  //       name: 'All',
+  //       year: exportYear,
+  //       jan: AllJan.length === 0 ? 0 : getSalesAmountExcel(AllJan),
+  //       feb: AllFeb.length === 0 ? 0 : getSalesAmountExcel(AllFeb),
+  //       mar: AllMar.length === 0 ? 0 : getSalesAmountExcel(AllMar),
+  //       apr: AllAprl.length === 0 ? 0 : getSalesAmountExcel(AllAprl),
+  //       may: AllMay.length === 0 ? 0 : getSalesAmountExcel(AllMay),
+  //       jun: AllJune.length === 0 ? 0 : getSalesAmountExcel(AllJune),
+  //       jul: AllJuly.length === 0 ? 0 : getSalesAmountExcel(AllJuly),
+  //       aug: AllAug.length === 0 ? 0 : getSalesAmountExcel(AllAug),
+  //       sep: AllSep.length === 0 ? 0 : getSalesAmountExcel(AllSep),
+  //       oct: AllOct.length === 0 ? 0 : getSalesAmountExcel(AllOct),
+  //       nov: AllNov.length === 0 ? 0 : getSalesAmountExcel(AllNov),
+  //       dec: AllDec.length === 0 ? 0 : getSalesAmountExcel(AllDec),
+  //     },
+  //   ];
+  //   return a;
+  // };
+
+  // const getSalesAmountExcel = (data) => {
+  //   let value = 0;
+  //   if (data) {
+  //     data.forEach((d) => {
+  //       if (d.general.bookingValue !== '') {
+  //         value = value + parseInt(d.general.bookingValue);
+  //       }
+  //     });
+  //     return value;
+  //   }
+  // };
+
   return (
     <div>
       <div style={{ textAlign: 'center', margin: '10px' }}>
@@ -1477,6 +1936,45 @@ const TotalSaleReport = () => {
         <div className='booking__count-bar'>
           <div className='booking--header'>
             <h1 className='booking__count--header'>Booking Value</h1>
+            {/* {exportYearSales.length == 4 ? (
+              <>
+                <div>
+                  <ExcelFile
+                    element={
+                      <button className='exports'>Export to Excel</button>
+                    }>
+                    <ExcelSheet data={getExcelSales} name='Queries'>
+                      <ExcelColumn label='Name' value='name' />
+                      <ExcelColumn label='Year' value='year' />
+                      <ExcelColumn label='Jan' value='jan' />
+                      <ExcelColumn label='Feb' value='feb' />
+                      <ExcelColumn label='Mar' value='mar' />
+                      <ExcelColumn label='Aprl' value='apr' />
+                      <ExcelColumn label='May' value='may' />
+                      <ExcelColumn label='Jun' value='jun' />
+                      <ExcelColumn label='Jul' value='jul' />
+                      <ExcelColumn label='Aug' value='aug' />
+                      <ExcelColumn label='Sep' value='sep' />
+                      <ExcelColumn label='Oct' value='oct' />
+                      <ExcelColumn label='Nov' value='nov' />
+                      <ExcelColumn label='Dec' value='dec' />
+                    </ExcelSheet>
+                  </ExcelFile>
+                </div>
+              </>
+            ) : (
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <h6 style={{ paddingRight: '10px' }}>Enter year to export</h6>
+                <input
+                  type='number'
+                  min='1'
+                  max='999'
+                  placeholder='2021'
+                  onChange={(e) => setExportYearSales(e.target.value)}
+                />
+              </div>
+            )} */}
+
             <div className='month'>
               <label>Show For</label>
               <div

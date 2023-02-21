@@ -55,6 +55,8 @@ import TotalSaleReport from './SalesReport/TotalSaleReport';
 import ResortMain from './Resort components/ResortMain';
 import SuperAdminRoute from './Login components/SuperAdminRoute';
 import AccessDenied from './AccessDenied/AccessDenied';
+import BookingDRecord from './BookingDRecord/BookingDRecord';
+import SalesVolumeCom from './Sales Volume Com/SalesVolumeCom';
 // import LuckySeat from './Quiz/LuckySeat';
 // import LuckySeatAdmin from './Quiz/LuckySeatAdmin';
 // import LuckySeatAs from './Quiz/LuckySeatAs';
@@ -363,6 +365,22 @@ const App = () => {
                 element={
                   <AdminRoute>
                     <TotalSaleReport />
+                  </AdminRoute>
+                }
+              />
+              <Route
+                path='/bookingDRecord'
+                element={
+                  <AdminRoute>
+                    <BookingDRecord />
+                  </AdminRoute>
+                }
+              />
+              <Route
+                path='/salesVolumeCom'
+                element={
+                  <AdminRoute>
+                    <SalesVolumeCom />
                   </AdminRoute>
                 }
               />
