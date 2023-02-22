@@ -15,7 +15,34 @@
 .BookingDRecord___Main__table th,
 .BookingDRecord___Main__table td {
   padding: 3px;
+  font-size: 14px;
 }
 .BookingDRecord___Main__table tbody tr {
   border-bottom: 1px solid #cad5e2;
+}
+.BookingDRecord___Main__Excel_Btn {
+  background-color: #0c247b;
+  cursor: pointer;
+  margin: 10px;
+  width: 150px;
+  text-align: center;
+  color: white;
+  padding: 15px;
+  border: none;
+  outline: none;
+}
+.BookingDRecord___Main_month_t {
+  background-color: white;
+  border: 1px solid #f7cd2e;
+  padding: 10px;
+  margin: 10px;
+  color: #0c247b;
+  cursor: pointer;
+}
+.BookingDRecord___Main_month_f {
+  background-color: #0c247b;
+  color: #f7cd2e;
+  padding: 10px;
+  margin: 10px;
+  cursor: pointer;
 }

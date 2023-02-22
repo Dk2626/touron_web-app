@@ -11,7 +11,23 @@ const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
 const BookingDRecord = () => {
   const isMounted = useRef(false);
   const [finalLogs, setFinalLogs] = useState([]);
-  // console.log('finalLogs', finalLogs);
+  const [year, setYear] = useState('');
+  const [month, setMonth] = useState('');
+
+  let months = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Aprl',
+    'May',
+    'June',
+    'July',
+    'Aug',
+    'Sept',
+    'Oct',
+    'Nov',
+    'Dec',
+  ];
 
   const getRecord = () => {
     let log = [];
@@ -21,8 +37,8 @@ const BookingDRecord = () => {
           if (d.val().paymentDetails.amountDetails) {
             d.val().paymentDetails.amountDetails.forEach((final) => {
               if (
-                '2022' === moment(final.date).format('YYYY') &&
-                3 === moment(final.date).month()
+                year === moment(final.date).format('YYYY') &&
+                month === moment(final.date).month()
               ) {
                 log.push({
                   date: final.date,
@@ -51,10 +67,33 @@ const BookingDRecord = () => {
     isMounted.current = true;
     getRecord();
     return () => (isMounted.current = false);
-  }, []);
+  }, [year, month]);
 
   return (
     <div className='BookingDRecord___Main'>
+      <div>
+        <label>Year:</label>
+        <input type='text' onChange={(e) => setYear(e.target.value)} />
+      </div>
+      <div>
+        <label>Month:</label>
+        <div style={{ display: 'flex' }}>
+          {months.map((m, i) => {
+            return (
+              <div
+                key={i}
+                className={
+                  month === i
+                    ? 'BookingDRecord___Main_month_f'
+                    : 'BookingDRecord___Main_month_t'
+                }
+                onClick={() => setMonth(i)}>
+                {m}
+              </div>
+            );
+          })}
+        </div>
+      </div>
       <div
         style={{
           display: 'flex',
@@ -63,18 +102,7 @@ const BookingDRecord = () => {
         }}>
         <ExcelFile
           element={
-            <button
-              style={{
-                backgroundColor: 'blueviolet',
-                cursor: 'pointer',
-                margin: '10px',
-                width: '150px',
-                textAlign: 'center',
-                color: 'white',
-                padding: 10,
-                border: 'none',
-                outline: 'none',
-              }}>
+            <button className='BookingDRecord___Main__Excel_Btn'>
               Export to Excel
             </button>
           }>
