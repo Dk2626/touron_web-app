@@ -20,6 +20,10 @@ export default function Destination() {
   const [showSubmitted, setShowSubmitted] = useState(false);
   const [suggestions, setSuggestions] = useState('');
 
+  // console.log('markers', markers);
+  // console.log('about', about);
+  // console.log('activeCity', activeCity);
+
   const gaiaData = () => {
     const m = [];
     firedb.ref('/gaiadata').on('value', (data) => {
@@ -170,7 +174,15 @@ export default function Destination() {
                         </div>
                       </Link>
                     )}
-                    <Typed strings={[about]} typeSpeed={40} backSpeed={20} />
+                    <div>
+                      <p style={{ fontSize: 14 }}>{about}</p>
+                    </div>
+                    {/* <Typed strings={[about]} typeSpeed={40} backSpeed={20} /> */}
+                    {/* <Typed
+                      strings={[activeCity.about]}
+                      typeSpeed={40}
+                      backSpeed={20}
+                    /> */}
                   </div>
                   <div className='routeCountry'>
                     <p>
