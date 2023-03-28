@@ -56,7 +56,7 @@ import ResortMain from './Resort components/ResortMain';
 import SuperAdminRoute from './Login components/SuperAdminRoute';
 import AccessDenied from './AccessDenied/AccessDenied';
 import BookingDRecord from './BookingDRecord/BookingDRecord';
-import SalesVolumeCom from './Sales Volume Com/SalesVolumeCom';
+import Record from './marginvolumerecord/Record';
 // import LuckySeat from './Quiz/LuckySeat';
 // import LuckySeatAdmin from './Quiz/LuckySeatAdmin';
 // import LuckySeatAs from './Quiz/LuckySeatAs';
@@ -199,6 +199,7 @@ const App = () => {
               <Route path='/access-denied' element={<AccessDenied />} />
               <Route path='/quiz-win-prize' element={<Quiz />} />
               <Route path='/resorts' element={<ResortMain />} />
+              <Route path='/record' element={<Record />} />
               {/* <Route path='/lucky-seat' element={<LuckySeat />} /> */}
               <Route
                 path='/profile'
@@ -373,14 +374,6 @@ const App = () => {
                 element={
                   <AdminRoute>
                     <BookingDRecord />
-                  </AdminRoute>
-                }
-              />
-              <Route
-                path='/salesVolumeCom'
-                element={
-                  <AdminRoute>
-                    <SalesVolumeCom />
                   </AdminRoute>
                 }
               />

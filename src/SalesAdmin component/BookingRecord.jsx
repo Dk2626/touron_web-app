@@ -18,9 +18,21 @@ import { v4 as uuidv4 } from 'uuid';
 import { useToasts } from 'react-toast-notifications';
 import numeral from 'numeral';
 import { ApiContext } from './../Context/ApiContext';
+import ReactToPrint from 'react-to-print';
+import JoditEditor from 'jodit-react';
+// import ReactExport from 'react-export-excel';
+
+// const ExcelFile = ReactExport.ExcelFile;
+// const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
+// const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
 
 const BookingRecord = () => {
   const isMounted = useRef(false);
+  const billto = useRef(null);
+  const invoiceDes = useRef(null);
+  const printInvoice = useRef();
+  // const [invoiceView, setInvoiceView] = useState(false);
+  const [invoiceTypeView, setInvoiceTypeView] = useState(false);
   const { surveyid } = useParams();
   const [surveyId, setSurveyId] = useState('');
   const [travellerDocuments, setTravellerDocuments] = useState([]);
@@ -78,6 +90,24 @@ const BookingRecord = () => {
   const [tourReportsPdfs, setTourReportsPdfs] = useState([]);
   const [vouchersPdfs, setVouchersPdfs] = useState([]);
   const [pdfUrl, setPdfUrl] = useState(null);
+  const [invoiceData, setInvoiceData] = useState({
+    invoiceNo: '',
+    invoiceDate: '',
+    dueDate: '',
+    invoiceDatas: [],
+  });
+  const [billTo, setBillTo] = useState('');
+  const [invcDes, setInvsDes] = useState('');
+  const [invoiceSingleData, setInvoiceSingleData] = useState({
+    qty: '',
+    unitPrice: '',
+  });
+
+  const { invoiceNo, invoiceDate, dueDate, invoiceDatas } = invoiceData;
+  const { qty, unitPrice } = invoiceSingleData;
+
+  console.log('invoiceData', invoiceData);
+  // console.log('invoiceSingleData', invoiceSingleData);
 
   // console.log('hotels', hotels);
 
@@ -347,6 +377,58 @@ const BookingRecord = () => {
       round(finalMargin, 1),
     ];
   };
+
+  // const exportData = () => {
+  //   let totalAmountReceived = 0;
+  //   let totalSpentAmount = 0;
+  //   let tcsValue = 0;
+  //   let gst = 0;
+  //   let marginBeforeGst = 0;
+  //   let finalMargin = 0;
+
+  //   if (amountDetails) {
+  //     amountDetails.forEach(
+  //       (a) => (totalAmountReceived += parseInt(a.recievedAmount))
+  //     );
+  //   }
+  //   if (amountDetails) {
+  //     amountDetails.forEach(
+  //       (a) => (totalSpentAmount += parseInt(a.spentAmount))
+  //     );
+  //   }
+  //   if (general.tcs === 'Yes') {
+  //     tcsValue = (parseInt(bookingValue) * 5) / 100;
+  //     console.log(`tcsValue`, tcsValue);
+  //   }
+  //   marginBeforeGst = totalAmountReceived - totalSpentAmount;
+
+  //   gst = (marginBeforeGst * 5) / 105;
+  //   finalMargin = marginBeforeGst - gst;
+
+  //   function round(value, precision) {
+  //     var multiplier = Math.pow(10, precision || 0);
+  //     return Math.round(value * multiplier) / multiplier;
+  //   }
+
+  //   if (amountDetails) {
+  //     let ddd = amountDetails.map((obj, i) => ({
+  //       ...obj,
+  //       totalbookingValue: i === 0 ? numeral(bookingValue).format('0,') : '',
+  //       totalAmountReceived:
+  //         i === 0 ? numeral(totalAmountReceived).format('0,') : '',
+  //       BookingVendorPayment:
+  //         i === 0 ? numeral(totalSpentAmount).format('0,') : '',
+  //       marginBeforeGst: i === 0 ? numeral(marginBeforeGst).format('0,') : '',
+  //       gst: i === 0 ? numeral(gst).format('0,') : '',
+  //       finalMargin: i === 0 ? numeral(finalMargin).format('0,') : '',
+  //       tcsValue: i === 0 ? numeral(tcsValue).format('0,') : '',
+  //     }));
+  //     return ddd;
+  //   }
+  // };
+
+  // console.log('exportData', exportData());
+
   const [reminders, setReminders] = useState([]);
 
   const setReminder = (newReminder, reminder) => {
@@ -1269,6 +1351,59 @@ const BookingRecord = () => {
   //   setVouchers([...swap, ...remaining]);
   // };
 
+  function addInvDesc() {
+    setInvoiceData({
+      ...invoiceData,
+      invoiceDatas: [...invoiceDatas, { invcDes, qty, unitPrice }],
+    });
+    setInvsDes('');
+    setInvoiceSingleData({
+      qty: '',
+      unitPrice: '',
+    });
+  }
+
+  function getSubtotal() {
+    let total = 0;
+    invoiceDatas.forEach((d) => {
+      total = total + parseInt(d.qty) * parseInt(d.unitPrice);
+    });
+    return total;
+  }
+
+  const submitInvoice = () => {
+    firedb
+      .ref('invoices')
+      .push({
+        email,
+        customerName,
+        onwardDate,
+        returnDate,
+        destination,
+        invoiceNo,
+        invoiceDate,
+        dueDate,
+        invoiceDatas,
+        billTo,
+      })
+      .then(() => {
+        setInvoiceData({
+          invoiceNo: '',
+          invoiceDate: '',
+          dueDate: '',
+          invoiceDatas: [],
+        });
+        setBillTo('');
+        setInvsDes('');
+        setInvoiceSingleData({
+          qty: '',
+          unitPrice: '',
+        });
+        setInvoiceTypeView(false);
+      })
+      .catch((err) => console.log('first', err));
+  };
+
   const renderItems = (step) => {
     switch (step) {
       case 1:
@@ -1872,6 +2007,44 @@ const BookingRecord = () => {
           <div className='bookingGeneral'>
             <div className='paymentMainn'>
               <h3>Payment Information</h3>
+              {/* {exportData() && (
+                <div>
+                  <ExcelFile element={<button>Export to Excel</button>}>
+                    <ExcelSheet data={exportData()} name='finalLogs'>
+                      <ExcelColumn label='Date' value='date' />
+                      <ExcelColumn label='Particulars' value='particulars' />
+                      <ExcelColumn label='Received Type' value='recievedType' />
+                      <ExcelColumn
+                        label='Received Amount'
+                        value='recievedAmount'
+                      />
+                      <ExcelColumn label='Spent Amount' value='spentAmount' />
+                      <ExcelColumn label='Remark' value='remark' />
+                      <ExcelColumn
+                        label='Total Booking Value'
+                        value='totalbookingValue'
+                      />
+                      <ExcelColumn
+                        label='Total Amount Received'
+                        value='totalAmountReceived'
+                      />
+                      <ExcelColumn
+                        label='Booking & Vendor Payment'
+                        value='BookingVendorPayment'
+                      />
+                      <ExcelColumn
+                        label='Margin Before GST'
+                        value='marginBeforeGst'
+                      />
+                      <ExcelColumn label='GST 5%' value='gst' />
+                      <ExcelColumn label='Final Margin' value='finalMargin' />
+                      {general.tcs === 'Yes' && (
+                        <ExcelColumn label='TCS' value='tcsValue' />
+                      )}
+                    </ExcelSheet>
+                  </ExcelFile>
+                </div>
+              )} */}
               <div className='paymentMainnBtn'>
                 <button onClick={() => setPaymentOpen(!paymentOpen)}>
                   + Add Payment
@@ -3234,6 +3407,20 @@ const BookingRecord = () => {
             </div>
           </div>
         );
+      case 6:
+        return (
+          <div className='bookingGeneral'>
+            <div className='invoiceMainn'>
+              <h3>Invoice</h3>
+              <div className='invoiceMainnBtn'>
+                <button onClick={() => setInvoiceTypeView(true)}>
+                  + Add Invoice
+                </button>
+              </div>
+            </div>
+            {/* <div onClick={() => setInvoiceView(true)}>sdfsd</div> */}
+          </div>
+        );
       default:
         break;
     }
@@ -3241,6 +3428,242 @@ const BookingRecord = () => {
 
   return (
     <div className='bookingRecord'>
+      {invoiceTypeView && (
+        <div className='invoice_sample_mainnn_type'>
+          <button
+            className='invoice_sample_mainnn_type_cls'
+            onClick={() => setInvoiceTypeView(false)}>
+            Close
+          </button>
+          <button
+            className='invoice_sample_mainnn_type_cls'
+            onClick={() => submitInvoice()}>
+            Submit
+          </button>
+          <div className='invoice_sample_mainnn_type_field'>
+            <div className='invoice_sample_mainnn_type_field1'>
+              <div className='invoice_sample_mainnn_type_field1_flx'>
+                <div>
+                  <label>Invoice no:</label>
+                  <input
+                    type='text'
+                    value={invoiceNo}
+                    onChange={(e) =>
+                      setInvoiceData({
+                        ...invoiceData,
+                        invoiceNo: e.target.value,
+                      })
+                    }
+                  />
+                </div>
+                <div>
+                  <label>Invoice Date:</label>
+                  <input
+                    type='date'
+                    value={invoiceDate}
+                    onChange={(e) =>
+                      setInvoiceData({
+                        ...invoiceData,
+                        invoiceDate: e.target.value,
+                      })
+                    }
+                  />
+                </div>
+                <div>
+                  <label>Due Date:</label>
+                  <input
+                    type='date'
+                    value={dueDate}
+                    onChange={(e) =>
+                      setInvoiceData({
+                        ...invoiceData,
+                        dueDate: e.target.value,
+                      })
+                    }
+                  />
+                </div>
+              </div>
+              <div>
+                <label>Bill to:</label>
+                <div style={{ width: '80%' }}>
+                  <JoditEditor
+                    ref={billto}
+                    value={billTo}
+                    onChange={(newContent) => setBillTo(newContent)}
+                  />
+                </div>
+              </div>
+              <button onClick={addInvDesc}>Add</button>
+              <div>
+                <label>Desc:</label>
+                <div style={{ width: '80%' }}>
+                  <JoditEditor
+                    ref={invoiceDes}
+                    value={invcDes}
+                    onChange={(newContent) => setInvsDes(newContent)}
+                  />
+                </div>
+              </div>
+              <div className='invoice_sample_mainnn_type_field1_flx'>
+                <div>
+                  <label>Qty:</label>
+                  <input
+                    type='text'
+                    value={qty}
+                    onChange={(e) =>
+                      setInvoiceSingleData({
+                        ...invoiceSingleData,
+                        qty: e.target.value,
+                      })
+                    }
+                  />
+                </div>
+                <div>
+                  <label>Unit Price:</label>
+                  <input
+                    type='text'
+                    value={unitPrice}
+                    onChange={(e) =>
+                      setInvoiceSingleData({
+                        ...invoiceSingleData,
+                        unitPrice: e.target.value,
+                      })
+                    }
+                  />
+                </div>
+              </div>
+            </div>
+            <div className='invoice_sample_mainnn_type_field2'>
+              <div>
+                <h3>Invoice</h3>
+              </div>
+              <div className='invoice_sample_mainnn_type_field2_invc'>
+                <div>
+                  <h6>
+                    Bill to:{' '}
+                    <span dangerouslySetInnerHTML={{ __html: billTo }} />
+                  </h6>
+                </div>
+                <div>
+                  <h6>Invoice: {invoiceNo}</h6>
+                  <h6>Invoice Date: {invoiceDate}</h6>
+                  <h6>Due Date: {dueDate}</h6>
+                </div>
+              </div>
+              <table className='invoice_sample_mainnn_type_field2_tabl'>
+                <thead>
+                  <tr>
+                    <th>Qty</th>
+                    <th>Desc</th>
+                    <th>Unit Price</th>
+                    <th>Amount</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {invoiceDatas.map((e, i) => {
+                    return (
+                      <tr key={i}>
+                        <td>{e.qty}</td>
+                        <td dangerouslySetInnerHTML={{ __html: e.invcDes }} />
+                        {/* <td>{parseInt(e.unitPrice)}.00</td> */}
+                        <td>{parseFloat(e.unitPrice).toFixed(2)}</td>
+                        <td>
+                          {parseFloat(
+                            parseInt(e.qty) * parseInt(e.unitPrice)
+                          ).toFixed(2)}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                  {invoiceDatas.length > 0 && (
+                    <>
+                      <tr>
+                        <td></td>
+                        <td></td>
+                        <td>Subtotal</td>
+                        <td>{parseFloat(getSubtotal()).toFixed(2)}</td>
+                      </tr>
+                      <tr>
+                        <td></td>
+                        <td></td>
+                        <td>GST 12%</td>
+                        <td>
+                          {parseFloat((getSubtotal() * 12) / 100).toFixed(2)}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td></td>
+                        <td></td>
+                        <td>Total</td>
+                        <td>
+                          {parseFloat(getSubtotal()).toFixed(2) -
+                            parseFloat((getSubtotal() * 12) / 100).toFixed(2)}
+                        </td>
+                      </tr>
+                    </>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      )}
+      {/* {invoiceView && (
+        <div className='invoice_sample_mainnn'>
+          <div className='invoice_sample_mainnn_1' ref={printInvoice}>
+            <h2>Invoice</h2>
+            <h2>Invoice</h2>
+            <h2>Invoice</h2>
+            <h2>Invoice</h2>
+            <h2>Invoice</h2>
+            <h2>Invoice</h2>
+            <h2>Invoice</h2>
+            <h2>Invoice</h2>
+            <h2>Invoice</h2>
+            <h2>Invoice</h2>
+            <h2>Invoice</h2>
+            <h2>Invoice</h2>
+            <h2>Invoice</h2>
+            <h2>Invoice</h2>
+            <h2>Invoice</h2>
+            <h2>Invoice</h2>
+            <h2>Invoice</h2>
+            <h2>Invoice</h2>
+            <h2>Invoice</h2>
+            <h2>Invoice</h2>
+            <h2>Invoice</h2>
+            <h2>Invoice</h2>
+            <h2>Invoice</h2>
+            <h2>Invoice</h2>
+            <h2>Invoice</h2>
+            <h2>Invoice</h2>
+            <h2>Invoice</h2>
+            <h2>Invoice</h2>
+            <h2>Invoice</h2>
+            <h2>Invoice</h2>
+            <h2>Invoice</h2>
+            <h2>Invoice</h2>
+            <h2>Invoice</h2>
+            <h2>Invoice</h2>
+            <h2>Invoice</h2>
+          </div>
+          <div className='invoice_sample_mainnn_2'>
+            <ReactToPrint
+              trigger={() => (
+                <button className='invoice_sample_mainnn_1_btn_print'>
+                  Print
+                </button>
+              )}
+              content={() => printInvoice.current}
+            />
+            <button
+              className='invoice_sample_mainnn_1_btn_close'
+              onClick={() => setInvoiceView(false)}>
+              Close
+            </button>
+          </div>
+        </div>
+      )} */}
       {pdfUrl && (
         <div className='pdf_Popup'>
           <div className='pdf_Popup_con'>
@@ -3411,6 +3834,16 @@ const BookingRecord = () => {
             className={step === 5 ? 'bb' : 'bc'}>
             Documents
           </h6>
+          {/* <div className='bookingBorder'></div>
+          <div
+            className={step === 6 ? 'bookingColor' : 'bookingColorNon'}></div>
+          <h6
+            onClick={() => {
+              if (isNewRecord) setStep(6);
+            }}
+            className={step === 6 ? 'bb' : 'bc'}>
+            Invoice
+          </h6> */}
 
           {/* {travellerDocuments?.length > 0 && (
             <>

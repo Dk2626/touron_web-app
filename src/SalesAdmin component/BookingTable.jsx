@@ -12,6 +12,7 @@ const BookingTable = () => {
   const isMounted = useRef(false);
   const { employees } = useContext(ApiContext);
   const [loading1, setLoading1] = useState(false);
+  const [loading2, setLoading2] = useState(false);
   const [bookingDetails, setBookingDetails] = useState([]);
   const [bMonth, setBMonth] = useState('');
   const [handleBy, setHandleBy] = useState('');
@@ -19,9 +20,10 @@ const BookingTable = () => {
   const [pageSize, setPageSize] = useState(10);
   const [currentPage, setCurrentpage] = useState(0);
   const [search, setSearch] = useState('');
+  const [openDelRecord, setOpenDelRecord] = useState(false);
+  const [bookingRId, setBookingRId] = useState('');
 
-  console.log('first', search);
-  console.log('first', typeof search);
+  // console.log('loading2', loading2);
 
   useEffect(() => {
     isMounted.current = true;
@@ -149,13 +151,13 @@ const BookingTable = () => {
               if (rr.isStarted) {
                 c += 1;
                 if (reminder.length === 0) {
-                  reminder.push(bookingDetails[r].surveyId);
+                  reminder.push(bookingDetails[r]?.surveyId);
                 } else {
                   reminder.forEach((s) => {
-                    if (reminder.includes(bookingDetails[s].surveyId)) {
+                    if (reminder.includes(bookingDetails[s]?.surveyId)) {
                       return;
                     } else {
-                      reminder.push(bookingDetails[s].surveyId);
+                      reminder.push(bookingDetails[s]?.surveyId);
                     }
                   });
                 }
@@ -165,7 +167,7 @@ const BookingTable = () => {
         });
         let r = {};
         Object.keys(bookingDetails).forEach((b) => {
-          if (reminder.includes(bookingDetails[b].surveyId)) {
+          if (reminder.includes(bookingDetails[b]?.surveyId)) {
             r[b] = bookingDetails[b];
           }
         });
@@ -365,299 +367,353 @@ const BookingTable = () => {
     return months[num + 1];
   };
 
+  // const deleteBookingRecord = () => {
+  //   firedb
+  //     .ref(`bookingdetails1/${bookingRId}`)
+  //     .remove()
+  //     .then(() => {
+  //       setOpenDelRecord(false);
+  //       setBookingRId('');
+  //       setLoading2(false);
+  //     })
+  //     .catch((err) => {
+  //       console.log('err', err);
+  //     });
+  // };
+
   return (
-    <div className='booking-container'>
-      <div className='booking-name-container'>
-        <div>
-          <h3 style={{ color: '#666666' }}>Booking Management</h3>
-        </div>
-        <Link to='/bookingrecord' target='_blank'>
-          <div className='add-booking'>
-            <h6> + Add Booking</h6>
-          </div>
-        </Link>
-      </div>
-      <div className='booking-stats-container'>
-        <div className='booking-stats'>
-          <h3>Total booking</h3>
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <h6>{Object.keys(bookingDetails).length}</h6>
-            <span onClick={() => setBMonth('')}>Show</span>
-          </div>
-        </div>
-
-        <div className='booking-stats'>
-          <h3>Current Travelling</h3>
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <h6>{Object.keys(render('current')).length}</h6>
-            <span onClick={() => setBMonth('current')}>Show</span>
-          </div>
-        </div>
-        <div className='booking-stats'>
-          <h3>Upcoming travel in 7 Days</h3>
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-            }}>
-            <h6>{Object.keys(render('week', 7)).length}</h6>
-            <span onClick={() => setBMonth('07')}>Show</span>
-          </div>
-        </div>
-
-        <div className='booking-stats'>
-          <h3>Travellers in {getMonth(new Date().getMonth())}</h3>
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <span onClick={() => setBMonth(new Date().getMonth())}>Show</span>
-          </div>
-        </div>
-        <div className='booking-stats'>
-          <h3>Total Reminders</h3>
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <h6>{render('reminder')[0]}</h6>
-            <span onClick={() => setBMonth('reminder')}>Show</span>
-          </div>
-        </div>
-      </div>
-
-      <div className='filters'>
-        <div className='month'>
-          <label>Show Item : </label>
-          <select
-            value={pageSize}
-            onChange={(e) => setPageSize(e.target.value)}>
-            <option value='10'>10</option>
-            <option value='20'>20</option>
-            <option value='50'>50</option>
-            <option value='100'>100</option>
-          </select>
-        </div>
-        <div className='month'>
-          <label>Upcoming Travel in : </label>
-          <select
-            // value={upTravel}
-            onChange={(e) => setBMonth(e.target.value)}>
-            <option value='' selected disabled hidden>
-              select One
-            </option>
-            <option value='07'>7 Days</option>
-            <option value='15'>15 Days</option>
-          </select>
-        </div>
-        <div className='month'>
-          <label>Year : </label>
-          <select value={year} onChange={(e) => setYear(e.target.value)}>
-            <option value='2020'>2020</option>
-            <option value='2021'>2021</option>
-            <option value='2022'>2022</option>
-            <option value='2023'>2023</option>
-            <option value='2024'>2024</option>
-            <option value='2025'>2025</option>
-          </select>
-        </div>
-
-        <div className='month'>
-          <label>Booked By Month : </label>
-          <select onChange={(e) => setBMonth(`${e.target.value}bMonth`)}>
-            {months.map((m, i) => (
-              <option key={i} value={m === 'All' ? 'All' : i - 1}>
-                {m}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className='month'>
-          <label>Travel By Month : </label>
-          <select onChange={(e) => setBMonth(e.target.value)}>
-            {months.map((m, i) => (
-              <option key={i} value={m === 'All' ? 'All' : i - 1}>
-                {m}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className='month'>
-          <label>Handle By : </label>
-          <select
-            onChange={(e) => {
-              // setBMonth(`handle${e.target.value}`);
-              setHandleBy(e.target.value);
-            }}>
-            <option value='All'>All</option>
-            {employees?.map((e, i) => {
-              if (
-                e.designation === 'CEO' ||
-                e.designation == 'Travel Associate'
-              )
-                return (
-                  <option key={i} value={e.name}>
-                    {e.name}
-                  </option>
-                );
-            })}
-          </select>
-        </div>
-        <div className='month'>
-          <label>Search by Name / Dest / Id:</label>
-          <input type='text' onChange={(e) => setSearch(e.target.value)} />
-        </div>
-      </div>
-
-      <div className='b-table'>
-        <div
-          className='table-heading-container'
-          style={{
-            backgroundColor: '#ddefff',
-          }}>
-          <h5>Sl.NO</h5>
-          <h5>Survey Id</h5>
-          <h5>Name</h5>
-          <h5>Destination</h5>
-          <h5>Booking Value</h5>
-          <h5>Departure</h5>
-          <h5>Return</h5>
-          <h5>Departure in</h5>
-          <h5>Handled By</h5>
-          <h5>Notification</h5>
-        </div>
-        {loading1 ? (
-          <div className='req-lo'>
-            Fetching Data <Ellipsis color='#0057ff' />
-          </div>
-        ) : (
-          <>
-            {getBookingByMonth().length === 0 ? (
-              <div className='req-lo'>
-                Fetching Data <Ellipsis color='#0057ff' />
-              </div>
+    <div>
+      {/* {openDelRecord && (
+        <div className='booking-container_del__recorf'>
+          <div className='booking-container_del__recorf_main'>
+            {loading2 ? (
+              <div>Just a sec...</div>
             ) : (
               <>
-                {Object.keys(getBookingByMonth())
-                  .slice(currentPage * pageSize, (currentPage + 1) * pageSize)
-                  .map((c, i) => {
-                    return (
-                      <Link
-                        target='_blank'
-                        className='plink'
-                        key={i}
-                        to={{
-                          pathname: `/bookingrecord/${c}/${bookingDetails[c]?.general?.customerName}`,
-                        }}>
-                        <div
-                          style={{
-                            fontSize: 6,
-                            backgroundColor:
-                              bookingDetails[c].general.tourType ===
-                              'International'
-                                ? '#E5D68A'
-                                : '#fff',
-                          }}
-                          className={`table-heading-row  ${completedtRequest(
-                            bookingDetails[c].general.returnDate,
-                            bookingDetails[c].general.isBookingCancelled
-                          )}`}>
-                          <h5>{i + 1}</h5>
-                          <h5>{bookingDetails[c].surveyId}</h5>
-                          <h5>{bookingDetails[c].general.customerName}</h5>
-                          <h5>{bookingDetails[c].general.destination}</h5>
-
-                          <h5>
-                            {numeral(
-                              bookingDetails[c].general.bookingValue
-                            ).format('0,')}
-                          </h5>
-
-                          <h5>{bookingDetails[c].general.onwardDate}</h5>
-                          <h5>{bookingDetails[c].general.returnDate}</h5>
-                          <h5>
-                            {getDepatureDate(
-                              bookingDetails[c].general.onwardDate
-                            )}{' '}
-                            days
-                          </h5>
-
-                          <h5>{bookingDetails[c].general.salesHandleName}</h5>
-                          <h5 className='notifyIcon'>
-                            <IoMdNotifications size={25} />
-
-                            {getRemindersCount(
-                              bookingDetails[c].reminders
-                            )[0] === 0 ? null : (
-                              <span className='notifyValue'>
-                                {
-                                  getRemindersCount(
-                                    bookingDetails[c].reminders
-                                  )[0]
-                                }
-                              </span>
-                            )}
-
-                            {getRemindersCount(bookingDetails[c].reminders)[1]
-                              .length > 0 && (
-                              <div className='notifyReminder'>
-                                {getRemindersCount(
-                                  bookingDetails[c].reminders
-                                )[1].map((s, i) => (
-                                  <span>
-                                    {i + 1}.{s}
-                                  </span>
-                                ))}
-                              </div>
-                            )}
-                          </h5>
-                        </div>
-                      </Link>
-                    );
-                  })}
+                <div>Are you sure want to remove the booking record?</div>
+                <div>
+                  <button
+                    onClick={() => {
+                      setLoading2(true);
+                      deleteBookingRecord();
+                    }}>
+                    Remove
+                  </button>
+                  <button onClick={() => setOpenDelRecord(false)}>
+                    Cancel
+                  </button>
+                </div>
               </>
             )}
-          </>
-        )}
-      </div>
-      {Object.keys(bookingDetails).length > 10 && (
-        <div className='pagination-table'>
-          {currentPage === 0 ? null : (
-            <div
-              className='pag-count'
-              onClick={(e) => {
-                handleClick(e, currentPage - 1);
-              }}
-              style={{
-                backgroundColor: '#0057ff',
-                color: '#fff',
-              }}>
-              <h5>{'<'}</h5>
+          </div>
+        </div>
+      )} */}
+      <div className='booking-container'>
+        <div className='booking-name-container'>
+          <div>
+            <h3 style={{ color: '#666666' }}>Booking Management</h3>
+          </div>
+          <Link to='/bookingrecord' target='_blank'>
+            <div className='add-booking'>
+              <h6> + Add Booking</h6>
             </div>
-          )}
-          {new Array(pagesCount).fill('1').map((c, i) => {
-            if (i + 1 < currentPage + 5 && i > currentPage - 2) {
-              return (
-                <div
-                  key={i}
-                  className='pag-count'
-                  onClick={(e) => handleClick(e, i)}
-                  style={{
-                    backgroundColor: currentPage === i ? '#0057ff' : '#fff',
-                    color: currentPage === i ? '#fff' : '#333',
-                  }}>
-                  <h5>{i + 1}</h5>
+          </Link>
+        </div>
+        <div className='booking-stats-container'>
+          <div className='booking-stats'>
+            <h3>Total booking</h3>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <h6>{Object.keys(bookingDetails).length}</h6>
+              <span onClick={() => setBMonth('')}>Show</span>
+            </div>
+          </div>
+
+          <div className='booking-stats'>
+            <h3>Current Travelling</h3>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <h6>{Object.keys(render('current')).length}</h6>
+              <span onClick={() => setBMonth('current')}>Show</span>
+            </div>
+          </div>
+          <div className='booking-stats'>
+            <h3>Upcoming travel in 7 Days</h3>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+              }}>
+              <h6>{Object.keys(render('week', 7)).length}</h6>
+              <span onClick={() => setBMonth('07')}>Show</span>
+            </div>
+          </div>
+
+          <div className='booking-stats'>
+            <h3>Travellers in {getMonth(new Date().getMonth())}</h3>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <span onClick={() => setBMonth(new Date().getMonth())}>Show</span>
+            </div>
+          </div>
+          <div className='booking-stats'>
+            <h3>Total Reminders</h3>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <h6>{render('reminder')[0]}</h6>
+              <span onClick={() => setBMonth('reminder')}>Show</span>
+            </div>
+          </div>
+        </div>
+
+        <div className='filters'>
+          <div className='month'>
+            <label>Show Item : </label>
+            <select
+              value={pageSize}
+              onChange={(e) => setPageSize(e.target.value)}>
+              <option value='10'>10</option>
+              <option value='20'>20</option>
+              <option value='50'>50</option>
+              <option value='100'>100</option>
+            </select>
+          </div>
+          <div className='month'>
+            <label>Upcoming Travel in : </label>
+            <select
+              // value={upTravel}
+              onChange={(e) => setBMonth(e.target.value)}>
+              <option value='' selected disabled hidden>
+                select One
+              </option>
+              <option value='07'>7 Days</option>
+              <option value='15'>15 Days</option>
+            </select>
+          </div>
+          <div className='month'>
+            <label>Year : </label>
+            <select value={year} onChange={(e) => setYear(e.target.value)}>
+              <option value='2020'>2020</option>
+              <option value='2021'>2021</option>
+              <option value='2022'>2022</option>
+              <option value='2023'>2023</option>
+              <option value='2024'>2024</option>
+              <option value='2025'>2025</option>
+            </select>
+          </div>
+
+          <div className='month'>
+            <label>Booked By Month : </label>
+            <select onChange={(e) => setBMonth(`${e.target.value}bMonth`)}>
+              {months.map((m, i) => (
+                <option key={i} value={m === 'All' ? 'All' : i - 1}>
+                  {m}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className='month'>
+            <label>Travel By Month : </label>
+            <select onChange={(e) => setBMonth(e.target.value)}>
+              {months.map((m, i) => (
+                <option key={i} value={m === 'All' ? 'All' : i - 1}>
+                  {m}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className='month'>
+            <label>Handle By : </label>
+            <select
+              onChange={(e) => {
+                // setBMonth(`handle${e.target.value}`);
+                setHandleBy(e.target.value);
+              }}>
+              <option value='All'>All</option>
+              {employees?.map((e, i) => {
+                if (
+                  e.designation === 'CEO' ||
+                  e.designation == 'Travel Associate'
+                )
+                  return (
+                    <option key={i} value={e.name}>
+                      {e.name}
+                    </option>
+                  );
+              })}
+            </select>
+          </div>
+          <div className='month'>
+            <label>Search by Name / Dest / Id:</label>
+            <input type='text' onChange={(e) => setSearch(e.target.value)} />
+          </div>
+        </div>
+
+        <div className='b-table'>
+          <div
+            className='table-heading-container'
+            style={{
+              backgroundColor: '#ddefff',
+            }}>
+            <h5>Sl.NO</h5>
+            <h5>Survey Id</h5>
+            <h5>Name</h5>
+            <h5>Destination</h5>
+            <h5>Booking Value</h5>
+            <h5>Departure</h5>
+            <h5>Return</h5>
+            <h5>Departure in</h5>
+            <h5>Handled By</h5>
+            <h5>Notification</h5>
+          </div>
+          {loading1 ? (
+            <div className='req-lo'>
+              Fetching Data <Ellipsis color='#0057ff' />
+            </div>
+          ) : (
+            <>
+              {getBookingByMonth().length === 0 ? (
+                <div className='req-lo'>
+                  Fetching Data <Ellipsis color='#0057ff' />
                 </div>
-              );
-            }
-          })}
-          {pagesCount - 1 === currentPage ? null : (
-            <div
-              className='pag-count'
-              onClick={(e) => handleClick(e, currentPage + 1)}
-              style={{
-                backgroundColor: '#0057ff',
-                color: '#fff',
-              }}>
-              <h5>{'>'}</h5>
-            </div>
+              ) : (
+                <>
+                  {Object.keys(getBookingByMonth())
+                    .slice(currentPage * pageSize, (currentPage + 1) * pageSize)
+                    .map((c, i) => {
+                      return (
+                        <div>
+                          {/* <div
+                            onClick={() => {
+                              setOpenDelRecord(true);
+                              setBookingRId(c);
+                            }}>
+                            del
+                          </div> */}
+                          <Link
+                            target='_blank'
+                            className='plink'
+                            key={i}
+                            to={{
+                              pathname: `/bookingrecord/${c}/${bookingDetails[c]?.general?.customerName}`,
+                            }}>
+                            <div
+                              style={{
+                                fontSize: 6,
+                                backgroundColor:
+                                  bookingDetails[c].general.tourType ===
+                                  'International'
+                                    ? '#E5D68A'
+                                    : '#fff',
+                                position: 'relative',
+                              }}
+                              className={`table-heading-row  ${completedtRequest(
+                                bookingDetails[c].general.returnDate,
+                                bookingDetails[c].general.isBookingCancelled
+                              )}`}>
+                              <h5>{i + 1}</h5>
+                              <h5>{bookingDetails[c]?.surveyId}</h5>
+                              <h5>{bookingDetails[c].general.customerName}</h5>
+                              <h5>{bookingDetails[c].general.destination}</h5>
+
+                              <h5>
+                                {numeral(
+                                  bookingDetails[c].general.bookingValue
+                                ).format('0,')}
+                              </h5>
+
+                              <h5>{bookingDetails[c].general.onwardDate}</h5>
+                              <h5>{bookingDetails[c].general.returnDate}</h5>
+                              <h5>
+                                {getDepatureDate(
+                                  bookingDetails[c].general.onwardDate
+                                )}{' '}
+                                days
+                              </h5>
+
+                              <h5>
+                                {bookingDetails[c].general.salesHandleName}
+                              </h5>
+                              <h5 className='notifyIcon'>
+                                <IoMdNotifications size={25} />
+
+                                {getRemindersCount(
+                                  bookingDetails[c].reminders
+                                )[0] === 0 ? null : (
+                                  <span className='notifyValue'>
+                                    {
+                                      getRemindersCount(
+                                        bookingDetails[c].reminders
+                                      )[0]
+                                    }
+                                  </span>
+                                )}
+
+                                {getRemindersCount(
+                                  bookingDetails[c].reminders
+                                )[1].length > 0 && (
+                                  <div className='notifyReminder'>
+                                    {getRemindersCount(
+                                      bookingDetails[c].reminders
+                                    )[1].map((s, i) => (
+                                      <span>
+                                        {i + 1}.{s}
+                                      </span>
+                                    ))}
+                                  </div>
+                                )}
+                              </h5>
+                            </div>
+                          </Link>
+                        </div>
+                      );
+                    })}
+                </>
+              )}
+            </>
           )}
         </div>
-      )}
+        {Object.keys(bookingDetails).length > 10 && (
+          <div className='pagination-table'>
+            {currentPage === 0 ? null : (
+              <div
+                className='pag-count'
+                onClick={(e) => {
+                  handleClick(e, currentPage - 1);
+                }}
+                style={{
+                  backgroundColor: '#0057ff',
+                  color: '#fff',
+                }}>
+                <h5>{'<'}</h5>
+              </div>
+            )}
+            {new Array(pagesCount).fill('1').map((c, i) => {
+              if (i + 1 < currentPage + 5 && i > currentPage - 2) {
+                return (
+                  <div
+                    key={i}
+                    className='pag-count'
+                    onClick={(e) => handleClick(e, i)}
+                    style={{
+                      backgroundColor: currentPage === i ? '#0057ff' : '#fff',
+                      color: currentPage === i ? '#fff' : '#333',
+                    }}>
+                    <h5>{i + 1}</h5>
+                  </div>
+                );
+              }
+            })}
+            {pagesCount - 1 === currentPage ? null : (
+              <div
+                className='pag-count'
+                onClick={(e) => handleClick(e, currentPage + 1)}
+                style={{
+                  backgroundColor: '#0057ff',
+                  color: '#fff',
+                }}>
+                <h5>{'>'}</h5>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 };

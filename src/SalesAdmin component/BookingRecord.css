@@ -13,6 +13,7 @@
 .generalLi2 li,
 .generalLi1 li,
 .paymentMainnBtn button,
+.invoiceMainnBtn button,
 .paymentTableHead h5,
 .paymentTableBody h5 {
   font-family: 'andika';
@@ -22,7 +23,8 @@
   padding: 5px 0;
   font-size: 24px;
 }
-.paymentMainn h3 {
+.paymentMainn h3,
+.invoiceMainn h3 {
   font-family: 'newyorklargeblack';
 }
 
@@ -258,13 +260,15 @@
 .paymentTableBody h5 {
   flex-basis: 20%;
 }
-.paymentMainn {
+.paymentMainn,
+.invoiceMainn {
   display: flex;
   align-items: center;
   justify-content: space-between;
   position: relative;
 }
-.paymentMainnBtn button {
+.paymentMainnBtn button,
+.invoiceMainnBtn button {
   border: none;
   outline: none;
   background-color: #0057ff;
@@ -650,6 +654,85 @@
   align-items: center;
   justify-content: center;
   border-radius: 50%;
+}
+.invoice_sample_mainnn {
+  position: absolute;
+  height: 100vh;
+  width: 100%;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  z-index: 100;
+  display: flex;
+  justify-content: center;
+}
+.invoice_sample_mainnn_type {
+  position: absolute;
+  height: 120vh;
+  width: 100%;
+  top: 0;
+  left: 0;
+  background-color: #fff;
+  z-index: 100;
+}
+.invoice_sample_mainnn_type_field {
+  width: 100%;
+  padding: 20px;
+  display: flex;
+}
+.invoice_sample_mainnn_type_field1 {
+  width: 50%;
+}
+.invoice_sample_mainnn_type_field2 {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.invoice_sample_mainnn_type_field1_flx {
+  display: flex;
+}
+.invoice_sample_mainnn_type_field label {
+  margin-right: 5px;
+}
+.invoice_sample_mainnn_type_field2_invc {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.invoice_sample_mainnn_type_field2_tabl {
+  width: 100%;
+}
+.invoice_sample_mainnn_1 {
+  width: 60%;
+  background-color: #fff;
+  overflow: scroll;
+}
+.invoice_sample_mainnn_2 {
+  background-color: #fff;
+  height: 60px;
+  border-left: 0.5px solid black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.invoice_sample_mainnn_1_btn_print {
+  background-color: #5da3fa;
+  outline: none;
+  border: none;
+  padding: 5px 10px;
+  color: #fff;
+  margin: 0 10px;
+}
+.invoice_sample_mainnn_1_btn_close {
+  background-color: #e21717;
+  outline: none;
+  border: none;
+  padding: 5px 10px;
+  color: #fff;
+  margin: 0 10px;
 }
 
 @media screen and (min-height: 722px) {
