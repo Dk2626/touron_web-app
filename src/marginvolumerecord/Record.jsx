@@ -28,8 +28,13 @@ import parse from 'html-react-parser';
 const Record = () => {
   const [email, setEmail] = useState('');
   const ht = useRef(null);
+  let content = ht.current;
+  console.log('ht', content);
 
-  // // console.log('ht', ht.current);
+  setTimeout(() => {
+    console.log('ht', content.innerHTML);
+  }, 5000);
+  // console.log('ht', '<html>' + content.documentElement.innerHTML + '</html>');
 
   // const parser = new DOMParser();
   // // const htmlString = `${ht.current}`;
@@ -89,7 +94,7 @@ const Record = () => {
       .ref('invoice')
       .push({
         email,
-        html: ht.current.toString(),
+        html: `${content.innerHTML}`,
       })
       .then(() => setEmail(''))
       .catch((err) => console.log(err));
@@ -97,38 +102,41 @@ const Record = () => {
 
   let arr = [1, 2, 3, 4, 4, 5];
 
-  return (
-    <div>
-      <div
-        ref={ht}
-        style={{
-          backgroundColor: 'white',
-          padding: 20,
-          margin: 10,
-          width: '100%',
-        }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <div>
-            <div style={{ width: '200px', height: '180px' }}>
-              <img
-                src='https://firebasestorage.googleapis.com/v0/b/touronapp-248e4.appspot.com/o/logof.png?alt=media&token=a45a95ae-e4a8-469d-a03d-2b20c6f2a484'
-                alt='logo'
-                style={{ width: '100%', height: '100%' }}
-              />
+  {
+    /* <div
+          style={{
+            backgroundColor: 'blue',
+            padding: 20,
+            margin: 10,
+          }}>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              width: '100%',
+            }}>
+            <div>
+              <div style={{ width: '200px', height: '180px' }}>
+                <img
+                  src='https://firebasestorage.googleapis.com/v0/b/touronapp-248e4.appspot.com/o/logof.png?alt=media&token=a45a95ae-e4a8-469d-a03d-2b20c6f2a484'
+                  alt='logo'
+                  style={{ width: '100%', height: '100%' }}
+                />
+              </div>
+              <div>
+                <h6>tour On (A Brand of Lotsatravel Holidays LLP)</h6>
+                <p>
+                  Chennai <br />
+                  Tamil Nadu 600073 <br />
+                  GST Number: 33AAHFL7839F1Z6 <br />
+                  GSTIN: 33AAHFL7839F1Z6
+                </p>
+              </div>
             </div>
             <div>
-              <h6>tour On (A Brand of Lotsatravel Holidays LLP)</h6>
-              <p>
-                Chennai <br />
-                Tamil Nadu 600073 <br />
-                GST Number: 33AAHFL7839F1Z6 <br />
-                GSTIN: 33AAHFL7839F1Z6
-              </p>
+              <h2>TAX INVOICE</h2>
+              <h6># INV-10123 </h6>
             </div>
-          </div>
-          <div>
-            <h2>TAX INVOICE</h2>
-            <h6># INV-10123 </h6>
           </div>
           <div>
             {arr.map((a, i) => {
@@ -139,6 +147,230 @@ const Record = () => {
               );
             })}
           </div>
+        </div> */
+  }
+
+  function getSubtotal() {
+    let total = 0;
+    data.invoiceDatas.forEach((d) => {
+      total = total + parseInt(d.qty) * parseInt(d.unitPrice);
+    });
+    return total;
+  }
+
+  return (
+    <div>
+      <div ref={ht}>
+        <div style={{ margin: 0 }}>
+          <center
+            style={{
+              width: '100%',
+              tableLayout: 'fixed',
+            }}>
+            <table
+              style={{
+                width: '100%',
+                maxWidth: '900px',
+                backgroundColor: '#fff',
+              }}>
+              <tr>
+                <td>
+                  <div style={{ width: '200px', height: '180px' }}>
+                    <img
+                      src='https://firebasestorage.googleapis.com/v0/b/touronapp-248e4.appspot.com/o/logof.png?alt=media&token=a45a95ae-e4a8-469d-a03d-2b20c6f2a484'
+                      alt='logo'
+                      style={{ width: '100%', height: '100%' }}
+                    />
+                  </div>
+                </td>
+                <td>
+                  <h2 style={{ margin: 0 }}>TAX INVOICE</h2>
+                  <h6 style={{ margin: 0 }}># INV-10123 </h6>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <h6 style={{ margin: 0 }}>
+                    tour On (A Brand of Lotsatravel Holidays LLP)
+                  </h6>
+                  <p style={{ margin: 0 }}>
+                    Chennai <br />
+                    Tamil Nadu 600073 <br />
+                    GST Number: 33AAHFL7839F1Z6 <br />
+                    GSTIN: 33AAHFL7839F1Z6
+                  </p>
+                </td>
+              </tr>
+            </table>
+            <table
+              style={{
+                width: '100%',
+                maxWidth: '900px',
+                backgroundColor: '#fff',
+                marginTop: '5px',
+              }}>
+              <tr style={{ backgroundColor: '#12B0E8' }}>
+                <td
+                  style={{
+                    width: '10%',
+                    padding: '5px',
+                    color: '#fff',
+                  }}>
+                  Qty
+                </td>
+                <td
+                  style={{
+                    width: '50%',
+                    padding: '5px',
+                    color: '#fff',
+                  }}>
+                  Desc
+                </td>
+                <td
+                  style={{
+                    width: '20%',
+                    padding: '5px',
+                    color: '#fff',
+                  }}>
+                  Unit price
+                </td>
+                <td
+                  style={{
+                    width: '20%',
+                    padding: '5px',
+                    color: '#fff',
+                  }}>
+                  Amt
+                </td>
+              </tr>
+              {data.invoiceDatas.map((d) => {
+                return (
+                  <tr>
+                    <td
+                      style={{
+                        width: '10%',
+                        padding: '5px',
+                      }}>
+                      {d.qty}
+                    </td>
+                    <td
+                      style={{
+                        width: '50%',
+                        padding: '5px 5px 0px 5px',
+                      }}
+                      dangerouslySetInnerHTML={{ __html: d.invcDes }}
+                    />
+                    <td
+                      style={{
+                        width: '20%',
+                        padding: '5px',
+                      }}>
+                      {parseFloat(d.unitPrice).toFixed(2)}
+                    </td>
+                    <td
+                      style={{
+                        width: '20%',
+                        padding: '5px',
+                      }}>
+                      {parseFloat(
+                        parseInt(d.qty) * parseInt(d.unitPrice)
+                      ).toFixed(2)}
+                    </td>
+                  </tr>
+                );
+              })}
+            </table>
+            <table
+              style={{
+                width: '100%',
+                maxWidth: '900px',
+                backgroundColor: '#fff',
+                marginTop: '5px',
+              }}>
+              <tr>
+                <td
+                  style={{
+                    width: '10%',
+                    padding: '5px',
+                  }}></td>
+                <td
+                  style={{
+                    width: '50%',
+                    padding: '5px',
+                  }}></td>
+                <td
+                  style={{
+                    width: '20%',
+                    padding: '5px',
+                  }}>
+                  Subtotal
+                </td>
+                <td
+                  style={{
+                    width: '20%',
+                    padding: '5px',
+                  }}>
+                  {parseFloat(getSubtotal()).toFixed(2)}
+                </td>
+              </tr>
+              <tr>
+                <td
+                  style={{
+                    width: '10%',
+                    padding: '5px',
+                  }}></td>
+                <td
+                  style={{
+                    width: '50%',
+                    padding: '5px',
+                  }}></td>
+                <td
+                  style={{
+                    width: '20%',
+                    padding: '5px',
+                  }}>
+                  GST 12%
+                </td>
+                <td
+                  style={{
+                    width: '20%',
+                    padding: '5px',
+                  }}>
+                  {parseFloat((getSubtotal() * 12) / 100).toFixed(2)}
+                </td>
+              </tr>
+              <tr>
+                <td
+                  style={{
+                    width: '10%',
+                    padding: '5px',
+                  }}></td>
+                <td
+                  style={{
+                    width: '50%',
+                    padding: '5px',
+                  }}></td>
+                <td
+                  style={{
+                    width: '20%',
+                    padding: '5px',
+                    color: '#12B0E8',
+                    fontSize: '20px',
+                    fontWeight: 'bold',
+                  }}>
+                  Total
+                </td>
+                <td
+                  style={{
+                    width: '20%',
+                    padding: '5px',
+                  }}>
+                  {parseFloat(getSubtotal()).toFixed(2) -
+                    parseFloat((getSubtotal() * 12) / 100).toFixed(2)}
+                </td>
+              </tr>
+            </table>
+          </center>
         </div>
       </div>
       <form onSubmit={submitMail}>

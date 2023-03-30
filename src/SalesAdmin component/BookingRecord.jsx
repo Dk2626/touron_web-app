@@ -18,7 +18,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { useToasts } from 'react-toast-notifications';
 import numeral from 'numeral';
 import { ApiContext } from './../Context/ApiContext';
-import ReactToPrint from 'react-to-print';
+// import ReactToPrint from 'react-to-print';
 import JoditEditor from 'jodit-react';
 // import ReactExport from 'react-export-excel';
 
@@ -3834,7 +3834,7 @@ const BookingRecord = () => {
             className={step === 5 ? 'bb' : 'bc'}>
             Documents
           </h6>
-          {/* <div className='bookingBorder'></div>
+          <div className='bookingBorder'></div>
           <div
             className={step === 6 ? 'bookingColor' : 'bookingColorNon'}></div>
           <h6
@@ -3843,7 +3843,7 @@ const BookingRecord = () => {
             }}
             className={step === 6 ? 'bb' : 'bc'}>
             Invoice
-          </h6> */}
+          </h6>
 
           {/* {travellerDocuments?.length > 0 && (
             <>
