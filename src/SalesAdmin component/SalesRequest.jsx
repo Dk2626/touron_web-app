@@ -881,10 +881,9 @@ const SalesRequest = () => {
                     <option value='All'>All</option>
                     {employees?.map((e, i) => {
                       if (
-                        // e.designation === 'CEO' ||
-                        // e.designation === 'Travel Associate'
-                        e.designation !== 'Junior Software Engg' &&
-                        e.designation !== 'CFO'
+                        e.designation === 'CEO' ||
+                        e.designation === 'Travel Associate' ||
+                        e.designation === 'Division Manager'
                       )
                         return (
                           <option key={i} value={e.name}>
