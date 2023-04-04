@@ -3,6 +3,7 @@ import { firedb, fireStorage } from '../firebase';
 import './BookingRecord.css';
 import { BiEdit } from 'react-icons/bi';
 import { MdDelete } from 'react-icons/md';
+import { TiTick } from 'react-icons/ti';
 import { FiAlertTriangle } from 'react-icons/fi';
 import { IoIosArrowDown } from 'react-icons/io';
 import {
@@ -18,7 +19,6 @@ import { v4 as uuidv4 } from 'uuid';
 import { useToasts } from 'react-toast-notifications';
 import numeral from 'numeral';
 import { ApiContext } from './../Context/ApiContext';
-// import ReactToPrint from 'react-to-print';
 import JoditEditor from 'jodit-react';
 // import ReactExport from 'react-export-excel';
 
@@ -28,11 +28,15 @@ import JoditEditor from 'jodit-react';
 
 const BookingRecord = () => {
   const isMounted = useRef(false);
+  const isPayment = useRef(false);
   const billto = useRef(null);
   const invoiceDes = useRef(null);
-  const printInvoice = useRef();
-  // const [invoiceView, setInvoiceView] = useState(false);
   const [invoiceTypeView, setInvoiceTypeView] = useState(false);
+  const [paymentsId, setPaymentsId] = useState('');
+  const [paymentModifyView, setPaymentModifyView] = useState(false);
+  const [expensesModifyView, setExpensesModifyView] = useState(false);
+  const [paymentRecieved, setPaymentRecieved] = useState(false);
+  const [expensesChecked, setExpensesChecked] = useState(false);
   const { surveyid } = useParams();
   const [surveyId, setSurveyId] = useState('');
   const [travellerDocuments, setTravellerDocuments] = useState([]);
@@ -106,8 +110,9 @@ const BookingRecord = () => {
   const { invoiceNo, invoiceDate, dueDate, invoiceDatas } = invoiceData;
   const { qty, unitPrice } = invoiceSingleData;
 
-  console.log('invoiceData', invoiceData);
+  // console.log('invoiceData', invoiceData);
   // console.log('invoiceSingleData', invoiceSingleData);
+  // console.log('paymentSucceed', paymentSucceed);
 
   // console.log('hotels', hotels);
 
@@ -1404,6 +1409,98 @@ const BookingRecord = () => {
       .catch((err) => console.log('first', err));
   };
 
+  const submitPaymentSucceed = () => {
+    firedb
+      .ref('paymentSucceed')
+      .push({
+        email: email,
+        destination: destination,
+        onwardDate: onwardDate,
+        paymentRecieved: paymentRecieved ? false : true,
+        expensesChecked: expensesChecked,
+      })
+      .then(() => {
+        setPaymentModifyView(false);
+        setPaymentRecieved((prev) => (prev ? false : true));
+      })
+      .catch((err) => console.log('err', err));
+  };
+
+  const updatePaymentSucceed = () => {
+    firedb
+      .ref(`paymentSucceed/${paymentsId}`)
+      .update({
+        email: email,
+        destination: destination,
+        onwardDate: onwardDate,
+        paymentRecieved: paymentRecieved ? false : true,
+        expensesChecked: expensesChecked,
+      })
+      .then(() => {
+        setPaymentModifyView(false);
+        setPaymentRecieved((prev) => (prev ? false : true));
+      })
+      .catch((err) => console.log('err', err));
+  };
+
+  const submitExpensesCheck = () => {
+    firedb
+      .ref('paymentSucceed')
+      .push({
+        email: email,
+        destination: destination,
+        onwardDate: onwardDate,
+        paymentRecieved: paymentRecieved,
+        expensesChecked: expensesChecked ? false : true,
+      })
+      .then(() => {
+        setExpensesModifyView(false);
+        setExpensesChecked((prev) => (prev ? false : true));
+      })
+      .catch((err) => console.log('err', err));
+  };
+
+  const updateExpensesCheck = () => {
+    firedb
+      .ref(`paymentSucceed/${paymentsId}`)
+      .update({
+        email: email,
+        destination: destination,
+        onwardDate: onwardDate,
+        paymentRecieved: paymentRecieved,
+        expensesChecked: expensesChecked ? false : true,
+      })
+      .then(() => {
+        setExpensesModifyView(false);
+        setExpensesChecked((prev) => (prev ? false : true));
+      })
+      .catch((err) => console.log('err', err));
+  };
+
+  const getPaymentSucceed = () => {
+    firedb.ref('paymentSucceed').on('value', (data) => {
+      if (isPayment.current) {
+        data.forEach((d) => {
+          if (
+            d.val().email === email &&
+            d.val().destination === destination &&
+            d.val().onwardDate === onwardDate
+          ) {
+            setPaymentsId(d.key);
+            setPaymentRecieved(d.val().paymentRecieved);
+            setExpensesChecked(d.val().expensesChecked);
+          }
+        });
+      }
+    });
+  };
+
+  useEffect(() => {
+    isPayment.current = true;
+    getPaymentSucceed();
+    return () => (isPayment.current = false);
+  }, [paymentRecieved, expensesChecked, step]);
+
   const renderItems = (step) => {
     switch (step) {
       case 1:
@@ -2045,6 +2142,34 @@ const BookingRecord = () => {
                   </ExcelFile>
                 </div>
               )} */}
+              <div
+                onClick={() => setPaymentModifyView(true)}
+                className='paymentMainn__Succeed'>
+                <>
+                  {paymentRecieved ? (
+                    <div className='paymentMainn__Succeed_true'>
+                      <TiTick className='paymentMainn__Succeed_true_tick' />
+                    </div>
+                  ) : (
+                    <div className='paymentMainn__Succeed_false' />
+                  )}
+                  <h6>Full Payment Recieved</h6>
+                </>
+              </div>
+              <div
+                onClick={() => setExpensesModifyView(true)}
+                className='paymentMainn__Succeed'>
+                <>
+                  {expensesChecked ? (
+                    <div className='paymentMainn__Succeed_true'>
+                      <TiTick className='paymentMainn__Succeed_true_tick' />
+                    </div>
+                  ) : (
+                    <div className='paymentMainn__Succeed_false' />
+                  )}
+                  <h6>Expenses Checked</h6>
+                </>
+              </div>
               <div className='paymentMainnBtn'>
                 <button onClick={() => setPaymentOpen(!paymentOpen)}>
                   + Add Payment
@@ -3428,6 +3553,50 @@ const BookingRecord = () => {
 
   return (
     <div className='bookingRecord'>
+      {paymentModifyView && (
+        <div className='paymentSuceedViewMain'>
+          <div className='paymentSuceedViewMain___Sub'>
+            <p className='paymentSuceedViewMain___Sub__p'>
+              Are you sure want to modify Full Payment Recieved!
+            </p>
+            <div>
+              <button
+                onClick={
+                  paymentsId ? updatePaymentSucceed : submitPaymentSucceed
+                }
+                className='paymentSuceedViewMain___Sub__btn1'>
+                Confirm
+              </button>
+              <button
+                onClick={() => setPaymentModifyView(false)}
+                className='paymentSuceedViewMain___Sub__btn2'>
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {expensesModifyView && (
+        <div className='paymentSuceedViewMain'>
+          <div className='paymentSuceedViewMain___Sub'>
+            <p className='paymentSuceedViewMain___Sub__p'>
+              Are you sure want to modify Expenses Checked!
+            </p>
+            <div>
+              <button
+                onClick={paymentsId ? updateExpensesCheck : submitExpensesCheck}
+                className='paymentSuceedViewMain___Sub__btn1'>
+                Confirm
+              </button>
+              <button
+                onClick={() => setExpensesModifyView(false)}
+                className='paymentSuceedViewMain___Sub__btn2'>
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       {invoiceTypeView && (
         <div className='invoice_sample_mainnn_type'>
           <button
@@ -3608,62 +3777,6 @@ const BookingRecord = () => {
           </div>
         </div>
       )}
-      {/* {invoiceView && (
-        <div className='invoice_sample_mainnn'>
-          <div className='invoice_sample_mainnn_1' ref={printInvoice}>
-            <h2>Invoice</h2>
-            <h2>Invoice</h2>
-            <h2>Invoice</h2>
-            <h2>Invoice</h2>
-            <h2>Invoice</h2>
-            <h2>Invoice</h2>
-            <h2>Invoice</h2>
-            <h2>Invoice</h2>
-            <h2>Invoice</h2>
-            <h2>Invoice</h2>
-            <h2>Invoice</h2>
-            <h2>Invoice</h2>
-            <h2>Invoice</h2>
-            <h2>Invoice</h2>
-            <h2>Invoice</h2>
-            <h2>Invoice</h2>
-            <h2>Invoice</h2>
-            <h2>Invoice</h2>
-            <h2>Invoice</h2>
-            <h2>Invoice</h2>
-            <h2>Invoice</h2>
-            <h2>Invoice</h2>
-            <h2>Invoice</h2>
-            <h2>Invoice</h2>
-            <h2>Invoice</h2>
-            <h2>Invoice</h2>
-            <h2>Invoice</h2>
-            <h2>Invoice</h2>
-            <h2>Invoice</h2>
-            <h2>Invoice</h2>
-            <h2>Invoice</h2>
-            <h2>Invoice</h2>
-            <h2>Invoice</h2>
-            <h2>Invoice</h2>
-            <h2>Invoice</h2>
-          </div>
-          <div className='invoice_sample_mainnn_2'>
-            <ReactToPrint
-              trigger={() => (
-                <button className='invoice_sample_mainnn_1_btn_print'>
-                  Print
-                </button>
-              )}
-              content={() => printInvoice.current}
-            />
-            <button
-              className='invoice_sample_mainnn_1_btn_close'
-              onClick={() => setInvoiceView(false)}>
-              Close
-            </button>
-          </div>
-        </div>
-      )} */}
       {pdfUrl && (
         <div className='pdf_Popup'>
           <div className='pdf_Popup_con'>

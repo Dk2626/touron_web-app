@@ -57,6 +57,7 @@ import SuperAdminRoute from './Login components/SuperAdminRoute';
 import AccessDenied from './AccessDenied/AccessDenied';
 import BookingDRecord from './BookingDRecord/BookingDRecord';
 import Record from './marginvolumerecord/Record';
+import BookingDeletion from './BookingDeletion/BookingDeletion';
 // import LuckySeat from './Quiz/LuckySeat';
 // import LuckySeatAdmin from './Quiz/LuckySeatAdmin';
 // import LuckySeatAs from './Quiz/LuckySeatAs';
@@ -374,6 +375,14 @@ const App = () => {
                 element={
                   <AdminRoute>
                     <BookingDRecord />
+                  </AdminRoute>
+                }
+              />
+              <Route
+                path='/bookingDeletion'
+                element={
+                  <AdminRoute>
+                    <BookingDeletion />
                   </AdminRoute>
                 }
               />
