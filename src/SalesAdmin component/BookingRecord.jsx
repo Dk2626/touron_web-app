@@ -29,9 +29,11 @@ import JoditEditor from 'jodit-react';
 const BookingRecord = () => {
   const isMounted = useRef(false);
   const isPayment = useRef(false);
+  const invoiceHtml = useRef(null);
   const billto = useRef(null);
   const invoiceDes = useRef(null);
   const [invoiceTypeView, setInvoiceTypeView] = useState(false);
+  const [invoicePreviewView, setInvoicePreviewView] = useState(false);
   const [paymentsId, setPaymentsId] = useState('');
   const [paymentModifyView, setPaymentModifyView] = useState(false);
   const [expensesModifyView, setExpensesModifyView] = useState(false);
@@ -105,12 +107,14 @@ const BookingRecord = () => {
   const [invoiceSingleData, setInvoiceSingleData] = useState({
     qty: '',
     unitPrice: '',
+    cgst: '',
+    sgst: '',
   });
 
   const { invoiceNo, invoiceDate, dueDate, invoiceDatas } = invoiceData;
-  const { qty, unitPrice } = invoiceSingleData;
+  const { qty, unitPrice, cgst, sgst } = invoiceSingleData;
 
-  // console.log('invoiceData', invoiceData);
+  console.log('invoiceData', invoiceData);
   // console.log('invoiceSingleData', invoiceSingleData);
   // console.log('paymentSucceed', paymentSucceed);
 
@@ -1359,51 +1363,52 @@ const BookingRecord = () => {
   function addInvDesc() {
     setInvoiceData({
       ...invoiceData,
-      invoiceDatas: [...invoiceDatas, { invcDes, qty, unitPrice }],
+      invoiceDatas: [...invoiceDatas, { invcDes, qty, unitPrice, cgst, sgst }],
     });
     setInvsDes('');
     setInvoiceSingleData({
       qty: '',
       unitPrice: '',
+      cgst: '',
+      sgst: '',
     });
   }
 
   function getSubtotal() {
     let total = 0;
-    invoiceDatas.forEach((d) => {
-      total = total + parseInt(d.qty) * parseInt(d.unitPrice);
+    invoiceDatas.forEach((e) => {
+      total =
+        total +
+        parseInt(e.qty) * parseFloat(e.unitPrice) -
+        ((parseFloat(e.unitPrice).toFixed(2) * parseFloat(e.cgst).toFixed(2)) /
+          100 +
+          (parseFloat(e.unitPrice).toFixed(2) * parseFloat(e.sgst).toFixed(2)) /
+            100);
     });
     return total;
   }
 
   const submitInvoice = () => {
     firedb
-      .ref('invoices')
+      .ref('invoice')
       .push({
-        email,
-        customerName,
-        onwardDate,
-        returnDate,
-        destination,
-        invoiceNo,
-        invoiceDate,
-        dueDate,
-        invoiceDatas,
-        billTo,
+        email: 'dineshkumardssd@gmail.com',
+        html: `${invoiceHtml.current.outerHTML}`,
       })
       .then(() => {
-        setInvoiceData({
-          invoiceNo: '',
-          invoiceDate: '',
-          dueDate: '',
-          invoiceDatas: [],
-        });
-        setBillTo('');
-        setInvsDes('');
-        setInvoiceSingleData({
-          qty: '',
-          unitPrice: '',
-        });
+        // setInvoiceData({
+        //   invoiceNo: '',
+        //   invoiceDate: '',
+        //   dueDate: '',
+        //   invoiceDatas: [],
+        // });
+        // setBillTo('');
+        // setInvsDes('');
+        // setInvoiceSingleData({
+        //   qty: '',
+        //   unitPrice: '',
+        // });
+        setInvoicePreviewView(false);
         setInvoiceTypeView(false);
       })
       .catch((err) => console.log('first', err));
@@ -3597,6 +3602,331 @@ const BookingRecord = () => {
           </div>
         </div>
       )}
+      {invoicePreviewView && (
+        <div
+          style={{
+            position: 'absolute',
+            content: '',
+            zIndex: 500,
+            top: 0,
+            left: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+            width: '100%',
+            height: 'auto',
+            minHeight: '120vh',
+            display: 'flex',
+            justifyContent: 'center',
+          }}>
+          <div
+            style={{
+              width: '100%',
+              backgroundColor: '#fff',
+              padding: '10px',
+            }}
+            ref={invoiceHtml}>
+            <center
+              style={{
+                width: '100%',
+                tableLayout: 'fixed',
+              }}>
+              <table
+                style={{
+                  background: 'linear-gradient(#83EAF1, #63A4FF)',
+                  width: '100%',
+                }}>
+                <tr>
+                  <td style={{ width: '70%' }}>
+                    <div style={{ width: '200px', height: '180px' }}>
+                      <img
+                        src='https://firebasestorage.googleapis.com/v0/b/touronapp-248e4.appspot.com/o/logof.png?alt=media&token=a45a95ae-e4a8-469d-a03d-2b20c6f2a484'
+                        alt='logo'
+                        style={{ width: '100%', height: '100%' }}
+                      />
+                    </div>
+                    <div>
+                      <p
+                        style={{
+                          margin: '10px',
+                          fontWeight: 'bold',
+                          fontSize: '16px',
+                          color: '#fff',
+                        }}>
+                        tour On (A Brand of Lotsatravel Holidays LLP)
+                      </p>
+                      <p
+                        style={{
+                          margin: '10px',
+                          fontSize: '14px',
+                          fontWeight: 'bold',
+                        }}>
+                        Chennai <br />
+                        Tamil Nadu 600073 <br />
+                        GST Number: 33AAHFL7839F1Z6 <br />
+                        GSTIN: 33AAHFL7839F1Z6
+                      </p>
+                    </div>
+                  </td>
+                  <td style={{ width: '30%' }}>
+                    <p
+                      style={{
+                        marginBottom: '200px',
+                        fontWeight: 'bold',
+                        color: '#fff',
+                        fontSize: '30px',
+                      }}>
+                      tourOn Invoice
+                    </p>
+                  </td>
+                </tr>
+              </table>
+              <table
+                style={{
+                  width: '100%',
+                  marginTop: '20px',
+                  marginLeft: '30px',
+                }}>
+                <tr>
+                  <td style={{ width: '70%' }}>
+                    <p
+                      style={{
+                        marginTop: '10px',
+                        marginBottom: 0,
+                        fontSize: '16px',
+                        fontWeight: 'bold',
+                        color: '#63a4ff',
+                      }}>
+                      Bill to
+                    </p>
+                    <div
+                      dangerouslySetInnerHTML={{ __html: billTo }}
+                      style={{ fontWeight: 'bold' }}
+                    />
+                  </td>
+                  <td style={{ width: '30%' }}>
+                    <p
+                      style={{
+                        marginTop: '10px',
+                        marginBottom: '10px',
+                        fontSize: '14px',
+                        fontWeight: 'bold',
+                      }}>
+                      Invoice No : {invoiceNo}
+                    </p>
+                    <p
+                      style={{
+                        marginTop: '10px',
+                        marginBottom: '10px',
+                        fontSize: '14px',
+                        fontWeight: 'bold',
+                      }}>
+                      Invoice Date : {invoiceDate}
+                    </p>
+                    <p
+                      style={{
+                        marginTop: '10px',
+                        marginBottom: '10px',
+                        fontSize: '14px',
+                        fontWeight: 'bold',
+                      }}>
+                      Due Date : {dueDate}
+                    </p>
+                  </td>
+                </tr>
+              </table>
+              <table
+                style={{
+                  width: '100%',
+                  marginTop: '30px',
+                }}>
+                <tr style={{ backgroundColor: '#63a4ff' }}>
+                  <th style={{ width: '10%', fontSize: '16px' }}>Qty</th>
+                  <th style={{ width: '35%', fontSize: '16px' }}>Desc</th>
+                  <th style={{ width: '12%', fontSize: '16px' }}>Unit Price</th>
+                  <th style={{ width: '12%', fontSize: '16px' }}>CGST</th>
+                  <th style={{ width: '12%', fontSize: '16px' }}>SGST</th>
+                  <th style={{ width: '12%', fontSize: '16px' }}>Amount</th>
+                </tr>
+                {invoiceDatas.map((e, i) => {
+                  return (
+                    <tr key={i}>
+                      <td
+                        style={{
+                          width: '10%',
+                          fontSize: '14px',
+                          fontWeight: 'bold',
+                        }}>
+                        {e.qty}
+                      </td>
+                      <td
+                        dangerouslySetInnerHTML={{ __html: e.invcDes }}
+                        style={{
+                          width: '35%',
+                          fontSize: '14px',
+                          fontWeight: 'bold',
+                        }}
+                      />
+                      <td
+                        style={{
+                          width: '12%',
+                          fontSize: '14px',
+                          fontWeight: 'bold',
+                        }}>
+                        {parseFloat(e.unitPrice).toFixed(2)}
+                      </td>
+                      <td style={{ width: '12%' }}>
+                        <div
+                          style={{
+                            fontSize: '14px',
+                            fontWeight: 'bold',
+                          }}>
+                          {parseFloat(
+                            (parseFloat(e.unitPrice).toFixed(2) *
+                              parseFloat(e.cgst).toFixed(2)) /
+                              100
+                          ).toFixed(2)}
+                        </div>
+                        <div
+                          style={{
+                            fontSize: '12px',
+                            fontWeight: 'bold',
+                            color: 'gray',
+                          }}>
+                          {e.cgst}%
+                        </div>
+                      </td>
+                      <td style={{ width: '12%' }}>
+                        <div
+                          style={{
+                            fontSize: '14px',
+                            fontWeight: 'bold',
+                          }}>
+                          {parseFloat(
+                            (parseFloat(e.unitPrice).toFixed(2) *
+                              parseFloat(e.sgst).toFixed(2)) /
+                              100
+                          ).toFixed(2)}
+                        </div>
+                        <div
+                          style={{
+                            fontSize: '12px',
+                            fontWeight: 'bold',
+                            color: 'gray',
+                          }}>
+                          {e.sgst}%
+                        </div>
+                      </td>
+                      <td
+                        style={{
+                          width: '12%',
+                          fontSize: '14px',
+                          fontWeight: 'bold',
+                        }}>
+                        {parseFloat(
+                          parseInt(e.qty) * parseFloat(e.unitPrice) -
+                            ((parseFloat(e.unitPrice).toFixed(2) *
+                              parseFloat(e.cgst).toFixed(2)) /
+                              100 +
+                              (parseFloat(e.unitPrice).toFixed(2) *
+                                parseFloat(e.sgst).toFixed(2)) /
+                                100)
+                        ).toFixed(2)}
+                      </td>
+                    </tr>
+                  );
+                })}
+                {invoiceDatas.length > 0 && (
+                  <tr>
+                    <td style={{ width: '10%' }}></td>
+                    <td style={{ width: '35%' }}></td>
+                    <td style={{ width: '12%' }}></td>
+                    <td style={{ width: '12%' }}></td>
+                    <td style={{ width: '12%' }}>
+                      <h4
+                        style={{
+                          fontWeight: 'bold',
+                          color: '#63a4ff',
+                          fontSize: '16px',
+                        }}>
+                        Total
+                      </h4>
+                    </td>
+                    <td
+                      style={{
+                        width: '12%',
+                        fontWeight: 'bold',
+                        fontSize: '16px',
+                      }}>
+                      {parseFloat(getSubtotal()).toFixed(2)}
+                    </td>
+                  </tr>
+                )}
+              </table>
+              <table
+                style={{
+                  background: 'linear-gradient(#83EAF1, #63A4FF)',
+                  width: '100%',
+                  marginTop: '30px',
+                }}>
+                <tr>
+                  <td>
+                    <p
+                      style={{
+                        margin: '10px',
+                        fontSize: '16px',
+                        fontWeight: 'bold',
+                        color: '#fff',
+                      }}>
+                      Notes
+                    </p>
+                    <p
+                      style={{
+                        margin: '10px',
+                        fontSize: '14px',
+                        fontWeight: 'bold',
+                      }}>
+                      We will share the list of all other Sightseeing locations
+                      from which you can choose what you wanted to see during
+                      your Leisure Days. <br />
+                      Happy Touring!
+                    </p>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <p
+                      style={{
+                        margin: '10px',
+                        fontSize: '16px',
+                        fontWeight: 'bold',
+                        color: '#fff',
+                      }}>
+                      Terms & Conditions
+                    </p>
+                    <p
+                      style={{
+                        margin: '10px',
+                        fontSize: '14px',
+                        fontWeight: 'bold',
+                      }}>
+                      Cancellation Charges & Refunds are subject to the
+                      transportation / accommodation / activities / tour
+                      providers through which your reservations are made. <br />
+                      Our Service Fee is 50% Refundable if cancellation done
+                      before 15 days and 100% non-refundable when cancelled on
+                      or after 14 day. Discount amount will not be considered
+                      during cancellation !
+                    </p>
+                  </td>
+                </tr>
+              </table>
+            </center>
+          </div>
+          <div>
+            <button onClick={() => submitInvoice()}>Send mail</button>
+            <button onClick={() => setInvoicePreviewView(false)}>Close</button>
+          </div>
+        </div>
+      )}
       {invoiceTypeView && (
         <div className='invoice_sample_mainnn_type'>
           <button
@@ -3604,10 +3934,15 @@ const BookingRecord = () => {
             onClick={() => setInvoiceTypeView(false)}>
             Close
           </button>
-          <button
+          {/* <button
             className='invoice_sample_mainnn_type_cls'
             onClick={() => submitInvoice()}>
             Submit
+          </button> */}
+          <button
+            className='invoice_sample_mainnn_type_cls'
+            onClick={() => setInvoicePreviewView(true)}>
+            Preview
           </button>
           <div className='invoice_sample_mainnn_type_field'>
             <div className='invoice_sample_mainnn_type_field1'>
@@ -3700,6 +4035,32 @@ const BookingRecord = () => {
                     }
                   />
                 </div>
+                <div>
+                  <label>CGST:</label>
+                  <input
+                    type='text'
+                    value={cgst}
+                    onChange={(e) =>
+                      setInvoiceSingleData({
+                        ...invoiceSingleData,
+                        cgst: e.target.value,
+                      })
+                    }
+                  />
+                </div>
+                <div>
+                  <label>SGST:</label>
+                  <input
+                    type='text'
+                    value={sgst}
+                    onChange={(e) =>
+                      setInvoiceSingleData({
+                        ...invoiceSingleData,
+                        sgst: e.target.value,
+                      })
+                    }
+                  />
+                </div>
               </div>
             </div>
             <div className='invoice_sample_mainnn_type_field2'>
@@ -3725,6 +4086,8 @@ const BookingRecord = () => {
                     <th>Qty</th>
                     <th>Desc</th>
                     <th>Unit Price</th>
+                    <th>CGST</th>
+                    <th>SGST</th>
                     <th>Amount</th>
                   </tr>
                 </thead>
@@ -3734,42 +4097,50 @@ const BookingRecord = () => {
                       <tr key={i}>
                         <td>{e.qty}</td>
                         <td dangerouslySetInnerHTML={{ __html: e.invcDes }} />
-                        {/* <td>{parseInt(e.unitPrice)}.00</td> */}
                         <td>{parseFloat(e.unitPrice).toFixed(2)}</td>
                         <td>
+                          <div>
+                            {parseFloat(
+                              (parseFloat(e.unitPrice).toFixed(2) *
+                                parseFloat(e.cgst).toFixed(2)) /
+                                100
+                            ).toFixed(2)}
+                          </div>
+                          <div>{e.cgst}%</div>
+                        </td>
+                        <td>
+                          <div>
+                            {parseFloat(
+                              (parseFloat(e.unitPrice).toFixed(2) *
+                                parseFloat(e.sgst).toFixed(2)) /
+                                100
+                            ).toFixed(2)}
+                          </div>
+                          <div>{e.sgst}%</div>
+                        </td>
+                        <td>
                           {parseFloat(
-                            parseInt(e.qty) * parseInt(e.unitPrice)
+                            parseInt(e.qty) * parseFloat(e.unitPrice) -
+                              ((parseFloat(e.unitPrice).toFixed(2) *
+                                parseFloat(e.cgst).toFixed(2)) /
+                                100 +
+                                (parseFloat(e.unitPrice).toFixed(2) *
+                                  parseFloat(e.sgst).toFixed(2)) /
+                                  100)
                           ).toFixed(2)}
                         </td>
                       </tr>
                     );
                   })}
                   {invoiceDatas.length > 0 && (
-                    <>
-                      <tr>
-                        <td></td>
-                        <td></td>
-                        <td>Subtotal</td>
-                        <td>{parseFloat(getSubtotal()).toFixed(2)}</td>
-                      </tr>
-                      <tr>
-                        <td></td>
-                        <td></td>
-                        <td>GST 12%</td>
-                        <td>
-                          {parseFloat((getSubtotal() * 12) / 100).toFixed(2)}
-                        </td>
-                      </tr>
-                      <tr>
-                        <td></td>
-                        <td></td>
-                        <td>Total</td>
-                        <td>
-                          {parseFloat(getSubtotal()).toFixed(2) -
-                            parseFloat((getSubtotal() * 12) / 100).toFixed(2)}
-                        </td>
-                      </tr>
-                    </>
+                    <tr>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td>Subtotal</td>
+                      <td>{parseFloat(getSubtotal()).toFixed(2)}</td>
+                    </tr>
                   )}
                 </tbody>
               </table>

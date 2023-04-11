@@ -767,6 +767,7 @@
 }
 .invoice_sample_mainnn_type_field1_flx {
   display: flex;
+  flex-wrap: wrap;
 }
 .invoice_sample_mainnn_type_field label {
   margin-right: 5px;
