@@ -71,24 +71,24 @@ h6 {
   cursor: pointer;
 }
 
-.booking-stats:nth-child(1) {
+/* .booking-stats:nth-child(1) {
   padding: 0;
   flex-basis: 20%;
-}
+} */
 
-.booking-stats:nth-child(4) {
+.booking-stats:nth-child(3) {
   padding: 0 1em;
   flex-basis: 25%;
 }
-.booking-stats:nth-child(3) {
+.booking-stats:nth-child(2) {
   padding: 0 1em;
   flex-basis: 35%;
 }
-.booking-stats:nth-child(2) {
+.booking-stats:nth-child(1) {
   padding: 0 1em;
   flex-basis: 20%;
 }
-.booking-stats:nth-child(5) {
+.booking-stats:nth-child(4) {
   border: none;
   flex-basis: 30%;
 }

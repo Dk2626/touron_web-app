@@ -238,9 +238,10 @@
 .paymentTableHead h5 {
   flex-basis: 20%;
 }
-.paymentTableHead h5:nth-child(7),
-.paymentTableBody h5:nth-child(7) {
-  flex-basis: 10%;
+.paymentTableHead h5:nth-child(8),
+.paymentTableBody h5:nth-child(8) {
+  flex-basis: 1.5%;
+  margin-right: 10px;
 }
 
 .paymentTableBody {
@@ -695,6 +696,12 @@
   border: 1px solid black;
   margin-right: 10px;
   position: relative;
+}
+.single__Tick {
+  height: 12px;
+  border: 1px solid black;
+  position: relative;
+  cursor: pointer;
 }
 .paymentMainn__Succeed_true_tick {
   content: '';

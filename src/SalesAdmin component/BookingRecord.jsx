@@ -36,6 +36,7 @@ const BookingRecord = () => {
   const [invoicePreviewView, setInvoicePreviewView] = useState(false);
   const [paymentsId, setPaymentsId] = useState('');
   const [paymentModifyView, setPaymentModifyView] = useState(false);
+  const [paymentSingleModifyView, setPaymentSingleModifyView] = useState(false);
   const [expensesModifyView, setExpensesModifyView] = useState(false);
   const [paymentRecieved, setPaymentRecieved] = useState(false);
   const [expensesChecked, setExpensesChecked] = useState(false);
@@ -114,7 +115,7 @@ const BookingRecord = () => {
   const { invoiceNo, invoiceDate, dueDate, invoiceDatas } = invoiceData;
   const { qty, unitPrice, cgst, sgst } = invoiceSingleData;
 
-  console.log('invoiceData', invoiceData);
+  // console.log('invoiceData', invoiceData);
   // console.log('invoiceSingleData', invoiceSingleData);
   // console.log('paymentSucceed', paymentSucceed);
 
@@ -171,6 +172,7 @@ const BookingRecord = () => {
     recievedAmount: 0,
     spentAmount: 0,
     remark: '',
+    pv: false,
   });
 
   const time = [
@@ -271,6 +273,7 @@ const BookingRecord = () => {
     recievedAmount,
     spentAmount,
     remark,
+    pv,
   } = newPayment;
   const [general, setGeneral] = useState({
     customerName: '',
@@ -515,6 +518,7 @@ const BookingRecord = () => {
         a.recievedAmount = recievedAmount;
         a.spentAmount = spentAmount;
         a.remark = remark;
+        a.pv = pv ? true : false;
       }
       return a;
     });
@@ -536,6 +540,8 @@ const BookingRecord = () => {
           recievedAmount: 0,
           spentAmount: 0,
           remark: '',
+          pv: false,
+          id: uuidv4(),
         });
         setUpdatePaymentOpen(false);
         setEditpaymentId('');
@@ -660,6 +666,7 @@ const BookingRecord = () => {
           recievedAmount: 0,
           spentAmount: 0,
           remark: '',
+          pv: false,
           id: uuidv4(),
         });
       })
@@ -1505,6 +1512,49 @@ const BookingRecord = () => {
     getPaymentSucceed();
     return () => (isPayment.current = false);
   }, [paymentRecieved, expensesChecked, step]);
+
+  const updateSinglePaymentCheck = () => {
+    let newPayment = amountDetails.map((a) => {
+      if (a.id === editpaymentId) {
+        a.id = editpaymentId;
+        a.date = date;
+        a.particulars = particulars;
+        a.recievedType = recievedType;
+        a.recievedAmount = recievedAmount;
+        a.spentAmount = spentAmount;
+        a.remark = remark;
+        a.pv = pv ? false : true;
+      }
+      return a;
+    });
+    console.log('newPayment', newPayment);
+
+    firedb
+      .ref(`bookingdetails1/${surveyid}/paymentDetails`)
+      .set({
+        invoiceNumber: invoiceNumber,
+        totalAmount: totalAmount,
+        amountDetails: newPayment,
+      })
+      .then(() => {
+        addToast('Payment updated Successfully', {
+          appearance: 'success',
+        });
+        setNewPayment({
+          date: '',
+          particulars: '',
+          recievedType: '',
+          recievedAmount: 0,
+          spentAmount: 0,
+          remark: '',
+          pv: false,
+          id: uuidv4(),
+        });
+        setEditpaymentId('');
+        setPaymentSingleModifyView(false);
+      })
+      .catch((err) => console.log(`err`, err));
+  };
 
   const renderItems = (step) => {
     switch (step) {
@@ -2530,6 +2580,7 @@ const BookingRecord = () => {
                   <h5>Spent Amount</h5>
                   <h5>Remark</h5>
                   <h5>Edit</h5>
+                  <h5>Pv</h5>
                 </div>
 
                 <>
@@ -2574,6 +2625,64 @@ const BookingRecord = () => {
                             }}
                           />
                         </h5>
+                        {c.pv ? (
+                          <h5
+                            className='single__Tick'
+                            onClick={() => {
+                              setEditpaymentId(c.id);
+                              setNewPayment({
+                                date: c.date,
+                                particulars: c.particulars,
+                                recievedType: c.recievedType,
+                                recievedAmount: c.recievedAmount,
+                                spentAmount: c.spentAmount,
+                                remark: c.remark,
+                                pv: c.pv,
+                              });
+                              setPaymentSingleModifyView(true);
+                            }}>
+                            <TiTick className='paymentMainn__Succeed_true_tick' />
+                          </h5>
+                        ) : (
+                          <h5
+                            className='single__Tick'
+                            onClick={() => {
+                              setEditpaymentId(c.id);
+                              setNewPayment({
+                                date: c.date,
+                                particulars: c.particulars,
+                                recievedType: c.recievedType,
+                                recievedAmount: c.recievedAmount,
+                                spentAmount: c.spentAmount,
+                                remark: c.remark,
+                                pv: c.pv,
+                              });
+                              setPaymentSingleModifyView(true);
+                            }}
+                          />
+                        )}
+                        {/* <h5
+                          onClick={() => {
+                            setEditpaymentId(c.id);
+                            setNewPayment({
+                              date: c.date,
+                              particulars: c.particulars,
+                              recievedType: c.recievedType,
+                              recievedAmount: c.recievedAmount,
+                              spentAmount: c.spentAmount,
+                              remark: c.remark,
+                              pv: c.pv,
+                            });
+                            setPaymentSingleModifyView(true);
+                          }}>
+                          {c.pv ? (
+                            <div className='paymentMainn__Succeed_true'>
+                              <TiTick className='paymentMainn__Succeed_true_tick' />
+                            </div>
+                          ) : (
+                            <div className='paymentMainn__Succeed_false' />
+                          )}
+                        </h5> */}
                       </div>
                     );
                   })}
@@ -3558,6 +3667,27 @@ const BookingRecord = () => {
 
   return (
     <div className='bookingRecord'>
+      {paymentSingleModifyView && (
+        <div className='paymentSuceedViewMain'>
+          <div className='paymentSuceedViewMain___Sub'>
+            <p className='paymentSuceedViewMain___Sub__p'>
+              Are you sure want to modify Single Payment!
+            </p>
+            <div>
+              <button
+                onClick={updateSinglePaymentCheck}
+                className='paymentSuceedViewMain___Sub__btn1'>
+                Confirm
+              </button>
+              <button
+                onClick={() => setPaymentSingleModifyView(false)}
+                className='paymentSuceedViewMain___Sub__btn2'>
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       {paymentModifyView && (
         <div className='paymentSuceedViewMain'>
           <div className='paymentSuceedViewMain___Sub'>

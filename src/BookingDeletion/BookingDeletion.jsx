@@ -12,28 +12,31 @@ const BookingDeletion = () => {
 
   function getData() {
     let final = [];
-    firedb.ref('bookingdetails1').on('value', (data) => {
-      if (isMounted.current) {
-        data.forEach((d) => {
-          final.push({
-            key: d.key,
-            survey: d.val().surveyId,
-            name: d.val().general.customerName,
-            dest: d.val().general.destination,
-            onward: d.val().general.onwardDate,
-            return: d.val().general.returnDate,
+    firedb
+      .ref('bookingdetails1')
+      .limitToLast(200)
+      .on('value', (data) => {
+        if (isMounted.current) {
+          data.forEach((d) => {
+            final.push({
+              key: d.key,
+              survey: d.val().surveyId,
+              name: d.val().general.customerName,
+              dest: d.val().general.destination,
+              onward: d.val().general.onwardDate,
+              return: d.val().general.returnDate,
+            });
           });
-        });
-      }
-      setBookRecords(final.reverse());
-    });
+        }
+        setBookRecords(final.reverse());
+      });
   }
 
   useEffect(() => {
     isMounted.current = true;
     getData();
     return () => (isMounted.current = false);
-  }, []);
+  }, [bookRecords]);
 
   function removeData() {
     setLoading(true);
@@ -46,6 +49,20 @@ const BookingDeletion = () => {
       })
       .catch((err) => console.log('err', err));
   }
+
+  const getDepatureDate = (date) => {
+    const countDate = Date.parse(date);
+    const now = new Date().getTime();
+    const gap = countDate - now;
+    const second = 1000;
+    const minute = second * 60;
+    const hour = minute * 60;
+    const day = hour * 24;
+
+    const d = Math.floor(gap / day);
+    if (d >= 0) return d;
+    return 0;
+  };
 
   return (
     <div className='bookingDeletion_form_mainzz_ss'>
@@ -88,6 +105,7 @@ const BookingDeletion = () => {
               <th>Destination</th>
               <th>Departure</th>
               <th>Return</th>
+              <th>Departure In</th>
               <th>Remove</th>
             </tr>
           </thead>
@@ -100,6 +118,7 @@ const BookingDeletion = () => {
                 <td>{b.dest}</td>
                 <td>{b.onward}</td>
                 <td>{b.return}</td>
+                <td>{getDepatureDate(b.onward)} days</td>
                 <td
                   style={{ cursor: 'pointer' }}
                   onClick={() => {

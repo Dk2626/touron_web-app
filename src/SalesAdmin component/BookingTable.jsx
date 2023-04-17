@@ -28,24 +28,27 @@ const BookingTable = () => {
   useEffect(() => {
     isMounted.current = true;
     setLoading1(true);
-    firedb.ref('bookingdetails1').on('value', (data) => {
-      if (isMounted.current) {
-        if (data.val() === null || data.val() === undefined) {
-          setLoading1(false);
-          return;
+    firedb
+      .ref('bookingdetails1')
+      .limitToLast(400)
+      .on('value', (data) => {
+        if (isMounted.current) {
+          if (data.val() === null || data.val() === undefined) {
+            setLoading1(false);
+            return;
+          }
+          if (data.val() !== null || data.val() !== undefined) {
+            let newReq = {};
+            let revReq = Object.keys(data.val()).reverse();
+            revReq.forEach((i) => {
+              newReq[i] = data.val()[i];
+            });
+            setBookingDetails({
+              ...newReq,
+            });
+          }
         }
-        if (data.val() !== null || data.val() !== undefined) {
-          let newReq = {};
-          let revReq = Object.keys(data.val()).reverse();
-          revReq.forEach((i) => {
-            newReq[i] = data.val()[i];
-          });
-          setBookingDetails({
-            ...newReq,
-          });
-        }
-      }
-    });
+      });
     setLoading1(false);
     return () => (isMounted.current = false);
   }, []);
@@ -420,13 +423,13 @@ const BookingTable = () => {
           </Link>
         </div>
         <div className='booking-stats-container'>
-          <div className='booking-stats'>
+          {/* <div className='booking-stats'>
             <h3>Total booking</h3>
             <div style={{ display: 'flex', alignItems: 'center' }}>
               <h6>{Object.keys(bookingDetails).length}</h6>
               <span onClick={() => setBMonth('')}>Show</span>
             </div>
-          </div>
+          </div> */}
 
           <div className='booking-stats'>
             <h3>Current Travelling</h3>
