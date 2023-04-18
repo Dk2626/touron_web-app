@@ -9,34 +9,33 @@ const BookingDeletion = () => {
   const [formOpen, setFormOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [key, setKey] = useState('');
+  const [pageSize, setPageSize] = useState(20);
+  const [currentPage, setCurrentpage] = useState(1);
 
   function getData() {
     let final = [];
-    firedb
-      .ref('bookingdetails1')
-      .limitToLast(200)
-      .on('value', (data) => {
-        if (isMounted.current) {
-          data.forEach((d) => {
-            final.push({
-              key: d.key,
-              survey: d.val().surveyId,
-              name: d.val().general.customerName,
-              dest: d.val().general.destination,
-              onward: d.val().general.onwardDate,
-              return: d.val().general.returnDate,
-            });
+    firedb.ref('bookingdetails1').on('value', (data) => {
+      if (isMounted.current) {
+        data.forEach((d) => {
+          final.push({
+            key: d.key,
+            survey: d.val().surveyId,
+            name: d.val().general.customerName,
+            dest: d.val().general.destination,
+            onward: d.val().general.onwardDate,
+            return: d.val().general.returnDate,
           });
-        }
-        setBookRecords(final.reverse());
-      });
+        });
+      }
+      setBookRecords(final.reverse());
+    });
   }
 
   useEffect(() => {
     isMounted.current = true;
     getData();
     return () => (isMounted.current = false);
-  }, [bookRecords]);
+  }, []);
 
   function removeData() {
     setLoading(true);
@@ -110,25 +109,30 @@ const BookingDeletion = () => {
             </tr>
           </thead>
           <tbody>
-            {bookRecords.map((b, i) => (
-              <tr key={i} className='bookingDeletion_table_tr1'>
-                <td>{i + 1}</td>
-                <td>{b.survey}</td>
-                <td>{b.name}</td>
-                <td>{b.dest}</td>
-                <td>{b.onward}</td>
-                <td>{b.return}</td>
-                <td>{getDepatureDate(b.onward)} days</td>
-                <td
-                  style={{ cursor: 'pointer' }}
-                  onClick={() => {
-                    setKey(b.key);
-                    setFormOpen(true);
-                  }}>
-                  <MdDeleteForever className='bookingDeletion_table_tr1_dels' />
-                </td>
-              </tr>
-            ))}
+            {bookRecords
+              .slice(
+                (currentPage === 1 ? 0 : currentPage - 1) * pageSize,
+                currentPage * pageSize
+              )
+              .map((b, i) => (
+                <tr key={i} className='bookingDeletion_table_tr1'>
+                  <td>{i + 1}</td>
+                  <td>{b.survey}</td>
+                  <td>{b.name}</td>
+                  <td>{b.dest}</td>
+                  <td>{b.onward}</td>
+                  <td>{b.return}</td>
+                  <td>{getDepatureDate(b.onward)} days</td>
+                  <td
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => {
+                      setKey(b.key);
+                      setFormOpen(true);
+                    }}>
+                    <MdDeleteForever className='bookingDeletion_table_tr1_dels' />
+                  </td>
+                </tr>
+              ))}
           </tbody>
         </table>
       </div>

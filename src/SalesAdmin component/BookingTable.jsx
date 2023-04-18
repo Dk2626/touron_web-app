@@ -22,8 +22,27 @@ const BookingTable = () => {
   const [search, setSearch] = useState('');
   const [openDelRecord, setOpenDelRecord] = useState(false);
   const [bookingRId, setBookingRId] = useState('');
+  const [bookingAllDdd, setBookingAllDdd] = useState([]);
 
   // console.log('loading2', loading2);
+
+  const getAllBookindDetails = () => {
+    let ddd = [];
+    firedb.ref('bookingdetails1').on('value', (data) => {
+      if (isMounted.current) {
+        data.forEach((d) => {
+          ddd.push(d.key);
+        });
+      }
+      setBookingAllDdd(ddd);
+    });
+  };
+
+  useEffect(() => {
+    isMounted.current = true;
+    getAllBookindDetails();
+    return () => (isMounted.current = false);
+  }, []);
 
   useEffect(() => {
     isMounted.current = true;
@@ -423,13 +442,13 @@ const BookingTable = () => {
           </Link>
         </div>
         <div className='booking-stats-container'>
-          {/* <div className='booking-stats'>
+          <div className='booking-stats'>
             <h3>Total booking</h3>
             <div style={{ display: 'flex', alignItems: 'center' }}>
-              <h6>{Object.keys(bookingDetails).length}</h6>
-              <span onClick={() => setBMonth('')}>Show</span>
+              <h6>{bookingAllDdd.length}</h6>
+              {/* <span onClick={() => setBMonth('')}>Show</span> */}
             </div>
-          </div> */}
+          </div>
 
           <div className='booking-stats'>
             <h3>Current Travelling</h3>
