@@ -16,6 +16,12 @@ const Destination = ({
       <div className='destination-questions checkout'>
         <div className='que1'>
           <h6>Enter the holiday destination you want to travel</h6>
+          {/* <select id='cars'>
+            <option value='volvo'>Volvo</option>
+            <option value='saab'>Saab</option>
+            <option value='opel'>Opel</option>
+            <option value='audi'>Audi</option>
+          </select> */}
           <input
             type='text'
             onChange={(e) => setDestination(e.target.value)}

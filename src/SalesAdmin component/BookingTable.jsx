@@ -26,24 +26,6 @@ const BookingTable = () => {
 
   // console.log('loading2', loading2);
 
-  const getAllBookindDetails = () => {
-    let ddd = [];
-    firedb.ref('bookingdetails1').on('value', (data) => {
-      if (isMounted.current) {
-        data.forEach((d) => {
-          ddd.push(d.key);
-        });
-      }
-      setBookingAllDdd(ddd);
-    });
-  };
-
-  useEffect(() => {
-    isMounted.current = true;
-    getAllBookindDetails();
-    return () => (isMounted.current = false);
-  }, []);
-
   useEffect(() => {
     isMounted.current = true;
     setLoading1(true);
@@ -69,6 +51,24 @@ const BookingTable = () => {
         }
       });
     setLoading1(false);
+    return () => (isMounted.current = false);
+  }, []);
+
+  const getAllBookindDetails = () => {
+    let ddd = [];
+    firedb.ref('bookingdetails1').on('value', (data) => {
+      if (isMounted.current) {
+        data.forEach((d) => {
+          ddd.push(d.key);
+        });
+      }
+      setBookingAllDdd(ddd);
+    });
+  };
+
+  useEffect(() => {
+    isMounted.current = true;
+    getAllBookindDetails();
     return () => (isMounted.current = false);
   }, []);
 
@@ -446,7 +446,7 @@ const BookingTable = () => {
             <h3>Total booking</h3>
             <div style={{ display: 'flex', alignItems: 'center' }}>
               <h6>{bookingAllDdd.length}</h6>
-              {/* <span onClick={() => setBMonth('')}>Show</span> */}
+              <span onClick={() => setBMonth('')}>Show</span>
             </div>
           </div>
 
