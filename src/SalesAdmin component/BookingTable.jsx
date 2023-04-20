@@ -203,6 +203,8 @@ const BookingTable = () => {
             1,
             'days'
           );
+          console.log('date', date);
+
           if (
             moment().isBetween(ds, date) &&
             bookingDetails[d]?.general.isBookingCancelled === false

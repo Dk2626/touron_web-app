@@ -16,12 +16,19 @@ const Destination = ({
       <div className='destination-questions checkout'>
         <div className='que1'>
           <h6>Enter the holiday destination you want to travel</h6>
-          {/* <select id='cars'>
-            <option value='volvo'>Volvo</option>
-            <option value='saab'>Saab</option>
-            <option value='opel'>Opel</option>
-            <option value='audi'>Audi</option>
-          </select> */}
+          {/* <div className='select_in_alter'>
+            <div>Select</div>
+            <div className='select_in_alter__ab'>
+              <div>Goa</div>
+              <div>Wayanad</div>
+              <div>Kashmir</div>
+              <div>Simla</div>
+              <div>Wayanad</div>
+              <div>Kashmir</div>
+              <div>Simla</div>
+              <div>Ladakh</div>
+            </div>
+          </div> */}
           <input
             type='text'
             onChange={(e) => setDestination(e.target.value)}

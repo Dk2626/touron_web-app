@@ -20,6 +20,7 @@ import CelebritySection from './Home components/CelebritySection/CelebritySectio
 import Footer from './Home components/Footer/Footer';
 import SelfPlanTour from './Tour Categories/SelfPlan Tour/SelfPlanTour';
 import ResortCon from './Resort components/ResortCon';
+import Ipl from './Ipl components/Ipl';
 
 const Home = () => {
   const [popup, setPopup] = useState(false);
@@ -31,9 +32,13 @@ const Home = () => {
     // if (!popup) {
     setTimeout(() => {
       setPopup(true);
-    }, 7000);
+    }, 8000);
     // }
   }, []);
+
+  const closeIplV = () => {
+    setPopup(false);
+  };
 
   const customStyles = {
     overlay: { zIndex: 1000 },
@@ -72,7 +77,8 @@ const Home = () => {
 
   return (
     <div>
-      {popup && <Popup setPopup={setPopup} popup={popup} />}
+      {popup && <Ipl closeIplV={closeIplV} />}
+      {/* {popup && <Popup setPopup={setPopup} popup={popup} />} */}
       <Navbar />
       <Modal
         isOpen={selfPlanModal}
