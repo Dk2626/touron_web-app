@@ -239,6 +239,7 @@ const LuxuryTour = () => {
             destination={destination}
             preferanece={preferanece}
             startPoint={startPoint}
+            tourType={tourType}
             nextStep={nextStep}
             prevStep={prevStep}
             setDestination={(value) => setDestination(value)}

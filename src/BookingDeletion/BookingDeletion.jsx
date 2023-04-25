@@ -1,11 +1,13 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useContext, useState } from 'react';
 import { firedb } from '../firebase';
 import './BookingDeletion.css';
 import { MdDeleteForever } from 'react-icons/md';
 import moment from 'moment';
+import { ApiContext } from './../Context/ApiContext';
 
 const BookingDeletion = () => {
   const isMounted = useRef(false);
+  const { employees } = useContext(ApiContext);
   const [bookRecords, setBookRecords] = useState([]);
   const [formOpen, setFormOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -14,9 +16,11 @@ const BookingDeletion = () => {
   const [currentPage, setCurrentpage] = useState(1);
   const [allBookings, setAllBookings] = useState([]);
   const [changeData, setChangeData] = useState('');
+  const [search, setSearch] = useState('');
   const [bMonth, setBMonth] = useState('');
+  const [tMonth, setTMonth] = useState('');
   const [handleBy, setHandleBy] = useState('');
-  // const [year, setYear] = useState(new Date().getFullYear());
+  const [year, setYear] = useState(new Date().getFullYear());
   // const [month, setMonth] = useState(new Date().getMonth());
 
   // console.log('year', typeof year);
@@ -26,6 +30,25 @@ const BookingDeletion = () => {
   // console.log('nnn', new Date('2023-05-08').getMonth() === month);
 
   // const pagesCount = Math.ceil(allBookings.length / pageSize);
+
+  var months = [
+    'All',
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
+  const getMonth = (num) => {
+    return months[num + 1];
+  };
 
   function getData() {
     let final = [];
@@ -42,6 +65,8 @@ const BookingDeletion = () => {
               dest: d.val().general.destination,
               onward: d.val().general.onwardDate,
               return: d.val().general.returnDate,
+              book: d.val().general.bookedDate,
+              salesH: d.val().general.salesHandleName,
               isBookingCancelled: d.val().general.isBookingCancelled,
             });
           });
@@ -68,6 +93,8 @@ const BookingDeletion = () => {
             dest: d.val().general.destination,
             onward: d.val().general.onwardDate,
             return: d.val().general.returnDate,
+            book: d.val().general.bookedDate,
+            salesH: d.val().general.salesHandleName,
             isBookingCancelled: d.val().general.isBookingCancelled,
           });
         });
@@ -103,6 +130,18 @@ const BookingDeletion = () => {
     return filter;
   };
 
+  const get15daysTravel = () => {
+    const filter = allBookings.filter(
+      (d) =>
+        d.isBookingCancelled === false &&
+        moment(d.onward).isBetween(
+          moment().subtract(1, 'days'),
+          moment().add(15, 'days')
+        )
+    );
+    return filter;
+  };
+
   const getMonthTravel = () => {
     const filter = allBookings.filter(
       (d) =>
@@ -115,18 +154,100 @@ const BookingDeletion = () => {
     return filter.reverse();
   };
 
+  const getPerfectMonth = () => {
+    const filter = allBookings.filter(
+      (d) =>
+        d.isBookingCancelled === false &&
+        new Date(d.book).getMonth() === parseInt(bMonth) &&
+        new Date(d.book).getFullYear() === year
+    );
+    return filter.reverse();
+  };
+
+  const getPerfectTMonth = () => {
+    const filter = allBookings.filter(
+      (d) =>
+        d.isBookingCancelled === false &&
+        new Date(d.onward).getMonth() === parseInt(tMonth) &&
+        new Date(d.onward).getFullYear() === year
+    );
+    return filter.reverse();
+  };
+
+  const getSalesFilter = () => {
+    if (tMonth) {
+      const filter = allBookings.filter(
+        (d) =>
+          d.isBookingCancelled === false &&
+          d.salesH === handleBy &&
+          new Date(d.onward).getFullYear() === year &&
+          new Date(d.onward).getMonth() === parseInt(tMonth)
+      );
+      return filter.reverse();
+    }
+    if (bMonth) {
+      const filter = allBookings.filter(
+        (d) =>
+          d.isBookingCancelled === false &&
+          d.salesH === handleBy &&
+          new Date(d.book).getFullYear() === year &&
+          new Date(d.book).getMonth() === parseInt(bMonth)
+      );
+      return filter.reverse();
+    } else {
+      const filter = allBookings.filter(
+        (d) =>
+          d.isBookingCancelled === false &&
+          d.salesH === handleBy &&
+          new Date(d.onward).getFullYear() === year
+      );
+      return filter.reverse();
+    }
+  };
+
   const switchData = () => {
-    if (changeData === '') {
-      return bookRecords;
-    }
-    if (changeData === 'current') {
-      return getCurrentTravel();
-    }
-    if (changeData === '7day') {
-      return get7daysTravel();
-    }
-    if (changeData === 'currentmonth') {
-      return getMonthTravel();
+    if (search) {
+      let dd = [];
+      allBookings.forEach((d) => {
+        if (
+          d.name
+            ?.toString()
+            .trim()
+            .toLowerCase()
+            .includes(search.trim().toLowerCase())
+        ) {
+          dd.push(d);
+        }
+      });
+      return dd;
+    } else {
+      if (changeData === '') {
+        return bookRecords;
+      }
+      if (changeData === 'current') {
+        return getCurrentTravel();
+      }
+      if (changeData === '7day') {
+        return get7daysTravel();
+      }
+      if (changeData === '07') {
+        return get7daysTravel();
+      }
+      if (changeData === '15') {
+        return get15daysTravel();
+      }
+      if (changeData === 'currentmonth') {
+        return getMonthTravel();
+      }
+      if (changeData === 'perfect') {
+        return getPerfectMonth();
+      }
+      if (changeData === 'perfectT') {
+        return getPerfectTMonth();
+      }
+      if (changeData === 'sales') {
+        return getSalesFilter();
+      }
     }
   };
 
@@ -160,25 +281,6 @@ const BookingDeletion = () => {
     const d = Math.floor(gap / day);
     if (d >= 0) return d;
     return 0;
-  };
-
-  var months = [
-    'All',
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
-  ];
-  const getMonth = (num) => {
-    return months[num + 1];
   };
 
   return (
@@ -242,6 +344,91 @@ const BookingDeletion = () => {
             <option value='100'>100</option>
           </select>
         </div>
+        <div className='month'>
+          <label>Upcoming Travel in : </label>
+          <select onChange={(e) => setChangeData(e.target.value)}>
+            <option value='' selected disabled hidden>
+              select
+            </option>
+            <option value='07'>7 Days</option>
+            <option value='15'>15 Days</option>
+          </select>
+        </div>
+        <div className='month'>
+          <label>Booked By Month : </label>
+          <select
+            onChange={(e) => {
+              setBMonth(e.target.value);
+              setChangeData('perfect');
+            }}>
+            <option value='' selected disabled hidden>
+              select
+            </option>
+            <option value='0'>Jan</option>
+            <option value='1'>Feb</option>
+            <option value='2'>Mar</option>
+            <option value='3'>April</option>
+            <option value='4'>May</option>
+            <option value='5'>June</option>
+            <option value='6'>July</option>
+            <option value='7'>Aug</option>
+            <option value='8'>Sep</option>
+            <option value='9'>Oct</option>
+            <option value='10'>Nov</option>
+            <option value='11'>Dec</option>
+          </select>
+        </div>
+        <div className='month'>
+          <label>Travel By Month : </label>
+          <select
+            onChange={(e) => {
+              setTMonth(e.target.value);
+              setChangeData('perfectT');
+            }}>
+            <option value='' selected disabled hidden>
+              select
+            </option>
+            <option value='0'>Jan</option>
+            <option value='1'>Feb</option>
+            <option value='2'>Mar</option>
+            <option value='3'>April</option>
+            <option value='4'>May</option>
+            <option value='5'>June</option>
+            <option value='6'>July</option>
+            <option value='7'>Aug</option>
+            <option value='8'>Sep</option>
+            <option value='9'>Oct</option>
+            <option value='10'>Nov</option>
+            <option value='11'>Dec</option>
+          </select>
+        </div>
+        <div className='month'>
+          <label>Handle By : </label>
+          <select
+            onChange={(e) => {
+              setHandleBy(e.target.value);
+              setChangeData('sales');
+            }}>
+            <option value='' selected disabled hidden>
+              select
+            </option>
+            {employees?.map((e, i) => {
+              if (
+                e.designation === 'CEO' ||
+                e.designation == 'Travel Associate'
+              )
+                return (
+                  <option key={i} value={e.name}>
+                    {e.name}
+                  </option>
+                );
+            })}
+          </select>
+        </div>
+        <div className='month'>
+          <label>Search by Name / Dest / Id:</label>
+          <input type='text' onChange={(e) => setSearch(e.target.value)} />
+        </div>
       </div>
       <div>
         <table className='bookingDeletion_table_mainsss'>
@@ -253,11 +440,12 @@ const BookingDeletion = () => {
               <th>Departure</th>
               <th>Return</th>
               <th>Departure In</th>
+              <th>Sales</th>
               <th>Remove</th>
             </tr>
           </thead>
           {switchData().length === 0 ? (
-            <>Loading...</>
+            <>No data found...</>
           ) : (
             <tbody>
               {switchData()
@@ -273,6 +461,7 @@ const BookingDeletion = () => {
                     <td>{b.onward}</td>
                     <td>{b.return}</td>
                     <td>{getDepatureDate(b.onward)} days</td>
+                    <td>{b.salesH}</td>
                     <td
                       style={{ cursor: 'pointer' }}
                       onClick={() => {

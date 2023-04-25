@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { firedb } from '../firebase';
 import ReactExport from 'react-export-excel';
 
@@ -7,26 +7,32 @@ const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
 const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
 
 const ExportAllQuaries = () => {
+  const isMounted = useRef(false);
   const [datas, setDatas] = useState([]);
+
+  console.log('first', datas.length);
 
   const getData = () => {
     let final = [];
-    firedb.ref('userGeneralInfo').on('value', (data) => {
-      data.forEach((d) => {
-        if (d.val().name && d.val().email && d.val().phoneNumber) {
-          final.push({
-            name: d.val().name,
-            email: d.val().email,
-            mobile: d.val().phoneNumber,
-          });
-        }
-      });
+    firedb.ref('requests').on('value', (data) => {
+      if (isMounted.current) {
+        data.forEach((d) => {
+          if (d.val().number !== '') {
+            final.push({
+              name: d.val().name,
+              number: d.val().number,
+            });
+          }
+        });
+      }
       setDatas(final);
     });
   };
 
   useEffect(() => {
+    isMounted.current = true;
     getData();
+    return () => (isMounted.current = false);
   }, []);
 
   return (
@@ -56,8 +62,7 @@ const ExportAllQuaries = () => {
           }>
           <ExcelSheet data={datas} name='Customers'>
             <ExcelColumn label='Name' value='name' />
-            <ExcelColumn label='Mobile' value='mobile' />
-            <ExcelColumn label='Email' value='email' />
+            <ExcelColumn label='Mobile' value='number' />
           </ExcelSheet>
         </ExcelFile>
         {/* <div
@@ -78,7 +83,6 @@ const ExportAllQuaries = () => {
           <tr>
             <th>Name</th>
             <th>Mobile</th>
-            <th>Email</th>
           </tr>
         </thead>
         <tbody>
@@ -86,8 +90,7 @@ const ExportAllQuaries = () => {
             return (
               <tr key={i}>
                 <td>{d.name}</td>
-                <td>{d.mobile}</td>
-                <td>{d.email}</td>
+                <td>{d.number}</td>
               </tr>
             );
           })}
