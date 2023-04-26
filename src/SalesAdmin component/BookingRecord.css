@@ -175,6 +175,11 @@
   font-size: 1.5rem;
   color: #0057ff;
 }
+.bookingArrowIcon_rename {
+  color: #0057ff;
+  cursor: pointer;
+  margin-left: 5px;
+}
 .bookingBorder {
   border-right: 1.5px solid #cad5e2;
   height: 30px;

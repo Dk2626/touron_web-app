@@ -38,7 +38,7 @@ const Destination = ({
     'Hong Kong',
     'Fiji',
     'Russia',
-    'Eqypt',
+    'Egypt',
     'Jordan',
   ];
   let domestic = [

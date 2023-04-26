@@ -24,8 +24,6 @@ const BookingTable = () => {
   const [bookingRId, setBookingRId] = useState('');
   const [bookingAllDdd, setBookingAllDdd] = useState([]);
 
-  // console.log('loading2', loading2);
-
   useEffect(() => {
     isMounted.current = true;
     setLoading1(true);
@@ -305,24 +303,6 @@ const BookingTable = () => {
     }
   };
 
-  // const monthRequest = () => {
-  //   let req3 = [];
-  //   Object.keys(bookingDetails).forEach((b, i) => {
-  //     if (
-  //       new Date(bookingDetails[b]?.general.onwardDate).getMonth() ===
-  //         parseInt(bMonth) &&
-  //       bookingDetails[b]?.general.isBookingCancelled === false
-  //     ) {
-  //       req3.push(b);
-  //     }
-  //   });
-
-  //   console.log(`req3.length`, req3.length);
-  //   return req3.length;
-  // };
-
-  // console.log(`bMonth`, bMonth, bMonth.slice(6));
-
   const getBookingByMonth = () => {
     if (search) {
       let srh = {};
@@ -356,8 +336,6 @@ const BookingTable = () => {
       if (bMonth === 'current') return render('current');
       if (bMonth === '07') return render('week', 7);
       if (bMonth === '15') return render('week', 15);
-      // if (bMonth === "All") return render("handle", "All");
-      // if (bMonth.toString().includes("handle")) return render("handle", handleBy);
       if (bMonth.toString().includes('bMonth')) return render('month');
       return render('travel');
     }
@@ -366,7 +344,6 @@ const BookingTable = () => {
   let pagesCount = Math.ceil(
     Object.keys(getBookingByMonth()).length / pageSize
   );
-  // let pagesCount = 10;
 
   const handleClick = (e, index) => {
     e.preventDefault();
@@ -391,47 +368,8 @@ const BookingTable = () => {
     return months[num + 1];
   };
 
-  // const deleteBookingRecord = () => {
-  //   firedb
-  //     .ref(`bookingdetails1/${bookingRId}`)
-  //     .remove()
-  //     .then(() => {
-  //       setOpenDelRecord(false);
-  //       setBookingRId('');
-  //       setLoading2(false);
-  //     })
-  //     .catch((err) => {
-  //       console.log('err', err);
-  //     });
-  // };
-
   return (
     <div>
-      {/* {openDelRecord && (
-        <div className='booking-container_del__recorf'>
-          <div className='booking-container_del__recorf_main'>
-            {loading2 ? (
-              <div>Just a sec...</div>
-            ) : (
-              <>
-                <div>Are you sure want to remove the booking record?</div>
-                <div>
-                  <button
-                    onClick={() => {
-                      setLoading2(true);
-                      deleteBookingRecord();
-                    }}>
-                    Remove
-                  </button>
-                  <button onClick={() => setOpenDelRecord(false)}>
-                    Cancel
-                  </button>
-                </div>
-              </>
-            )}
-          </div>
-        </div>
-      )} */}
       <div className='booking-container'>
         <div className='booking-name-container'>
           <div>

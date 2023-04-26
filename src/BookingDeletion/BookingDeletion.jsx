@@ -21,15 +21,6 @@ const BookingDeletion = () => {
   const [tMonth, setTMonth] = useState('');
   const [handleBy, setHandleBy] = useState('');
   const [year, setYear] = useState(new Date().getFullYear());
-  // const [month, setMonth] = useState(new Date().getMonth());
-
-  // console.log('year', typeof year);
-  // console.log('month', typeof month);
-  // console.log('year', year);
-  // console.log('month', month);
-  // console.log('nnn', new Date('2023-05-08').getMonth() === month);
-
-  // const pagesCount = Math.ceil(allBookings.length / pageSize);
 
   var months = [
     'All',
@@ -58,17 +49,7 @@ const BookingDeletion = () => {
       .on('value', (data) => {
         if (isMounted.current) {
           data.forEach((d) => {
-            final.push({
-              key: d.key,
-              survey: d.val().surveyId,
-              name: d.val().general.customerName,
-              dest: d.val().general.destination,
-              onward: d.val().general.onwardDate,
-              return: d.val().general.returnDate,
-              book: d.val().general.bookedDate,
-              salesH: d.val().general.salesHandleName,
-              isBookingCancelled: d.val().general.isBookingCancelled,
-            });
+            final.push(d.val());
           });
         }
         setBookRecords(final.reverse());
@@ -86,17 +67,7 @@ const BookingDeletion = () => {
     firedb.ref('bookingdetails1').on('value', (data) => {
       if (isMounted.current) {
         data.forEach((d) => {
-          final.push({
-            key: d.key,
-            survey: d.val().surveyId,
-            name: d.val().general.customerName,
-            dest: d.val().general.destination,
-            onward: d.val().general.onwardDate,
-            return: d.val().general.returnDate,
-            book: d.val().general.bookedDate,
-            salesH: d.val().general.salesHandleName,
-            isBookingCancelled: d.val().general.isBookingCancelled,
-          });
+          final.push(d.val());
         });
       }
       setAllBookings(final);
@@ -112,8 +83,11 @@ const BookingDeletion = () => {
   const getCurrentTravel = () => {
     const filter = allBookings.filter(
       (d) =>
-        d.isBookingCancelled === false &&
-        moment().isBetween(moment(d.onward), moment(d.return).add(1, 'days'))
+        d.general.isBookingCancelled === false &&
+        moment().isBetween(
+          moment(d.general.onwardDate),
+          moment(d.general.returnDate).add(1, 'days')
+        )
     );
     return filter;
   };
@@ -121,8 +95,8 @@ const BookingDeletion = () => {
   const get7daysTravel = () => {
     const filter = allBookings.filter(
       (d) =>
-        d.isBookingCancelled === false &&
-        moment(d.onward).isBetween(
+        d.general.isBookingCancelled === false &&
+        moment(d.general.onwardDate).isBetween(
           moment().subtract(1, 'days'),
           moment().add(7, 'days')
         )
@@ -133,8 +107,8 @@ const BookingDeletion = () => {
   const get15daysTravel = () => {
     const filter = allBookings.filter(
       (d) =>
-        d.isBookingCancelled === false &&
-        moment(d.onward).isBetween(
+        d.general.isBookingCancelled === false &&
+        moment(d.general.onwardDate).isBetween(
           moment().subtract(1, 'days'),
           moment().add(15, 'days')
         )
@@ -145,11 +119,13 @@ const BookingDeletion = () => {
   const getMonthTravel = () => {
     const filter = allBookings.filter(
       (d) =>
-        d.isBookingCancelled === false &&
-        new Date(d?.onward).getFullYear() === new Date().getFullYear() &&
-        new Date(d?.onward).getMonth() === new Date().getMonth() &&
-        new Date(d?.return).getFullYear() === new Date().getFullYear() &&
-        new Date(d?.return).getMonth() === new Date().getMonth()
+        d.general.isBookingCancelled === false &&
+        new Date(d?.general.onwardDate).getFullYear() ===
+          new Date().getFullYear() &&
+        new Date(d?.general.onwardDate).getMonth() === new Date().getMonth() &&
+        new Date(d?.general.returnDate).getFullYear() ===
+          new Date().getFullYear() &&
+        new Date(d?.general.returnDate).getMonth() === new Date().getMonth()
     );
     return filter.reverse();
   };
@@ -157,9 +133,9 @@ const BookingDeletion = () => {
   const getPerfectMonth = () => {
     const filter = allBookings.filter(
       (d) =>
-        d.isBookingCancelled === false &&
-        new Date(d.book).getMonth() === parseInt(bMonth) &&
-        new Date(d.book).getFullYear() === year
+        d.general.isBookingCancelled === false &&
+        new Date(d.general.bookedDate).getMonth() === parseInt(bMonth) &&
+        new Date(d.general.bookedDate).getFullYear() === year
     );
     return filter.reverse();
   };
@@ -167,9 +143,9 @@ const BookingDeletion = () => {
   const getPerfectTMonth = () => {
     const filter = allBookings.filter(
       (d) =>
-        d.isBookingCancelled === false &&
-        new Date(d.onward).getMonth() === parseInt(tMonth) &&
-        new Date(d.onward).getFullYear() === year
+        d.general.isBookingCancelled === false &&
+        new Date(d.general.onwardDate).getMonth() === parseInt(tMonth) &&
+        new Date(d.general.onwardDate).getFullYear() === year
     );
     return filter.reverse();
   };
@@ -178,31 +154,45 @@ const BookingDeletion = () => {
     if (tMonth) {
       const filter = allBookings.filter(
         (d) =>
-          d.isBookingCancelled === false &&
-          d.salesH === handleBy &&
-          new Date(d.onward).getFullYear() === year &&
-          new Date(d.onward).getMonth() === parseInt(tMonth)
+          d.general.isBookingCancelled === false &&
+          d.general.salesHandleName === handleBy &&
+          new Date(d.general.onwardDate).getFullYear() === year &&
+          new Date(d.general.onwardDate).getMonth() === parseInt(tMonth)
       );
       return filter.reverse();
     }
     if (bMonth) {
       const filter = allBookings.filter(
         (d) =>
-          d.isBookingCancelled === false &&
-          d.salesH === handleBy &&
-          new Date(d.book).getFullYear() === year &&
-          new Date(d.book).getMonth() === parseInt(bMonth)
+          d.general.isBookingCancelled === false &&
+          d.general.salesHandleName === handleBy &&
+          new Date(d.general.bookedDate).getFullYear() === year &&
+          new Date(d.general.bookedDate).getMonth() === parseInt(bMonth)
       );
       return filter.reverse();
     } else {
       const filter = allBookings.filter(
         (d) =>
-          d.isBookingCancelled === false &&
-          d.salesH === handleBy &&
-          new Date(d.onward).getFullYear() === year
+          d.general.isBookingCancelled === false &&
+          d.general.salesHandleName === handleBy &&
+          new Date(d.general.onwardDate).getFullYear() === year
       );
       return filter.reverse();
     }
+  };
+
+  const getRemainders = () => {
+    let reminder = [];
+    allBookings.forEach((r) => {
+      if (r.reminders) {
+        r.reminders.forEach((rr) => {
+          if (rr.isStarted) {
+            reminder.push(r);
+          }
+        });
+      }
+    });
+    return reminder;
   };
 
   const switchData = () => {
@@ -210,7 +200,17 @@ const BookingDeletion = () => {
       let dd = [];
       allBookings.forEach((d) => {
         if (
-          d.name
+          d.general.customerName
+            ?.toString()
+            .trim()
+            .toLowerCase()
+            .includes(search.trim().toLowerCase()) ||
+          d.general.destination
+            ?.toString()
+            .trim()
+            .toLowerCase()
+            .includes(search.trim().toLowerCase()) ||
+          d.surveyId
             ?.toString()
             .trim()
             .toLowerCase()
@@ -247,6 +247,9 @@ const BookingDeletion = () => {
       }
       if (changeData === 'sales') {
         return getSalesFilter();
+      }
+      if (changeData === 'reminder') {
+        return getRemainders();
       }
     }
   };
@@ -331,6 +334,10 @@ const BookingDeletion = () => {
           <h4>Travellers in {getMonth(new Date().getMonth())}</h4>
           <button onClick={() => setChangeData('currentmonth')}>Show</button>
         </div>
+        <div>
+          <h4>Total Reminders {getRemainders().length}</h4>
+          <button onClick={() => setChangeData('reminder')}>Show</button>
+        </div>
       </div>
       <div>
         <div className='month'>
@@ -352,6 +359,17 @@ const BookingDeletion = () => {
             </option>
             <option value='07'>7 Days</option>
             <option value='15'>15 Days</option>
+          </select>
+        </div>
+        <div className='month'>
+          <label>Year : </label>
+          <select value={year} onChange={(e) => setYear(e.target.value)}>
+            <option value='2020'>2020</option>
+            <option value='2021'>2021</option>
+            <option value='2022'>2022</option>
+            <option value='2023'>2023</option>
+            <option value='2024'>2024</option>
+            <option value='2025'>2025</option>
           </select>
         </div>
         <div className='month'>
@@ -455,13 +473,13 @@ const BookingDeletion = () => {
                 )
                 .map((b, i) => (
                   <tr key={i} className='bookingDeletion_table_tr1'>
-                    <td>{b.survey}</td>
-                    <td>{b.name}</td>
-                    <td>{b.dest}</td>
-                    <td>{b.onward}</td>
-                    <td>{b.return}</td>
-                    <td>{getDepatureDate(b.onward)} days</td>
-                    <td>{b.salesH}</td>
+                    <td>{b.surveyId}</td>
+                    <td>{b.general.customerName}</td>
+                    <td>{b.general.destination}</td>
+                    <td>{b.general.onwardDate}</td>
+                    <td>{b.general.returnDate}</td>
+                    <td>{getDepatureDate(b.general.onwardDate)} days</td>
+                    <td>{b.general.salesHandleName}</td>
                     <td
                       style={{ cursor: 'pointer' }}
                       onClick={() => {
