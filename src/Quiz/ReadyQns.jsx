@@ -44,7 +44,7 @@ const ReadyQns = () => {
 
   const submitQns = () => {
     firedb
-      .ref('quizqns')
+      .ref('saudiquizqns')
       .set(questions)
       .then(() => console.log('Sucess'))
       .catch((error) => console.log('error', error));

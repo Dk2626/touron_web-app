@@ -330,7 +330,7 @@ const Quiz = () => {
   const submitForm = () => {
     let end = new Date();
     firedb
-      .ref('quiz')
+      .ref('saudiquiz')
       .push({
         name,
         email,
@@ -386,7 +386,7 @@ const Quiz = () => {
 
   const getQns = () => {
     let finalQns = [];
-    firedb.ref('quizqns').on('value', (data) => {
+    firedb.ref('saudiquizqns').on('value', (data) => {
       if (isMounted.current) {
         data.forEach((d) => {
           finalQns.push({
@@ -398,11 +398,14 @@ const Quiz = () => {
           });
         });
       }
-      if (finalQns.length == 20) {
-        setQuestionBank(
-          finalQns.sort((a, b) => a.randomQuiz - b.randomQuiz).slice(0, 10)
-        );
+      if (finalQns.length == 5) {
+        setQuestionBank(finalQns.sort((a, b) => a.randomQuiz - b.randomQuiz));
       }
+      // if (finalQns.length == 20) {
+      //   setQuestionBank(
+      //     finalQns.sort((a, b) => a.randomQuiz - b.randomQuiz).slice(0, 10)
+      //   );
+      // }
     });
   };
 
@@ -415,7 +418,7 @@ const Quiz = () => {
   const getData = () => {
     let quizdataEmail = [];
     let quizdataPhone = [];
-    firedb.ref('quiz').on('value', (data) => {
+    firedb.ref('saudiquiz').on('value', (data) => {
       if (isMounted.current) {
         data.forEach((d) => {
           quizdataEmail.push(d.val().email);

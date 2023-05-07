@@ -14,7 +14,7 @@ const QuizDash = () => {
   const getData = () => {
     setLoading(true);
     const datas = [];
-    firedb.ref('quiz').on('value', (data) => {
+    firedb.ref('saudiquiz').on('value', (data) => {
       if (isMounted.current) {
         data.forEach((d) => {
           datas.push(d.val());
