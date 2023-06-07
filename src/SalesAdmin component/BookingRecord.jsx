@@ -1556,6 +1556,22 @@ const BookingRecord = () => {
       .catch((err) => console.log(`err`, err));
   };
 
+  // const calculateDays = () => {
+  //   const start = new Date(onwardDate);
+  //   const end = new Date(returnDate);
+
+  //   // Calculate the difference in milliseconds
+  //   const diffInMilliseconds = Math.abs(end - start);
+
+  //   // Convert milliseconds to days
+  //   const days = Math.floor(diffInMilliseconds / (1000 * 60 * 60 * 24));
+  //   console.log('days', days);
+
+  //   return days;
+  // };
+
+  console.log('general', general);
+
   const renderItems = (step) => {
     switch (step) {
       case 1:
@@ -1901,12 +1917,13 @@ const BookingRecord = () => {
                     <input
                       type='text'
                       value={totalTravelDays}
-                      onChange={(e) =>
-                        setGeneral({
-                          ...general,
-                          totalTravelDays: e.target.value,
-                        })
-                      }
+                      readOnly
+                      // onChange={(e) =>
+                      //   setGeneral({
+                      //     ...general,
+                      //     totalTravelDays: e.target.value,
+                      //   })
+                      // }
                     />
                   </div>
                   <div className='generalInput'>
@@ -1939,13 +1956,21 @@ const BookingRecord = () => {
                     <label>Return Date</label>
                     <input
                       type='date'
+                      min={onwardDate ? onwardDate : ''}
                       value={returnDate}
-                      onChange={(e) =>
+                      onChange={(e) => {
                         setGeneral({
                           ...general,
                           returnDate: e.target.value,
-                        })
-                      }
+                          totalTravelDays: Math.floor(
+                            Math.abs(
+                              new Date(e.target.value) - new Date(onwardDate)
+                            ) /
+                              (1000 * 60 * 60 * 24) +
+                              1
+                          ),
+                        });
+                      }}
                     />
                   </div>
                   <div className='generalInput'>

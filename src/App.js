@@ -58,6 +58,7 @@ import AccessDenied from './AccessDenied/AccessDenied';
 import BookingDRecord from './BookingDRecord/BookingDRecord';
 import Record from './marginvolumerecord/Record';
 import BookingDeletion from './BookingDeletion/BookingDeletion';
+import Virtual from './Virtual/Virtual';
 // import LuckySeat from './Quiz/LuckySeat';
 // import LuckySeatAdmin from './Quiz/LuckySeatAdmin';
 // import LuckySeatAs from './Quiz/LuckySeatAs';
@@ -174,6 +175,7 @@ const App = () => {
               <Route path='/wildlife-tour' element={<WildlifeTour />} />
               <Route path='/self-planned' element={<SelfPlanTour />} />
               <Route path='/blogs' exact element={<Blog />} />
+              <Route path='/virtual' exact element={<Virtual />} />
               <Route
                 path='/blogdetails/:blogname/:blogid/:countryName'
                 element={<BlogInner />}

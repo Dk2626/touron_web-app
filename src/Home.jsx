@@ -77,7 +77,7 @@ const Home = () => {
 
   return (
     <div>
-      {popup && <Ipl closeIplV={closeIplV} />}
+      {/* {popup && <Ipl closeIplV={closeIplV} />} */}
       {/* {popup && <Popup setPopup={setPopup} popup={popup} />} */}
       <Navbar />
       <Modal
