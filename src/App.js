@@ -175,7 +175,7 @@ const App = () => {
               <Route path='/wildlife-tour' element={<WildlifeTour />} />
               <Route path='/self-planned' element={<SelfPlanTour />} />
               <Route path='/blogs' exact element={<Blog />} />
-              <Route path='/virtual' exact element={<Virtual />} />
+              <Route path='/virtualtrialroom' exact element={<Virtual />} />
               <Route
                 path='/blogdetails/:blogname/:blogid/:countryName'
                 element={<BlogInner />}

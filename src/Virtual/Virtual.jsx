@@ -2,10 +2,10 @@ import axios from 'axios';
 import React, { useEffect, useState, useRef } from 'react';
 import { firedb } from '../firebase';
 import './Virtual.css';
+import { Link } from 'react-router-dom';
 
 const Virtual = () => {
   const isMounted = useRef(false);
-  const [step, setStep] = useState(1);
   const [data, setData] = useState({
     name: '',
     number: '',
@@ -17,9 +17,8 @@ const Virtual = () => {
   const [selectedDate, setSelectedDate] = useState('');
   const [alotTime, setAlotTime] = useState([]);
   const [dummySlot, setDummySlot] = useState([]);
-
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [otp, setOTP] = useState('');
+  const [modal, setModal] = useState(false);
+  const [mainForm, setMainForm] = useState(false);
 
   const { name, number, date, time, apType } = data;
 
@@ -53,8 +52,6 @@ const Virtual = () => {
     '05:30PM',
   ];
 
-  // let dummyslot = ['01:00PM', '01:15PM', '01:30PM', '01:45PM', '02:00PM'];
-
   const submit = () => {
     firedb
       .ref('virtual')
@@ -65,15 +62,17 @@ const Virtual = () => {
         time: time,
         apType: apType,
       })
-      .then(() =>
+      .then(() => {
         setData({
           name: '',
           number: '',
           date: '',
           time: '',
           apType: '',
-        })
-      )
+        });
+        setModal(true);
+        setMainForm(true);
+      })
       .catch((err) => console.log(err));
   };
 
@@ -135,199 +134,188 @@ const Virtual = () => {
     return () => (isMounted.current = false);
   }, []);
 
-  // const handleSendOTP = async () => {
-  //   try {
-  //     const response = await axios.post('https://api.wati.io/v1/sendOTP', {
-  //       phone: phoneNumber,
-  //       channel: 'whatsapp',
-  //     });
-  //     // Handle the response as needed
-  //     console.log('response', response);
-  //   } catch (error) {
-  //     // Handle the error appropriately
-  //     console.log('error', error);
-  //   }
-  // };
-
-  const render = () => {
-    switch (step) {
-      case 1:
-        return (
-          <div className='virtual_step_1_main'>
-            {/* <div>
-              <h1>OTP Verification</h1>
-              <input
-                type='text'
-                placeholder='Phone Number'
-                value={phoneNumber}
-                onChange={(e) => setPhoneNumber(e.target.value)}
-              />
-              <button onClick={handleSendOTP}>Send OTP</button>
-              <br />
-              <input
-                type='text'
-                placeholder='OTP'
-                value={otp}
-                onChange={(e) => setOTP(e.target.value)}
-              /> */}
-            {/* <button onClick={handleVerifyOTP}>Verify OTP</button> */}
-            {/* </div> */}
-
-            <div className='virtual_step_1_main_headdd'>
-              <h1>Trial Room</h1>
-              <h4>Set up your first appointment type</h4>
-            </div>
-            <div className='virtual_step_1_main_inputs'>
-              <div className='virtual_step_1_main_inputs_input'>
-                <label>name</label>
-                <input
-                  type='text'
-                  value={name}
-                  onChange={(e) =>
-                    setData({
-                      ...data,
-                      name: e.target.value,
-                    })
-                  }
-                />
-              </div>
-              <div className='virtual_step_1_main_inputs_input'>
-                <label>whatsapp number</label>
-                <input
-                  type='number'
-                  value={number}
-                  onChange={(e) =>
-                    setData({
-                      ...data,
-                      number: e.target.value,
-                    })
-                  }
-                />
-              </div>
-              <div>
-                <label className='virtual_step_1_main_inputs_radio_lab'>
-                  appointment type
-                </label>
-                <div className='virtual_step_1_main_inputs_radio'>
-                  <div>
-                    <input
-                      type='radio'
-                      name='onwardTransportMode'
-                      id='Single'
-                      value='Single'
-                      checked={apType === 'Single'}
-                      onChange={(e) =>
-                        setData({
-                          ...data,
-                          apType: e.target.value,
-                        })
-                      }
-                    />
-                    <label htmlFor='Single'>Single</label>
-                  </div>
-                  <div>
-                    <input
-                      type='radio'
-                      name='onwardTransportMode'
-                      id='Couple'
-                      value='Couple'
-                      checked={apType === 'Couple'}
-                      onChange={(e) =>
-                        setData({
-                          ...data,
-                          apType: e.target.value,
-                        })
-                      }
-                    />
-                    <label htmlFor='Couple'>Couple</label>
-                  </div>
-                  <div>
-                    <input
-                      type='radio'
-                      name='onwardTransportMode'
-                      id='Group'
-                      value='Group'
-                      checked={apType === 'Group'}
-                      onChange={(e) =>
-                        setData({
-                          ...data,
-                          apType: e.target.value,
-                        })
-                      }
-                    />
-                    <label htmlFor='Group'>Group</label>
-                  </div>
-                </div>
-              </div>
-              <div className='virtual_step_1_main_inputs_input'>
-                <label>date</label>
-                <input
-                  type='date'
-                  value={date}
-                  onChange={handleDateChange}
-                  required
-                />
-              </div>
-              <div className='virtual_step_1_main_inputs_input'>
-                <label>book your slot</label>
-                <select
-                  disabled={!date}
-                  value={time}
-                  onChange={(e) =>
-                    setData({
-                      ...data,
-                      time: e.target.value,
-                    })
-                  }>
-                  <option value='' selected hidden>
-                    Select
-                  </option>
-                  {times.map((t) => {
-                    return (
-                      <option
-                        value={t}
-                        disabled={
-                          alotTime.includes(t) || dummySlot.includes(t)
-                        }>
-                        {alotTime.includes(t) || dummySlot.includes(t)
-                          ? `${t} "Slot Booked"`
-                          : t}
-                      </option>
-                    );
-                  })}
-                </select>
-              </div>
-            </div>
-            <div>
-              <button
-                disabled={
-                  name == '' ||
-                  number == '' ||
-                  date == '' ||
-                  time == '' ||
-                  apType == ''
-                }
-                className={
-                  name == '' ||
-                  number == '' ||
-                  date == '' ||
-                  time == '' ||
-                  apType == ''
-                    ? 'virtual_step_1_main_btn_dis'
-                    : 'virtual_step_1_main_btn'
-                }
-                onClick={() => submit()}>
-                Submit
-              </button>
-            </div>
-          </div>
-        );
-      default:
-        return step;
+  const handleKeyDown = (e) => {
+    if (e.key === ' ') {
+      e.preventDefault();
     }
   };
 
-  return <div>{render()}</div>;
+  const handleKeyPress = (e) => {
+    if (!/[0-9]/.test(e.key)) {
+      e.preventDefault();
+    }
+  };
+
+  return (
+    <div className='virtual__home'>
+      <video autoPlay muted loop className='virtual__video'>
+        <source
+          src='https://firebasestorage.googleapis.com/v0/b/touronapp-248e4.appspot.com/o/virtualvideo.mp4?alt=media&token=f3ea5a3e-1220-4dda-bc48-e5d1f03db721&_gl=1*17gr4cw*_ga*MjEyMDEzODI3Ny4xNjQ4NTc0MzYz*_ga_CW55HF8NVT*MTY4NjMwNDIyNi40My4xLjE2ODYzMDQ2ODguMC4wLjA.'
+          type='video/mp4'
+        />
+      </video>
+      {modal && (
+        <div className='virtual__modal'>
+          <p>Hurray! Your Appointment booked successfully.</p>
+          <Link to='/'>
+            <button>Go to Home</button>
+          </Link>
+        </div>
+      )}
+      {!mainForm && (
+        <div className='virtual_step_1_main'>
+          <div className='virtual_step_1_main_headdd'>
+            <h1>Trial Room</h1>
+            <h4>Set up your first Appointment type</h4>
+          </div>
+          <div className='virtual_step_1_main_inputs'>
+            <div className='virtual_step_1_main_inputs_input'>
+              <label>name</label>
+              <input
+                type='text'
+                value={name}
+                onChange={(e) =>
+                  setData({
+                    ...data,
+                    name: e.target.value,
+                  })
+                }
+              />
+            </div>
+            <div className='virtual_step_1_main_inputs_input'>
+              <label>whatsapp number</label>
+              <input
+                type='text'
+                value={number}
+                maxLength='10'
+                onKeyDown={handleKeyDown}
+                onKeyPress={handleKeyPress}
+                onChange={(e) =>
+                  setData({
+                    ...data,
+                    number: e.target.value,
+                  })
+                }
+              />
+            </div>
+            <div>
+              <label className='virtual_step_1_main_inputs_radio_lab'>
+                appointment type
+              </label>
+              <div className='virtual_step_1_main_inputs_radio'>
+                <div>
+                  <input
+                    type='radio'
+                    name='onwardTransportMode'
+                    id='Single'
+                    value='Single'
+                    checked={apType === 'Single'}
+                    onChange={(e) =>
+                      setData({
+                        ...data,
+                        apType: e.target.value,
+                      })
+                    }
+                  />
+                  <label htmlFor='Single'>Single</label>
+                </div>
+                <div>
+                  <input
+                    type='radio'
+                    name='onwardTransportMode'
+                    id='Couple'
+                    value='Couple'
+                    checked={apType === 'Couple'}
+                    onChange={(e) =>
+                      setData({
+                        ...data,
+                        apType: e.target.value,
+                      })
+                    }
+                  />
+                  <label htmlFor='Couple'>Couple</label>
+                </div>
+                <div>
+                  <input
+                    type='radio'
+                    name='onwardTransportMode'
+                    id='Group'
+                    value='Group'
+                    checked={apType === 'Group'}
+                    onChange={(e) =>
+                      setData({
+                        ...data,
+                        apType: e.target.value,
+                      })
+                    }
+                  />
+                  <label htmlFor='Group'>Group</label>
+                </div>
+              </div>
+            </div>
+            <div className='virtual_step_1_main_inputs_input'>
+              <label>date</label>
+              <input
+                type='date'
+                value={date}
+                onChange={handleDateChange}
+                required
+              />
+            </div>
+            <div className='virtual_step_1_main_inputs_input'>
+              <label>book your slot</label>
+              <select
+                disabled={!date}
+                value={time}
+                onChange={(e) =>
+                  setData({
+                    ...data,
+                    time: e.target.value,
+                  })
+                }>
+                <option value='' selected hidden>
+                  Select
+                </option>
+                {times.map((t) => {
+                  return (
+                    <option
+                      value={t}
+                      disabled={alotTime.includes(t) || dummySlot.includes(t)}>
+                      {alotTime.includes(t) || dummySlot.includes(t)
+                        ? `${t} "Slot Booked"`
+                        : t}
+                    </option>
+                  );
+                })}
+              </select>
+            </div>
+          </div>
+          <div>
+            <button
+              disabled={
+                name == '' ||
+                number == '' ||
+                date == '' ||
+                time == '' ||
+                apType == ''
+              }
+              className={
+                name == '' ||
+                number == '' ||
+                date == '' ||
+                time == '' ||
+                apType == ''
+                  ? 'virtual_step_1_main_btn_dis'
+                  : 'virtual_step_1_main_btn'
+              }
+              onClick={() => submit()}>
+              Submit
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
 };
 
 export default Virtual;
