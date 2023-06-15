@@ -59,6 +59,7 @@ import BookingDRecord from './BookingDRecord/BookingDRecord';
 import Record from './marginvolumerecord/Record';
 import BookingDeletion from './BookingDeletion/BookingDeletion';
 import Virtual from './Virtual/Virtual';
+import Virtualdash from './Virtual/Virtualdash';
 // import LuckySeat from './Quiz/LuckySeat';
 // import LuckySeatAdmin from './Quiz/LuckySeatAdmin';
 // import LuckySeatAs from './Quiz/LuckySeatAs';
@@ -385,6 +386,14 @@ const App = () => {
                 element={
                   <AdminRoute>
                     <BookingDeletion />
+                  </AdminRoute>
+                }
+              />
+              <Route
+                path='/virtualDash'
+                element={
+                  <AdminRoute>
+                    <Virtualdash />
                   </AdminRoute>
                 }
               />

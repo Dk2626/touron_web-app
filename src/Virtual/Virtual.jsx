@@ -1,4 +1,3 @@
-import axios from 'axios';
 import React, { useEffect, useState, useRef } from 'react';
 import { firedb } from '../firebase';
 import './Virtual.css';
@@ -14,11 +13,65 @@ const Virtual = () => {
     apType: '',
   });
 
-  const [selectedDate, setSelectedDate] = useState('');
+  // const [selectedDate, setSelectedDate] = useState('');
   const [alotTime, setAlotTime] = useState([]);
-  const [dummySlot, setDummySlot] = useState([]);
+  // const [dummySlot, setDummySlot] = useState([]);
   const [modal, setModal] = useState(false);
   const [mainForm, setMainForm] = useState(false);
+
+  const arrays = [
+    [
+      '11:00AM',
+      '12:15PM',
+      '01:15PM',
+      '02:15PM',
+      '03:30PM',
+      '04:15PM',
+      '05:00PM',
+      '05:30PM',
+    ],
+    [
+      '11:15AM',
+      '11:45AM',
+      '12:30PM',
+      '01:45PM',
+      '03:15PM',
+      '04:00PM',
+      '04:45PM',
+      '05:15PM',
+    ],
+    [
+      '11:45AM',
+      '12:45PM',
+      '01:00PM',
+      '01:45PM',
+      '02:30PM',
+      '03:30PM',
+      '04:15PM',
+      '05:00PM',
+    ],
+    [
+      '11:15AM',
+      '12:00PM',
+      '01:30PM',
+      '02:45PM',
+      '03:00PM',
+      '03:45PM',
+      '04:30PM',
+      '05:15PM',
+    ],
+    [
+      '11:30AM',
+      '12:15PM',
+      '02:00PM',
+      '02:30PM',
+      '03:15PM',
+      '04:00PM',
+      '04:45PM',
+      '05:15PM',
+    ],
+  ];
+  const [dummySlot, setDummySlot] = useState(arrays[0]);
 
   const { name, number, date, time, apType } = data;
 
@@ -116,23 +169,23 @@ const Virtual = () => {
     return () => (isMounted.current = false);
   }, [date]);
 
-  const getDummySlot = () => {
-    let dd = [];
-    firedb.ref('dummyslot').on('value', (data) => {
-      if (isMounted.current) {
-        data.forEach((d) => {
-          dd.push(d.val().time);
-        });
-        setDummySlot(dd);
-      }
-    });
-  };
+  // const getDummySlot = () => {
+  //   let dd = [];
+  //   firedb.ref('dummyslot').on('value', (data) => {
+  //     if (isMounted.current) {
+  //       data.forEach((d) => {
+  //         dd.push(d.val().time);
+  //       });
+  //       setDummySlot(dd);
+  //     }
+  //   });
+  // };
 
-  useEffect(() => {
-    isMounted.current = true;
-    getDummySlot();
-    return () => (isMounted.current = false);
-  }, []);
+  // useEffect(() => {
+  //   isMounted.current = true;
+  //   getDummySlot();
+  //   return () => (isMounted.current = false);
+  // }, []);
 
   const handleKeyDown = (e) => {
     if (e.key === ' ') {
@@ -145,6 +198,14 @@ const Virtual = () => {
       e.preventDefault();
     }
   };
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const randomIndex = Math.floor(Math.random() * arrays.length);
+      setDummySlot(arrays[randomIndex]);
+    }, 60 * 60 * 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <div className='virtual__home'>
@@ -293,18 +354,18 @@ const Virtual = () => {
           <div>
             <button
               disabled={
-                name == '' ||
-                number == '' ||
-                date == '' ||
-                time == '' ||
-                apType == ''
+                name === '' ||
+                number === '' ||
+                date === '' ||
+                time === '' ||
+                apType === ''
               }
               className={
-                name == '' ||
-                number == '' ||
-                date == '' ||
-                time == '' ||
-                apType == ''
+                name === '' ||
+                number === '' ||
+                date === '' ||
+                time === '' ||
+                apType === ''
                   ? 'virtual_step_1_main_btn_dis'
                   : 'virtual_step_1_main_btn'
               }
