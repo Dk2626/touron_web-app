@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { firedb } from '../firebase';
 import './Virtual.css';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 const Virtual = () => {
   const isMounted = useRef(false);
@@ -13,65 +14,26 @@ const Virtual = () => {
     apType: '',
   });
 
-  // const [selectedDate, setSelectedDate] = useState('');
   const [alotTime, setAlotTime] = useState([]);
-  // const [dummySlot, setDummySlot] = useState([]);
+  const [dummySlot, setDummySlot] = useState([]);
   const [modal, setModal] = useState(false);
   const [mainForm, setMainForm] = useState(false);
 
-  const arrays = [
-    [
-      '11:00AM',
-      '12:15PM',
-      '01:15PM',
-      '02:15PM',
-      '03:30PM',
-      '04:15PM',
-      '05:00PM',
-      '05:30PM',
-    ],
-    [
-      '11:15AM',
-      '11:45AM',
-      '12:30PM',
-      '01:45PM',
-      '03:15PM',
-      '04:00PM',
-      '04:45PM',
-      '05:15PM',
-    ],
-    [
-      '11:45AM',
-      '12:45PM',
-      '01:00PM',
-      '01:45PM',
-      '02:30PM',
-      '03:30PM',
-      '04:15PM',
-      '05:00PM',
-    ],
-    [
-      '11:15AM',
-      '12:00PM',
-      '01:30PM',
-      '02:45PM',
-      '03:00PM',
-      '03:45PM',
-      '04:30PM',
-      '05:15PM',
-    ],
-    [
-      '11:30AM',
-      '12:15PM',
-      '02:00PM',
-      '02:30PM',
-      '03:15PM',
-      '04:00PM',
-      '04:45PM',
-      '05:15PM',
-    ],
-  ];
-  const [dummySlot, setDummySlot] = useState(arrays[0]);
+  const fetchCurrentSlot = async () => {
+    try {
+      const response = await axios.get(
+        'https://us-central1-touronapp-248e4.cloudfunctions.net/dummyslot'
+      );
+      const data = await response.data;
+      setDummySlot(data.slot);
+    } catch (error) {
+      console.log('error', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchCurrentSlot();
+  }, []);
 
   const { name, number, date, time, apType } = data;
 
@@ -169,24 +131,6 @@ const Virtual = () => {
     return () => (isMounted.current = false);
   }, [date]);
 
-  // const getDummySlot = () => {
-  //   let dd = [];
-  //   firedb.ref('dummyslot').on('value', (data) => {
-  //     if (isMounted.current) {
-  //       data.forEach((d) => {
-  //         dd.push(d.val().time);
-  //       });
-  //       setDummySlot(dd);
-  //     }
-  //   });
-  // };
-
-  // useEffect(() => {
-  //   isMounted.current = true;
-  //   getDummySlot();
-  //   return () => (isMounted.current = false);
-  // }, []);
-
   const handleKeyDown = (e) => {
     if (e.key === ' ') {
       e.preventDefault();
@@ -198,14 +142,6 @@ const Virtual = () => {
       e.preventDefault();
     }
   };
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const randomIndex = Math.floor(Math.random() * arrays.length);
-      setDummySlot(arrays[randomIndex]);
-    }, 60 * 60 * 1000);
-    return () => clearInterval(interval);
-  }, []);
 
   return (
     <div className='virtual__home'>
