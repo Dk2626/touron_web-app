@@ -10,6 +10,7 @@ const Destination = ({
   prevStep,
   setStartPoint,
   tourType,
+  typeee,
 }) => {
   const [open, setOpen] = useState(false);
 
@@ -60,46 +61,50 @@ const Destination = ({
       <div className='destination-questions checkout'>
         <div className='que1'>
           <h6>Enter the holiday destination you want to travel</h6>
-          <div className='select_in_alter'>
-            <div onClick={() => setOpen(true)} style={{ cursor: 'pointer' }}>
-              {destination === '' ? 'Select' : destination}
-            </div>
-            {open && (
-              <div className='select_in_alter__ab'>
-                {tourType === 'Domestic' ? (
-                  <>
-                    {domestic.map((d) => (
-                      <div
-                        onClick={() => {
-                          setDestination(d);
-                          setOpen(false);
-                        }}>
-                        {d}
-                      </div>
-                    ))}
-                  </>
-                ) : (
-                  <>
-                    {international.map((d) => (
-                      <div
-                        onClick={() => {
-                          setDestination(d);
-                          setOpen(false);
-                        }}>
-                        {d}
-                      </div>
-                    ))}
-                  </>
-                )}
+          {typeee === 'Wildlife' ? (
+            <input
+              type='text'
+              onChange={(e) => setDestination(e.target.value)}
+              value={destination}
+              readOnly
+              className='user-input-alter user-input'
+            />
+          ) : (
+            <div className='select_in_alter'>
+              <div onClick={() => setOpen(true)} style={{ cursor: 'pointer' }}>
+                {destination === '' ? 'Select' : destination}
               </div>
-            )}
-          </div>
-          {/* <input
-            type='text'
-            onChange={(e) => setDestination(e.target.value)}
-            value={destination}
-            className='user-input-alter user-input'
-          /> */}
+              {open && (
+                <div className='select_in_alter__ab'>
+                  {tourType === 'Domestic' ? (
+                    <>
+                      {domestic.map((d) => (
+                        <div
+                          onClick={() => {
+                            setDestination(d);
+                            setOpen(false);
+                          }}>
+                          {d}
+                        </div>
+                      ))}
+                    </>
+                  ) : (
+                    <>
+                      {international.map((d) => (
+                        <div
+                          onClick={() => {
+                            setDestination(d);
+                            setOpen(false);
+                          }}>
+                          {d}
+                        </div>
+                      ))}
+                    </>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
         </div>
         <div className='que2'>
           <h6>From where would you like to start your journey </h6>

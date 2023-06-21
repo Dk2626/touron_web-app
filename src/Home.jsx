@@ -21,6 +21,7 @@ import Footer from './Home components/Footer/Footer';
 import SelfPlanTour from './Tour Categories/SelfPlan Tour/SelfPlanTour';
 import ResortCon from './Resort components/ResortCon';
 import Ipl from './Ipl components/Ipl';
+import VirtualHome from './Virtual/VirtualHome';
 
 const Home = () => {
   const [popup, setPopup] = useState(false);
@@ -104,6 +105,7 @@ const Home = () => {
             <Categories />
           </div>
         </div>
+        {/* <VirtualHome /> */}
         <div className='populartours'>
           <PopularTours />
         </div>

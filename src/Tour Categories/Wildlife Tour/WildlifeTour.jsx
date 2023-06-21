@@ -45,6 +45,7 @@ const WildlifeTour = () => {
   const [budget, setBudget] = useState('');
   const [step, setStep] = useState(1);
   const [priority, setPriority] = useState('');
+  const [typeee, setTypeee] = useState('Wildlife');
 
   const [isLoggedin, setIsLoggedin] = useState(false);
   const [nationalPark, setNationalPark] = useState('');
@@ -277,6 +278,7 @@ const WildlifeTour = () => {
             destination={destination}
             preferanece={preferanece}
             startPoint={startPoint}
+            typeee={typeee}
             nextStep={nextStep}
             prevStep={prevStep}
             setDestination={(value) => setDestination(value)}

@@ -269,6 +269,7 @@ const PlannedTour = () => {
             destination={destination}
             preferanece={preferanece}
             startPoint={startPoint}
+            tourType={tourType}
             nextStep={nextStep}
             prevStep={prevStep}
             step={step}
