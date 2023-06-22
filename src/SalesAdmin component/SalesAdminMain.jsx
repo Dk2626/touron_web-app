@@ -6,7 +6,6 @@ import YearStatistics from './YearStatistics';
 import FlightMail from '../MailSend/FlightMail';
 import HotelMail from '../MailSend/HotelMail';
 import './SalesAdminMain.css';
-import SalesSelfPlans from './SalesSelfPlans';
 
 const SalesAdminMain = () => {
   const [step, setStep] = useState(1);
@@ -48,8 +47,7 @@ const SalesAdminMain = () => {
         return <HotelMail />;
       case 6:
         return <FlightMail />;
-      // case 7:
-      //   return <SalesSelfPlans />;
+
       default:
         return step;
     }
@@ -117,15 +115,6 @@ const SalesAdminMain = () => {
             }>
             Send Flight Mail
           </li>
-          {/* <li
-            onClick={() => setStep(7)}
-            className={
-              step === 7
-                ? 'salessadminmainndivide1Li'
-                : 'salessadminmainndivide1LiN'
-            }>
-            Self Plans
-          </li> */}
         </ul>
       </div>
       <div className='salessadminmainndivide2'>{renderSale()}</div>

@@ -41,13 +41,14 @@ const SalesSelfPlan = () => {
   const [planKey, setPlanKey] = useState({});
   const [cost, setCost] = useState(0);
   const [plannedDetails, setPlannedDetails] = useState({});
-  const [pageSize, setPageSize] = useState(10);
-  let pagesCount = Math.ceil(Object.keys(selfPlans).length / pageSize);
-  const [currentPage, setCurrentpage] = useState(0);
+  const [pageSize, setPageSize] = useState(20);
+  // let pagesCount = Math.ceil(Object.keys(selfPlans).length / pageSize);
+  const [currentPage, setCurrentpage] = useState(1);
   const [taskAssigned, setTaskAssigned] = useState('');
   const [assignedTasks, setAssignedTasks] = useState([]);
   const [userRequestDates, setUserRequestDates] = useState([]);
   const [userRequestCount, setUserRequestCount] = useState(0);
+  const [userRequestLength, setUserRequestLength] = useState([]);
 
   const getTaskAssigne = (requestID) => {
     let name = '';
@@ -149,6 +150,8 @@ const SalesSelfPlan = () => {
     return () => (isMounted.current = false);
   }, []);
 
+  let pagesCount = userRequestLength.length;
+
   const handleClick = (e, index) => {
     e.preventDefault();
     setCurrentpage(index);
@@ -211,6 +214,28 @@ const SalesSelfPlan = () => {
     isMounted.current = true;
     getSelfPlans();
     return () => (isMounted.current = false);
+  }, [currentPage, pageSize]);
+
+  const getUserRequestLength = (uid) => {
+    firedb.ref('self-planned-tours').on('value', (data) => {
+      if (isMounted.current) {
+        if (data !== null) {
+          let req = [];
+          data.forEach((d) => {
+            req.push({
+              key: d.key,
+              value: d.val(),
+            });
+          });
+          setUserRequestLength(req);
+        }
+      }
+    });
+  };
+  useEffect(() => {
+    isMounted.current = true;
+    getUserRequestLength();
+    return () => (isMounted.current = false);
   }, []);
 
   const updateRequest = () => {
@@ -246,25 +271,29 @@ const SalesSelfPlan = () => {
   const getSelfPlans = () => {
     let plans = [];
     setLoading(true);
-    firedb.ref('self-planned-tours').on('value', (data) => {
-      if (isMounted.current) {
-        if (data.val() === null || data.val() === undefined) {
-          setLoading(false);
-          return;
+    firedb
+      .ref('self-planned-tours')
+      .orderByKey()
+      .limitToLast(currentPage * pageSize)
+      .on('value', (data) => {
+        if (isMounted.current) {
+          if (data.val() === null || data.val() === undefined) {
+            setLoading(false);
+            return;
+          }
+          if (data.val() !== null || data.val() !== undefined) {
+            let newReq = {};
+            let revReq = Object.keys(data.val()).reverse();
+            revReq.forEach((i) => {
+              newReq[i] = data.val()[i];
+            });
+            setSelfPlans({
+              ...newReq,
+            });
+          }
         }
-        if (data.val() !== null || data.val() !== undefined) {
-          let newReq = {};
-          let revReq = Object.keys(data.val()).reverse();
-          revReq.forEach((i) => {
-            newReq[i] = data.val()[i];
-          });
-          setSelfPlans({
-            ...newReq,
-          });
-        }
-      }
-      setLoading(false);
-    });
+        setLoading(false);
+      });
   };
 
   const getUserRequestCount = (uid) => {
@@ -315,15 +344,34 @@ const SalesSelfPlan = () => {
     return count;
   };
 
+  // const filterSelfPlan = () => {
+  //   if (querystatus == '') return selfPlans;
+  //   const req = {};
+  //   Object.keys(selfPlans).forEach((s) => {
+  //     if (selfPlans[s].status === querystatus) {
+  //       req[s] = selfPlans[s];
+  //     }
+  //   });
+  //   return req;
+  // };
+
   const filterSelfPlan = () => {
-    if (querystatus == '') return selfPlans;
-    const req = {};
-    Object.keys(selfPlans).forEach((s) => {
-      if (selfPlans[s].status === querystatus) {
-        req[s] = selfPlans[s];
-      }
-    });
-    return req;
+    let newReq = [];
+    firedb
+      .ref('self-planned-tours')
+      .orderByChild('status')
+      .equalTo(querystatus)
+      .on('value', (data) => {
+        if (data.val() !== null || data.val() !== undefined) {
+          data.forEach((d) => {
+            newReq.push({
+              key: d.key,
+              value: d.val(),
+            });
+          });
+        }
+      });
+    return newReq.reverse();
   };
 
   let monthReq = {};
@@ -1180,7 +1228,8 @@ const SalesSelfPlan = () => {
         <div className='booking-stats'>
           <h3>Submitted Request</h3>
           <div style={{ display: 'flex', alignItems: 'center' }}>
-            <h6>{Object.keys(selfPlans).length}</h6>
+            {/* <h6>{Object.keys(selfPlans).length}</h6> */}
+            <h6>{userRequestLength.length}</h6>
           </div>
         </div>
         <div
@@ -1232,7 +1281,154 @@ const SalesSelfPlan = () => {
           <h5>Total No of Days</h5>
           <h5>Handle By </h5>
         </div>
-        {loading ? (
+
+        {querystatus === '' ? (
+          <>
+            {loading ? (
+              <div className='req-lo'>
+                Fetching Data <Ellipsis color='#0057ff' />
+              </div>
+            ) : (
+              <>
+                {selfPlans.length !== 0 ? (
+                  <>
+                    {Object.keys(selfPlans)
+                      .slice(
+                        (currentPage === 1 ? 0 : currentPage - 1) * pageSize,
+                        currentPage * pageSize
+                      )
+                      .map((c, i) => {
+                        return (
+                          <div
+                            className='table-heading-row request'
+                            key={i}
+                            style={{
+                              backgroundColor:
+                                selfPlans[c].status === 'Duplicate Query'
+                                  ? '#FF6666'
+                                  : '',
+                            }}
+                            onClick={() => {
+                              openDetailsModal();
+                              setSelectedPlans(selfPlans[c]);
+                              setStatus(selfPlans[c].status);
+                              setStep(1);
+                              setKey(c);
+                              getUserRequestCount(selfPlans[c].userId);
+                              getPlannedDetailsD(selfPlans[c].requestID);
+                              setTaskAssigned(
+                                getTaskAssigne(selfPlans[c].requestID)
+                              );
+                            }}>
+                            <h5
+                              style={{
+                                color: `${getColor(selfPlans[c].status)}`,
+                              }}>
+                              {selfPlans[c].status}
+                            </h5>
+                            <h5>{selfPlans[c].requestID}</h5>
+                            <h5>{selfPlans[c].name}</h5>
+                            <h5>{selfPlans[c].travelmode}</h5>
+                            <h5>{selfPlans[c].fromData}</h5>
+                            <h5>{selfPlans[c].totalDays}</h5>
+                            <h5>{getTaskAssigne(selfPlans[c].requestID)}</h5>
+                          </div>
+                        );
+                      })}
+                    <div className='pagination-table'>
+                      {currentPage === 1 ? null : (
+                        <div
+                          className='pag-count'
+                          onClick={(e) => {
+                            handleClick(e, currentPage - 1);
+                          }}
+                          style={{
+                            backgroundColor: '#0057ff',
+                            color: '#fff',
+                          }}>
+                          <h5>{'<'}</h5>
+                        </div>
+                      )}
+                      {new Array(pagesCount).fill('1').map((c, i) => {
+                        if (i + 1 < currentPage + 5 && i > currentPage - 2) {
+                          return (
+                            <div
+                              key={i}
+                              className='pag-count'
+                              onClick={(e) => handleClick(e, i + 1)}
+                              style={{
+                                backgroundColor:
+                                  currentPage - 1 === i ? '#0057ff' : '#fff',
+                                color: currentPage - 1 === i ? '#fff' : '#333',
+                              }}>
+                              <h5>{i + 1}</h5>
+                            </div>
+                          );
+                        }
+                      })}
+                      {pagesCount - 1 === currentPage ? null : (
+                        <div
+                          className='pag-count'
+                          onClick={(e) => handleClick(e, currentPage + 1)}
+                          style={{
+                            backgroundColor: '#0057ff',
+                            color: '#fff',
+                          }}>
+                          <h5>{'>'}</h5>
+                        </div>
+                      )}
+                    </div>
+                  </>
+                ) : (
+                  <tr>
+                    <div className='noFind'>No Request found</div>
+                  </tr>
+                )}
+              </>
+            )}
+          </>
+        ) : (
+          <>
+            {filterSelfPlan().map((c, i) => {
+              const { value, key } = c;
+              return (
+                <div
+                  className='table-heading-row request'
+                  key={i}
+                  style={{
+                    backgroundColor:
+                      value.status === 'Duplicate Query' ? '#FF6666' : '',
+                  }}
+                  onClick={() => {
+                    openDetailsModal();
+                    setSelectedPlans(value);
+                    setStatus(value.status);
+                    setStep(1);
+                    setKey(key);
+                    getUserRequestCount(value.userId);
+                    getPlannedDetailsD(value.requestID);
+                    setTaskAssigned(getTaskAssigne(value.requestID));
+                  }}>
+                  <h5
+                    style={{
+                      color: `${getColor(value.status)}`,
+                    }}>
+                    {value.status}
+                  </h5>
+                  <h5>{value.requestID}</h5>
+                  <h5>{value.name}</h5>
+                  <h5>{value.travelmode}</h5>
+                  <h5>{value.fromData}</h5>
+                  <h5>{value.totalDays}</h5>
+                  <h5>{getTaskAssigne(value.requestID)}</h5>
+                </div>
+              );
+            })}
+          </>
+        )}
+      </div>
+
+      {/* {loading ? (
           <div className='req-lo'>
             Fetching Data <Ellipsis color='#0057ff' />
           </div>
@@ -1241,7 +1437,10 @@ const SalesSelfPlan = () => {
             {Object.keys(filterSelfPlan()).length !== 0 ? (
               <>
                 {Object.keys(filterSelfPlan())
-                  .slice(currentPage * pageSize, (currentPage + 1) * pageSize)
+                  .slice(
+                    (currentPage === 1 ? 0 : currentPage - 1) * pageSize,
+                    currentPage * pageSize
+                  )
                   .map((c, i) => {
                     return (
                       <div
@@ -1285,10 +1484,9 @@ const SalesSelfPlan = () => {
               <tr className='noFind'>No Plans found</tr>
             )}
           </>
-        )}
-      </div>
-      <div className='pagination-table'>
-        {currentPage === 0 ? null : (
+        )} */}
+      {/* <div className='pagination-table'>
+        {currentPage === 1 ? null : (
           <div
             className='pag-count'
             onClick={(e) => {
@@ -1307,10 +1505,10 @@ const SalesSelfPlan = () => {
               <div
                 key={i}
                 className='pag-count'
-                onClick={(e) => handleClick(e, i)}
+                onClick={(e) => handleClick(e, i + 1)}
                 style={{
-                  backgroundColor: currentPage === i ? '#0057ff' : '#fff',
-                  color: currentPage === i ? '#fff' : '#333',
+                  backgroundColor: currentPage - 1 === i ? '#0057ff' : '#fff',
+                  color: currentPage - 1 === i ? '#fff' : '#333',
                 }}>
                 <h5>{i + 1}</h5>
               </div>
@@ -1328,7 +1526,7 @@ const SalesSelfPlan = () => {
             <h5>{'>'}</h5>
           </div>
         )}
-      </div>
+      </div> */}
       <Modal contentClassName='modal-request' isOpen={detailsModal}>
         <div className='modal-header'>
           <h3 className='modal-title' id='modal-title-notification'>
