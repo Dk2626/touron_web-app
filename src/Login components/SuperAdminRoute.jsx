@@ -12,6 +12,7 @@ const SuperAdminRoute = ({ children }) => {
         'dineshkumar.devadasan@touron.in',
         'vikashmanoharan@touron.in',
         'sandy@touron.in',
+        'rajeshp@touron.in',
       ];
       return sa.includes(JSON.parse(authToken).user.email);
     }

@@ -368,9 +368,9 @@ const App = () => {
               <Route
                 path='/totalsales'
                 element={
-                  <AdminRoute>
+                  <SuperAdminRoute>
                     <TotalSaleReport />
-                  </AdminRoute>
+                  </SuperAdminRoute>
                 }
               />
               <Route
