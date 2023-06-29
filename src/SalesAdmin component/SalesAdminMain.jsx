@@ -6,7 +6,7 @@ import YearStatistics from './YearStatistics';
 import FlightMail from '../MailSend/FlightMail';
 import HotelMail from '../MailSend/HotelMail';
 import './SalesAdminMain.css';
-// import BookingB2C from './BookingB2C';
+import BookingB2C from './BookingB2C';
 
 const SalesAdminMain = () => {
   const [step, setStep] = useState(1);

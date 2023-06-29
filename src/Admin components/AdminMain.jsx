@@ -21,6 +21,7 @@ import Particulars from './Particulars';
 import PaymentType from './PaymentType';
 import Vendor from './Vendor';
 import EmployeePhoto from './EmployeePhoto';
+import DummySlot from './DummySlot';
 
 const AdminSidebarData = [
   {
@@ -109,6 +110,11 @@ const AdminSidebarData = [
     step: 17,
     icon: <AiIcons.AiOutlineTag />,
   },
+  {
+    title: 'Dummy Slot',
+    step: 18,
+    icon: <AiIcons.AiOutlineTag />,
+  },
 ];
 
 const AdminMain = () => {
@@ -150,6 +156,8 @@ const AdminMain = () => {
         return <Vendor />;
       case 17:
         return <EmployeePhoto />;
+      case 18:
+        return <DummySlot />;
       default:
         return step;
     }

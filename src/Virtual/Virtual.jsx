@@ -16,8 +16,11 @@ const Virtual = () => {
 
   const [alotTime, setAlotTime] = useState([]);
   const [dummySlot, setDummySlot] = useState([]);
+  const [dummySlotss, setDummySlotss] = useState([]);
   const [modal, setModal] = useState(false);
   const [mainForm, setMainForm] = useState(false);
+
+  console.log('first', dummySlotss);
 
   const fetchCurrentSlot = async () => {
     try {
@@ -130,6 +133,37 @@ const Virtual = () => {
     getData();
     return () => (isMounted.current = false);
   }, [date]);
+
+  const getDataDummy = () => {
+    let arr = [];
+    firedb.ref('dummySlot').on('value', (data) => {
+      if (isMounted.current) {
+        data.forEach((d) => {
+          arr.push(d.val().name);
+        });
+        setDummySlotss(arr);
+      }
+    });
+  };
+
+  useEffect(() => {
+    isMounted.current = true;
+    getDataDummy();
+    return () => (isMounted.current = false);
+  }, []);
+
+  // let l = new Date().getHours() % 12 || 12;
+  // let l = 12;
+
+  // let timeover = l === 11 || 12 ? parseInt(l.toString().split('')[0]) : l;
+
+  // console.log('sd', l === 11 || 12 ? parseInt(l.toString().split('')[0]) : l);
+
+  // let timessss = '12:00';
+
+  // console.log('first', parseInt(timessss));
+
+  // console.log('ff', parseInt(timessss) < l);
 
   const handleKeyDown = (e) => {
     if (e.key === ' ') {
@@ -256,6 +290,7 @@ const Virtual = () => {
                 type='date'
                 value={date}
                 onChange={handleDateChange}
+                min={new Date().toISOString().split('T')[0]}
                 required
               />
             </div>
@@ -277,8 +312,14 @@ const Virtual = () => {
                   return (
                     <option
                       value={t}
-                      disabled={alotTime.includes(t) || dummySlot.includes(t)}>
-                      {alotTime.includes(t) || dummySlot.includes(t)
+                      disabled={
+                        alotTime.includes(t) ||
+                        dummySlot.includes(t) ||
+                        dummySlotss.includes(t)
+                      }>
+                      {alotTime.includes(t) ||
+                      dummySlot.includes(t) ||
+                      dummySlotss.includes(t)
                         ? `${t} "Slot Booked"`
                         : t}
                     </option>
