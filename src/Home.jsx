@@ -105,7 +105,7 @@ const Home = () => {
             <Categories />
           </div>
         </div>
-        {/* <VirtualHome /> */}
+        <VirtualHome />
         <div className='populartours'>
           <PopularTours />
         </div>
