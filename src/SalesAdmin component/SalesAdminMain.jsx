@@ -43,7 +43,9 @@ const SalesAdminMain = () => {
       case 3:
         return <YearStatistics />;
       case 4:
-        return <BookingTable />;
+        return <BookingB2C />;
+      // case 4:
+      //   return <BookingTable />;
       case 5:
         return <HotelMail />;
       case 6:

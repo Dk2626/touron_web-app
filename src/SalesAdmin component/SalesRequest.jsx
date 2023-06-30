@@ -203,16 +203,14 @@ const SalesRequest = () => {
   const getUserRequestLength = (uid) => {
     firedb.ref('requests').on('value', (data) => {
       if (isMounted.current) {
-        if (data !== null) {
-          let req = [];
-          data.forEach((d) => {
-            req.push({
-              key: d.key,
-              value: d.val(),
-            });
+        let req = [];
+        data.forEach((d) => {
+          req.push({
+            key: d.key,
+            value: d.val(),
           });
-          setUserRequestLength(req);
-        }
+        });
+        setUserRequestLength(req);
       }
     });
   };

@@ -14,11 +14,11 @@ const BookingB2C = () => {
   const [currentPage, setCurrentpage] = useState(1);
   const [pageSize, setPageSize] = useState(20);
   const [bookingLength, setBookingLength] = useState([]);
-  const [currentBooking, setCurrentBooking] = useState('');
   const [year, setYear] = useState(new Date().getFullYear());
   const { employees } = useContext(ApiContext);
   const [handleBy, setHandleBy] = useState('');
   const [search, setSearch] = useState('');
+  const [bMonth, setBMonth] = useState('');
 
   useEffect(() => {
     isMounted.current = true;
@@ -48,11 +48,178 @@ const BookingB2C = () => {
     return () => (isMounted.current = false);
   }, [currentPage, pageSize]);
 
+  const getDepatureDate = (date) => {
+    const countDate = Date.parse(date);
+    const now = new Date().getTime();
+    const gap = countDate - now;
+    const second = 1000;
+    const minute = second * 60;
+    const hour = minute * 60;
+    const day = hour * 24;
+
+    const d = Math.floor(gap / day);
+    if (d >= 0) return d;
+    return 0;
+  };
+
+  const render = (cat, val) => {
+    switch (cat) {
+      case 'travel':
+        let req3 = [];
+        bookingLength.filter((b, i) => {
+          if (handleBy === 'All' || handleBy === '') {
+            if (
+              b.value?.general.isBookingCancelled === false &&
+              new Date(b.value?.general.onwardDate).getFullYear() ===
+                parseInt(year) &&
+              new Date(b.value?.general.onwardDate).getMonth() ===
+                parseInt(bMonth)
+            ) {
+              req3.push(b);
+            }
+          } else {
+            if (
+              b.value?.general.isBookingCancelled === false &&
+              new Date(b.value?.general.onwardDate).getFullYear() ===
+                parseInt(year) &&
+              new Date(b.value?.general.onwardDate).getMonth() ===
+                parseInt(bMonth) &&
+              b.value?.general.salesHandleName === handleBy
+            ) {
+              req3.push(b);
+            }
+          }
+
+          if (
+            b.value?.general.isBookingCancelled === false &&
+            new Date(b.value?.general.onwardDate).getFullYear() ===
+              parseInt(year) &&
+            new Date(b.value?.general.onwardDate).getMonth() ===
+              parseInt(bMonth) &&
+            b.value?.general.salesHandleName === handleBy
+          ) {
+            req3.push(b);
+          }
+        });
+
+        const sort3 = req3.sort((a, b) => {
+          return (
+            parseInt(getDepatureDate(a.value.general.onwardDate)) -
+            parseInt(getDepatureDate(b.value.general.onwardDate))
+          );
+        });
+        let q3 = [];
+        sort3.map((s, i) => {
+          return q3.push(s);
+        });
+        return q3;
+      case 'current':
+        let newReq = [];
+        bookingLength.forEach((d) => {
+          const ds = moment(d.value?.general?.onwardDate);
+          const date = moment(d.value?.general?.returnDate).add(1, 'days');
+          if (
+            moment().isBetween(ds, date) &&
+            d.value?.general.isBookingCancelled === false
+          ) {
+            newReq.push(d);
+          }
+        });
+        return newReq;
+      case 'week':
+        let newReq1 = [];
+        bookingLength.forEach((d) => {
+          const ds = moment().subtract(1, 'days');
+          const date = moment().add(val, 'days');
+          if (
+            moment(d.value?.general.onwardDate).isBetween(ds, date) &&
+            d.value?.general.isBookingCancelled === false
+          ) {
+            newReq1.push(d);
+          }
+        });
+
+        const sort = newReq1.sort((a, b) => {
+          return (
+            parseInt(getDepatureDate(a.value.general.onwardDate)) -
+            parseInt(getDepatureDate(b.value.general.onwardDate))
+          );
+        });
+        let q = [];
+        sort.map((s, i) => {
+          return q.push(s);
+        });
+        return q;
+      case 'handle':
+        let req = [];
+        if (val === 'All') {
+          return bookingDetails;
+        }
+        bookingLength.forEach((b) => {
+          if (b.value?.general.salesHandleName === val) {
+            req.push(b);
+          }
+        });
+        return req;
+      case 'month':
+        let req2 = [];
+        bookingLength.forEach((b, i) => {
+          if (handleBy === 'All' || handleBy === '') {
+            if (
+              b.value?.general.isBookingCancelled === false &&
+              new Date(b.value?.general.bookedDate).getFullYear() ===
+                parseInt(year) &&
+              new Date(b.value?.general.bookedDate).getMonth() ===
+                parseInt(bMonth)
+            ) {
+              req2.push(b);
+            }
+          } else {
+            if (
+              b.value?.general.isBookingCancelled === false &&
+              new Date(b.value?.general.bookedDate).getFullYear() ===
+                parseInt(year) &&
+              new Date(b.value?.general.bookedDate).getMonth() ===
+                parseInt(bMonth) &&
+              b.value?.general.salesHandleName === handleBy
+            ) {
+              req2.push(b);
+            }
+          }
+
+          if (
+            b.value?.general.isBookingCancelled === false &&
+            new Date(b.value?.general.bookedDate).getFullYear() ===
+              parseInt(year) &&
+            new Date(b.value?.general.bookedDate).getMonth() ===
+              parseInt(bMonth) &&
+            b.value?.general.salesHandleName === handleBy
+          ) {
+            req2.push(b);
+          }
+        });
+
+        const sort1 = req2.sort((a, b) => {
+          return (
+            parseInt(getDepatureDate(a.value.general.onwardDate)) -
+            parseInt(getDepatureDate(b.value.general.onwardDate))
+          );
+        });
+        let q1 = [];
+        sort1.map((s, i) => {
+          return q1.push(s);
+        });
+        console.log('first', q1);
+
+        return q1;
+    }
+  };
+
   const filterBooking = () => {
     if (search) {
-      let srh = {};
-      Object.keys(bookingLength).forEach((b, i) => {
-        const { general, surveyId } = bookingLength[b];
+      let srh = [];
+      bookingLength.forEach((b, i) => {
+        const { general, surveyId } = b.value;
         if (
           general.customerName
             ?.toString()
@@ -70,15 +237,20 @@ const BookingB2C = () => {
             .toLowerCase()
             .includes(search.trim().toLowerCase())
         ) {
-          srh[b] = bookingDetails[b];
+          srh.push(b);
         }
       });
       return srh;
     } else {
+      if (bMonth === '' || bMonth === 'All' || bMonth === 'AllbMonth')
+        return bookingLength;
+      if (bMonth === 'current') return render('current');
+      if (bMonth === '07') return render('week', 7);
+      if (bMonth === '15') return render('week', 15);
+      if (bMonth.toString().includes('bMonth')) return render('month');
+      return render('travel');
     }
   };
-
-  console.log('first', filterBooking());
 
   const completedtRequest = (returnDate, isBookingCancelled) => {
     const date = moment(returnDate);
@@ -90,37 +262,17 @@ const BookingB2C = () => {
     return '';
   };
 
-  const getDepatureDate = (date) => {
-    const countDate = Date.parse(date);
-    const now = new Date().getTime();
-    const gap = countDate - now;
-    const second = 1000;
-    const minute = second * 60;
-    const hour = minute * 60;
-    const day = hour * 24;
-
-    const d = Math.floor(gap / day);
-    if (d >= 0) return d;
-    return 0;
-  };
-
   const getBookingLength = () => {
     firedb.ref('bookingdetails1').on('value', (data) => {
       if (isMounted.current) {
-        if (data.val() === null || data.val() === undefined) {
-          setLoading1(false);
-          return;
-        }
-        if (data.val() !== null || data.val() !== undefined) {
-          let newReq = {};
-          let revReq = Object.keys(data.val()).reverse();
-          revReq.forEach((i) => {
-            newReq[i] = data.val()[i];
+        let req = [];
+        data.forEach((d) => {
+          req.push({
+            key: d.key,
+            value: d.val(),
           });
-          setBookingLength({
-            ...newReq,
-          });
-        }
+        });
+        setBookingLength(req);
       }
     });
   };
@@ -131,7 +283,7 @@ const BookingB2C = () => {
     return () => (isMounted.current = false);
   }, []);
 
-  let pagesCount = Object.keys(bookingLength).length;
+  let pagesCount = bookingLength.length;
 
   const handleClick = (e, index) => {
     e.preventDefault();
@@ -174,15 +326,15 @@ const BookingB2C = () => {
           <div className='booking-stats'>
             <h3>Total booking</h3>
             <div style={{ display: 'flex', alignItems: 'center' }}>
-              <h6>{Object.keys(bookingLength).length}</h6>
-              <span>Show</span>
+              <h6>{bookingLength.length}</h6>
+              <span onClick={() => setBMonth('')}>Show</span>
             </div>
           </div>
           <div className='booking-stats'>
             <h3>Current Travelling</h3>
             <div style={{ display: 'flex', alignItems: 'center' }}>
-              {/* <h6>{currentBookings().length}</h6> */}
-              {/* <span onClick={() => setCurrentBooking('current')}>Show</span> */}
+              <h6>{render('current').length}</h6>
+              <span onClick={() => setBMonth('current')}>Show</span>
             </div>
           </div>
           <div className='booking-stats'>
@@ -192,14 +344,14 @@ const BookingB2C = () => {
                 display: 'flex',
                 alignItems: 'center',
               }}>
-              {/* <h6>{Object.keys(render('week', 7)).length}</h6> */}
-              {/* <span onClick={() => setBMonth('07')}>Show</span> */}
+              <h6>{render('week', 7).length}</h6>
+              <span onClick={() => setBMonth('07')}>Show</span>
             </div>
           </div>
           <div className='booking-stats'>
             <h3>Travellers in {getMonth(new Date().getMonth())}</h3>
             <div style={{ display: 'flex', alignItems: 'center' }}>
-              {/* <span onClick={() => setBMonth(new Date().getMonth())}>Show</span> */}
+              <span onClick={() => setBMonth(new Date().getMonth())}>Show</span>
             </div>
           </div>
         </div>
@@ -217,8 +369,8 @@ const BookingB2C = () => {
           <div className='month'>
             <label>Upcoming Travel in : </label>
             <select
-            // value={upTravel}
-            >
+              // value={upTravel}
+              onChange={(e) => setBMonth(e.target.value)}>
               <option value='' selected disabled hidden>
                 select One
               </option>
@@ -239,7 +391,7 @@ const BookingB2C = () => {
           </div>
           <div className='month'>
             <label>Booked By Month : </label>
-            <select>
+            <select onChange={(e) => setBMonth(`${e.target.value}bMonth`)}>
               {months.map((m, i) => (
                 <option key={i} value={m === 'All' ? 'All' : i - 1}>
                   {m}
@@ -249,7 +401,7 @@ const BookingB2C = () => {
           </div>
           <div className='month'>
             <label>Travel By Month : </label>
-            <select>
+            <select onChange={(e) => setBMonth(e.target.value)}>
               {months.map((m, i) => (
                 <option key={i} value={m === 'All' ? 'All' : i - 1}>
                   {m}
@@ -298,9 +450,8 @@ const BookingB2C = () => {
             <h5>Return</h5>
             <h5>Departure in</h5>
             <h5>Handled By</h5>
-            {/* <h5>Notification</h5> */}
           </div>
-          {search === '' ? (
+          {search === '' && bMonth === '' ? (
             <>
               {loading1 ? (
                 <div className='req-lo'>
@@ -370,35 +521,6 @@ const BookingB2C = () => {
                                   <h5>
                                     {bookingDetails[c].general.salesHandleName}
                                   </h5>
-                                  {/* <h5 className='notifyIcon'>
-                                <IoMdNotifications size={25} />
-
-                                {getRemindersCount(
-                                  bookingDetails[c].reminders
-                                )[0] === 0 ? null : (
-                                  <span className='notifyValue'>
-                                    {
-                                      getRemindersCount(
-                                        bookingDetails[c].reminders
-                                      )[0]
-                                    }
-                                  </span>
-                                )}
-
-                                {getRemindersCount(
-                                  bookingDetails[c].reminders
-                                )[1].length > 0 && (
-                                  <div className='notifyReminder'>
-                                    {getRemindersCount(
-                                      bookingDetails[c].reminders
-                                    )[1].map((s, i) => (
-                                      <span>
-                                        {i + 1}.{s}
-                                      </span>
-                                    ))}
-                                  </div>
-                                )}
-                              </h5> */}
                                 </div>
                               </Link>
                             </div>
@@ -459,13 +581,47 @@ const BookingB2C = () => {
             </>
           ) : (
             <>
-              {Object.keys(filterBooking()).map((c, i) => {
-                const df = bookingLength[c];
-                console.log('v', df);
-
+              {filterBooking().map((c, i) => {
+                const { key, value } = c;
                 return (
                   <div>
-                    <div>sds</div>
+                    <Link
+                      target='_blank'
+                      className='plink'
+                      key={i}
+                      to={{
+                        pathname: `/bookingrecord/${key}/${value?.general?.customerName}`,
+                      }}>
+                      <div
+                        style={{
+                          fontSize: 6,
+                          backgroundColor:
+                            value.general.tourType === 'International'
+                              ? '#E5D68A'
+                              : '#fff',
+                          position: 'relative',
+                        }}
+                        className={`table-heading-row  ${completedtRequest(
+                          value.general.returnDate,
+                          value.general.isBookingCancelled
+                        )}`}>
+                        <h5>{i + 1}</h5>
+                        <h5>{value?.surveyId}</h5>
+                        <h5>{value.general.customerName}</h5>
+                        <h5>{value.general.destination}</h5>
+                        <h5>
+                          {numeral(value.general.bookingValue).format('0,')}
+                        </h5>
+
+                        <h5>{value.general.onwardDate}</h5>
+                        <h5>{value.general.returnDate}</h5>
+                        <h5>
+                          {getDepatureDate(value.general.onwardDate)} days
+                        </h5>
+
+                        <h5>{value.general.salesHandleName}</h5>
+                      </div>
+                    </Link>
                   </div>
                 );
               })}

@@ -20,8 +20,6 @@ const Virtual = () => {
   const [modal, setModal] = useState(false);
   const [mainForm, setMainForm] = useState(false);
 
-  console.log('first', dummySlotss);
-
   const fetchCurrentSlot = async () => {
     try {
       const response = await axios.get(
@@ -152,19 +150,6 @@ const Virtual = () => {
     return () => (isMounted.current = false);
   }, []);
 
-  // let l = new Date().getHours() % 12 || 12;
-  // let l = 12;
-
-  // let timeover = l === 11 || 12 ? parseInt(l.toString().split('')[0]) : l;
-
-  // console.log('sd', l === 11 || 12 ? parseInt(l.toString().split('')[0]) : l);
-
-  // let timessss = '12:00';
-
-  // console.log('first', parseInt(timessss));
-
-  // console.log('ff', parseInt(timessss) < l);
-
   const handleKeyDown = (e) => {
     if (e.key === ' ') {
       e.preventDefault();
@@ -291,6 +276,11 @@ const Virtual = () => {
                 value={date}
                 onChange={handleDateChange}
                 min={new Date().toISOString().split('T')[0]}
+                max={
+                  new Date(new Date().getTime() + 30 * 24 * 60 * 60 * 1000)
+                    .toISOString()
+                    .split('T')[0]
+                }
                 required
               />
             </div>
