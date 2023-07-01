@@ -60,6 +60,7 @@ import Record from './marginvolumerecord/Record';
 import BookingDeletion from './BookingDeletion/BookingDeletion';
 import Virtual from './Virtual/Virtual';
 import Virtualdash from './Virtual/Virtualdash';
+import BookingRecordB2B from './SalesAdmin component/BookingRecordB2B';
 // import LuckySeat from './Quiz/LuckySeat';
 // import LuckySeatAdmin from './Quiz/LuckySeatAdmin';
 // import LuckySeatAs from './Quiz/LuckySeatAs';
@@ -358,10 +359,26 @@ const App = () => {
                 }
               />
               <Route
+                path='/bookingrecordb2b'
+                element={
+                  <AdminRoute>
+                    <BookingRecordB2B />
+                  </AdminRoute>
+                }
+              />
+              <Route
                 path='/bookingrecord/:surveyid/:name'
                 element={
                   <AdminRoute>
                     <BookingRecord />
+                  </AdminRoute>
+                }
+              />
+              <Route
+                path='/bookingrecordb2b/:surveyid/:name'
+                element={
+                  <AdminRoute>
+                    <BookingRecordB2B />
                   </AdminRoute>
                 }
               />

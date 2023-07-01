@@ -24,7 +24,7 @@ const BookingB2C = () => {
     isMounted.current = true;
     setLoading1(true);
     firedb
-      .ref('bookingdetails1')
+      .ref('bookingdetails1b2b')
       .limitToLast(currentPage * pageSize)
       .on('value', (data) => {
         if (isMounted.current) {
@@ -263,7 +263,7 @@ const BookingB2C = () => {
   };
 
   const getBookingLength = () => {
-    firedb.ref('bookingdetails1').on('value', (data) => {
+    firedb.ref('bookingdetails1b2b').on('value', (data) => {
       if (isMounted.current) {
         let req = [];
         data.forEach((d) => {
@@ -314,9 +314,9 @@ const BookingB2C = () => {
       <div className='booking-container'>
         <div className='booking-name-container'>
           <div>
-            <h3 style={{ color: '#666666' }}>Booking Management B2C</h3>
+            <h3 style={{ color: '#666666' }}>Booking Management B2B</h3>
           </div>
-          <Link to='/bookingrecord' target='_blank'>
+          <Link to='/bookingrecordb2b' target='_blank'>
             <div className='add-booking'>
               <h6> + Add Booking</h6>
             </div>
@@ -474,7 +474,7 @@ const BookingB2C = () => {
                                 className='plink'
                                 key={i}
                                 to={{
-                                  pathname: `/bookingrecord/${c}/${bookingDetails[c]?.general?.customerName}`,
+                                  pathname: `/bookingrecordb2b/${c}/${bookingDetails[c]?.general?.customerName}`,
                                 }}>
                                 <div
                                   style={{
@@ -590,7 +590,7 @@ const BookingB2C = () => {
                       className='plink'
                       key={i}
                       to={{
-                        pathname: `/bookingrecord/${key}/${value?.general?.customerName}`,
+                        pathname: `/bookingrecordb2b/${key}/${value?.general?.customerName}`,
                       }}>
                       <div
                         style={{

@@ -7,6 +7,7 @@ import FlightMail from '../MailSend/FlightMail';
 import HotelMail from '../MailSend/HotelMail';
 import './SalesAdminMain.css';
 import BookingB2C from './BookingB2C';
+import BookingB2B from './BookingB2B';
 
 const SalesAdminMain = () => {
   const [step, setStep] = useState(1);
@@ -44,11 +45,13 @@ const SalesAdminMain = () => {
         return <YearStatistics />;
       case 4:
         return <BookingB2C />;
+      case 5:
+        return <BookingB2B />;
       // case 4:
       //   return <BookingTable />;
-      case 5:
-        return <HotelMail />;
       case 6:
+        return <HotelMail />;
+      case 7:
         return <FlightMail />;
       // case 7:
       //   return <BookingB2C />;
@@ -99,7 +102,7 @@ const SalesAdminMain = () => {
                 ? 'salessadminmainndivide1Li'
                 : 'salessadminmainndivide1LiN'
             }>
-            Booking
+            Booking B2C
           </li>
           <li
             onClick={() => setStep(5)}
@@ -108,12 +111,21 @@ const SalesAdminMain = () => {
                 ? 'salessadminmainndivide1Li'
                 : 'salessadminmainndivide1LiN'
             }>
-            Send Hotel Mail
+            Booking B2B
           </li>
           <li
             onClick={() => setStep(6)}
             className={
               step === 6
+                ? 'salessadminmainndivide1Li'
+                : 'salessadminmainndivide1LiN'
+            }>
+            Send Hotel Mail
+          </li>
+          <li
+            onClick={() => setStep(7)}
+            className={
+              step === 7
                 ? 'salessadminmainndivide1Li'
                 : 'salessadminmainndivide1LiN'
             }>

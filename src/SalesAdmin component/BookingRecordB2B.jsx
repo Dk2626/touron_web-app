@@ -26,7 +26,7 @@ import JoditEditor from 'jodit-react';
 // const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
 // const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
 
-const BookingRecord = () => {
+const BookingRecordB2B = () => {
   const isMounted = useRef(false);
   const isPayment = useRef(false);
   const invoiceHtml = useRef(null);
@@ -276,6 +276,7 @@ const BookingRecord = () => {
     pv,
   } = newPayment;
   const [general, setGeneral] = useState({
+    agencyName: '',
     customerName: '',
     email: '',
     phoneNumber: '',
@@ -301,6 +302,7 @@ const BookingRecord = () => {
   });
 
   const {
+    agencyName,
     customerName,
     phoneNumber,
     tourType,
@@ -460,7 +462,7 @@ const BookingRecord = () => {
       });
 
       firedb
-        .ref(`bookingdetails1/${surveyid}/reminders`)
+        .ref(`bookingdetails1b2b/${surveyid}/reminders`)
         .set(newRemind)
         .then(() => {
           addToast(' Successfully', {
@@ -489,7 +491,7 @@ const BookingRecord = () => {
     });
 
     firedb
-      .ref(`bookingdetails1/${surveyid}/reminders`)
+      .ref(`bookingdetails1b2b/${surveyid}/reminders`)
       .set(newRemind)
       .then(() => {
         addToast('Status updated', {
@@ -523,7 +525,7 @@ const BookingRecord = () => {
       return a;
     });
     firedb
-      .ref(`bookingdetails1/${surveyid}/paymentDetails`)
+      .ref(`bookingdetails1b2b/${surveyid}/paymentDetails`)
       .set({
         invoiceNumber: invoiceNumber,
         totalAmount: totalAmount,
@@ -552,7 +554,7 @@ const BookingRecord = () => {
   const deletePaymentDetails = (id) => {
     let deletePayment = amountDetails.filter((a) => a.id !== id);
     firedb
-      .ref(`bookingdetails1/${surveyid}/paymentDetails`)
+      .ref(`bookingdetails1b2b/${surveyid}/paymentDetails`)
       .set({
         invoiceNumber: invoiceNumber,
         totalAmount: totalAmount,
@@ -575,6 +577,7 @@ const BookingRecord = () => {
     const bookingDetails = {
       surveyId: surveyId,
       general: {
+        agencyName: agencyName,
         customerName: customerName,
         phoneNumber: phoneNumber,
         isBookingCancelled: isBookingCancelled,
@@ -603,20 +606,9 @@ const BookingRecord = () => {
         totalAmount: totalAmount,
         amountDetails: amountDetails,
       },
-      visaDetails: {
-        visaOnArrival: visaOnArrival,
-        processingDate: processingDate,
-        completedDate: completedDate,
-        visaStatus: visaStatus,
-        visaVendor: visaVendor,
-        visaValidityDate: visaValidityDate,
-        visaAppointmentDate: visaAppointmentDate,
-        visaAppointment: visaAppointment,
-      },
-      reminders: reminders,
     };
     firedb
-      .ref(`bookingdetails1`)
+      .ref(`bookingdetails1b2b`)
       .push(bookingDetails)
       .then(() => {
         addToast('Added Successfully', {
@@ -648,7 +640,7 @@ const BookingRecord = () => {
     console.log('surveyid', surveyid);
     console.log(`payment`, payment);
     firedb
-      .ref(`bookingdetails1/${surveyid}/paymentDetails`)
+      .ref(`bookingdetails1b2b/${surveyid}/paymentDetails`)
       .set({
         invoiceNumber: invoiceNumber,
         totalAmount: totalAmount,
@@ -690,7 +682,7 @@ const BookingRecord = () => {
       reminder = [newReminder];
     }
     firedb
-      .ref(`bookingdetails1/${surveyid}/reminders`)
+      .ref(`bookingdetails1b2b/${surveyid}/reminders`)
       .set(reminder)
       .then(() => {
         setReminderOpen(false);
@@ -717,6 +709,7 @@ const BookingRecord = () => {
     const bookingDetails = {
       surveyId: surveyId,
       general: {
+        agencyName: agencyName,
         customerName: customerName,
         phoneNumber: phoneNumber,
         tcs: tcs,
@@ -745,20 +738,20 @@ const BookingRecord = () => {
         totalAmount: totalAmount,
         amountDetails: amountDetails,
       },
-      visaDetails: {
-        visaOnArrival: visaOnArrival,
-        processingDate: processingDate,
-        completedDate: completedDate,
-        visaStatus: visaStatus,
-        visaVendor: visaVendor,
-        visaValidityDate: visaValidityDate,
-        visaAppointmentDate: visaAppointmentDate,
-        visaAppointment: visaAppointment,
-      },
-      reminders: reminders,
+      //   visaDetails: {
+      //     visaOnArrival: visaOnArrival,
+      //     processingDate: processingDate,
+      //     completedDate: completedDate,
+      //     visaStatus: visaStatus,
+      //     visaVendor: visaVendor,
+      //     visaValidityDate: visaValidityDate,
+      //     visaAppointmentDate: visaAppointmentDate,
+      //     visaAppointment: visaAppointment,
+      //   },
+      //   reminders: reminders,
     };
     firedb
-      .ref(`bookingdetails1/${surveyid}`)
+      .ref(`bookingdetails1b2b/${surveyid}`)
       .update(bookingDetails)
       .then(() => {
         addToast('Updated Successfully', {
@@ -771,7 +764,7 @@ const BookingRecord = () => {
 
   const cancelBookingdetails = () => {
     firedb
-      .ref(`bookingdetails1/${surveyid}`)
+      .ref(`bookingdetails1b2b/${surveyid}`)
       .child('general')
       .update({
         isBookingCancelled: isBookingCancelled,
@@ -812,7 +805,7 @@ const BookingRecord = () => {
       },
     };
     firedb
-      .ref(`bookingdetails1/${surveyid}`)
+      .ref(`bookingdetails1b2b/${surveyid}`)
       .update(bookingDetails)
       .then(() => {
         addToast('Visa added Successfully', {
@@ -830,13 +823,13 @@ const BookingRecord = () => {
         setVisaEdit(false);
         setDetailsLoaded(true);
         setIsNewRecord(true);
-        firedb.ref(`bookingdetails1/${surveyid}`).on('value', (data) => {
-          const { general, paymentDetails, visaDetails, surveyId, reminders } =
-            data.val();
+        firedb.ref(`bookingdetails1b2b/${surveyid}`).on('value', (data) => {
+          const { general, paymentDetails, surveyId } = data.val();
 
           getDocuments(general.email, general.destination, general.onwardDate);
           setSurveyId(surveyId);
           setGeneral({
+            agencyName: general.agencyName,
             tourType: general.tourType,
             panNumber: general.panNumber,
             tcs: general.tcs,
@@ -874,19 +867,19 @@ const BookingRecord = () => {
             });
           }
 
-          setVisaDetails({
-            visaOnArrival: visaDetails.visaOnArrival,
-            processingDate: visaDetails.processingDate,
-            completedDate: visaDetails.completedDate,
-            visaStatus: visaDetails.visaStatus,
-            visaVendor: visaDetails.visaVendor,
-            visaValidityDate: visaDetails.visaValidityDate,
-            visaAppointmentDate: visaDetails.visaAppointmentDate,
-            visaAppointment: visaDetails.visaAppointment,
-          });
-          if (reminders) {
-            setReminders(reminders);
-          }
+          //   setVisaDetails({
+          //     visaOnArrival: visaDetails.visaOnArrival,
+          //     processingDate: visaDetails.processingDate,
+          //     completedDate: visaDetails.completedDate,
+          //     visaStatus: visaDetails.visaStatus,
+          //     visaVendor: visaDetails.visaVendor,
+          //     visaValidityDate: visaDetails.visaValidityDate,
+          //     visaAppointmentDate: visaDetails.visaAppointmentDate,
+          //     visaAppointment: visaDetails.visaAppointment,
+          //   });
+          //   if (reminders) {
+          //     setReminders(reminders);
+          //   }
           //     }
           //   });
           // }
@@ -1530,7 +1523,7 @@ const BookingRecord = () => {
     console.log('newPayment', newPayment);
 
     firedb
-      .ref(`bookingdetails1/${surveyid}/paymentDetails`)
+      .ref(`bookingdetails1b2b/${surveyid}/paymentDetails`)
       .set({
         invoiceNumber: invoiceNumber,
         totalAmount: totalAmount,
@@ -1601,6 +1594,19 @@ const BookingRecord = () => {
                     />
                   </div>
                   <div className='generalInput'>
+                    <label>Agency Name</label>
+                    <input
+                      type='text'
+                      value={agencyName}
+                      onChange={(e) =>
+                        setGeneral({
+                          ...general,
+                          agencyName: e.target.value,
+                        })
+                      }
+                    />
+                  </div>
+                  <div className='generalInput'>
                     <label>Customer Name</label>
                     <input
                       type='text'
@@ -1627,7 +1633,7 @@ const BookingRecord = () => {
                     />
                   </div>
                   <div className='generalInput'>
-                    <label>Email</label>
+                    <label>Agency Email</label>
                     <input
                       type='text'
                       value={email}
@@ -1640,7 +1646,7 @@ const BookingRecord = () => {
                     />
                   </div>
                   <div className='generalInput'>
-                    <label>Phone Number</label>
+                    <label>Agency Phone Number</label>
                     <input
                       type='number'
                       value={phoneNumber}
@@ -2096,6 +2102,10 @@ const BookingRecord = () => {
                   <h6>{surveyId}</h6>
                 </div>
                 <div className='generalInput'>
+                  <label>Agency Name</label>
+                  <h6>{agencyName}</h6>
+                </div>
+                <div className='generalInput'>
                   <label>Customer Name</label>
                   <h6>{customerName}</h6>
                 </div>
@@ -2104,11 +2114,11 @@ const BookingRecord = () => {
                   <h6>{destination}</h6>
                 </div>
                 <div className='generalInput'>
-                  <label>Email</label>
+                  <label>Agency Email</label>
                   <h6>{email}</h6>
                 </div>
                 <div className='generalInput'>
-                  <label>Phone Number</label>
+                  <label>Agency Phone Number</label>
                   <h6>{phoneNumber}</h6>
                 </div>
                 <div className='generalInput'>
@@ -4444,7 +4454,7 @@ const BookingRecord = () => {
             Payment
           </h6>
           <div className='bookingBorder'></div>
-          <div
+          {/* <div
             className={step === 3 ? 'bookingColor' : 'bookingColorNon'}></div>
           <h6
             onClick={() => {
@@ -4452,8 +4462,8 @@ const BookingRecord = () => {
             }}
             className={step === 3 ? 'bb' : 'bc'}>
             Visa
-          </h6>
-          <div className='bookingBorder'></div>
+          </h6> */}
+          {/* <div className='bookingBorder'></div>
           <div
             className={step === 4 ? 'bookingColor' : 'bookingColorNon'}></div>
           <h6
@@ -4462,7 +4472,7 @@ const BookingRecord = () => {
             }}
             className={step === 4 ? 'bb' : 'bc'}>
             Reminders
-          </h6>
+          </h6> */}
           <div className='bookingBorder'></div>
           <div
             className={step === 5 ? 'bookingColor' : 'bookingColorNon'}></div>
@@ -4540,4 +4550,4 @@ const BookingRecord = () => {
   );
 };
 
-export default BookingRecord;
+export default BookingRecordB2B;
