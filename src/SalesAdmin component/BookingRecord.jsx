@@ -29,6 +29,7 @@ import JoditEditor from 'jodit-react';
 const BookingRecord = () => {
   const isMounted = useRef(false);
   const isPayment = useRef(false);
+  const isNotify = useRef(false);
   const invoiceHtml = useRef(null);
   const billto = useRef(null);
   const invoiceDes = useRef(null);
@@ -114,6 +115,10 @@ const BookingRecord = () => {
 
   const { invoiceNo, invoiceDate, dueDate, invoiceDatas } = invoiceData;
   const { qty, unitPrice, cgst, sgst } = invoiceSingleData;
+
+  const [notifyss, setNotifyss] = useState([]);
+
+  console.log('notifyss', notifyss);
 
   // console.log('invoiceData', invoiceData);
   // console.log('invoiceSingleData', invoiceSingleData);
@@ -260,9 +265,7 @@ const BookingRecord = () => {
     reminderDate: '',
     title: '',
     body: '',
-    reminderTime: 0,
-    isStarted: false,
-    isCompleted: false,
+    isPending: true,
   });
 
   const { reminderDate, reminderTime, title, body } = newReminder;
@@ -441,7 +444,7 @@ const BookingRecord = () => {
 
   // console.log('exportData', exportData());
 
-  const [reminders, setReminders] = useState([]);
+  const [reminders, setReminders] = useState('');
 
   const setReminder = (newReminder, reminder) => {
     var datess = moment(newReminder.reminderDate).set({
@@ -478,6 +481,35 @@ const BookingRecord = () => {
         })
         .catch((err) => console.log(`err`, err));
     }, diff);
+  };
+
+  const setNotifyssComplete = (key, pending) => {
+    try {
+      const databaseRef = firedb.ref(`alert/${key}`);
+      databaseRef
+        .update({
+          isPending: !pending,
+        })
+        .then(() => {
+          addToast('Status updated', {
+            appearance: 'success',
+          });
+        });
+    } catch (error) {
+      console.log(error);
+    }
+    // firedb
+    //   .ref(`alert/${key}`)
+    //   .update({
+    //     isPending: !pending,
+    //   })
+    //   .then(() => {
+    //     addToast('Status updated', {
+    //       appearance: 'success',
+    //     });
+    //     setStep(1);
+    //   })
+    //   .catch((err) => console.log(`err`, err));
   };
 
   const setReminderComplete = (reminder) => {
@@ -675,40 +707,66 @@ const BookingRecord = () => {
   };
 
   const addReminders = () => {
-    if (
-      reminderDate === '' ||
-      title === '' ||
-      body === '' ||
-      reminderTime <= 0
-    ) {
+    if (reminderDate === '' || title === '' || body === '') {
       return alert('All fields are required');
-    }
-    let reminder = [];
-    if (reminders) {
-      reminder = [...reminders, newReminder];
     } else {
-      reminder = [newReminder];
+      firedb
+        .ref('alert')
+        .push({
+          destination: destination,
+          email: email,
+          onwardDate: onwardDate,
+          ...newReminder,
+        })
+        .then(() => {
+          setReminderOpen(false);
+          addToast('Reminder added Successfully', {
+            appearance: 'success',
+          });
+          setNewReminder({
+            id: uuidv4(),
+            reminderDate: '',
+            title: '',
+            body: '',
+            isPending: true,
+          });
+        })
+        .catch((err) => console.log(`err`, err));
     }
-    firedb
-      .ref(`bookingdetails1/${surveyid}/reminders`)
-      .set(reminder)
-      .then(() => {
-        setReminderOpen(false);
-        addToast('Reminder added Successfully', {
-          appearance: 'success',
-        });
-        setReminder(newReminder, reminder);
-        setNewReminder({
-          id: '',
-          reminderDate: '',
-          title: '',
-          body: '',
-          reminderTime: 0,
-          isStarted: false,
-          isCompleted: false,
-        });
-      })
-      .catch((err) => console.log(`err`, err));
+    // if (
+    //   reminderDate === '' ||
+    //   title === '' ||
+    //   body === '' ||
+    //   reminderTime <= 0
+    // ) {
+    //   return alert('All fields are required');
+    // }
+    // let reminder = [];
+    // if (reminders) {
+    //   reminder = [...reminders, newReminder];
+    // } else {
+    //   reminder = [newReminder];
+    // }
+    // firedb
+    //   .ref(`bookingdetails1/${surveyid}/reminders`)
+    //   .set(reminder)
+    //   .then(() => {
+    //     setReminderOpen(false);
+    //     addToast('Reminder added Successfully', {
+    //       appearance: 'success',
+    //     });
+    //     setReminder(newReminder, reminder);
+    //     setNewReminder({
+    //       id: '',
+    //       reminderDate: '',
+    //       title: '',
+    //       body: '',
+    //       reminderTime: 0,
+    //       isStarted: false,
+    //       isCompleted: false,
+    //     });
+    //   })
+    //   .catch((err) => console.log(`err`, err));
   };
 
   const updateBookingDetails = () => {
@@ -1513,6 +1571,75 @@ const BookingRecord = () => {
     return () => (isPayment.current = false);
   }, [paymentRecieved, expensesChecked, step]);
 
+  // const getNotifictionss = () => {
+  //   let dds = [];
+  //   firedb.ref('alert').on('value', (data) => {
+  //     if (isNotify.current) {
+  //       data.forEach((d) => {
+  //         if (
+  //           d.val().email === email &&
+  //           d.val().destination === destination &&
+  //           d.val().onwardDate === onwardDate
+  //         ) {
+  //           dds.push({
+  //             key: d.key,
+  //             id: d.val().id,
+  //             body: d.val().body,
+  //             isPending: d.val().isPending,
+  //             reminderDate: d.val().reminderDate,
+  //             title: d.val().title,
+  //           });
+  //         }
+  //       });
+  //       setNotifyss(dds);
+  //     }
+  //   });
+  // };
+
+  // useEffect(() => {
+  //   isNotify.current = true;
+  //   getNotifictionss();
+  //   return () => (isNotify.current = false);
+  // }, [step]);
+
+  useEffect(() => {
+    const getNotifictionssData = async () => {
+      try {
+        const databaseRef = firedb.ref('alert');
+        databaseRef.on('value', (snapshot) => {
+          setNotifyss([]);
+          if (snapshot.exists()) {
+            const newData = [];
+            snapshot.forEach((childSnapshot) => {
+              if (
+                childSnapshot.val().email === email &&
+                childSnapshot.val().destination === destination &&
+                childSnapshot.val().onwardDate === onwardDate
+              ) {
+                newData.push({
+                  key: childSnapshot.key,
+                  id: childSnapshot.val().id,
+                  body: childSnapshot.val().body,
+                  isPending: childSnapshot.val().isPending,
+                  reminderDate: childSnapshot.val().reminderDate,
+                  title: childSnapshot.val().title,
+                });
+              }
+            });
+            setNotifyss(newData);
+          }
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getNotifictionssData();
+    return () => {
+      const databaseRef = firedb.ref('alert');
+      databaseRef.off();
+    };
+  }, [newReminder, step]);
+
   const updateSinglePaymentCheck = () => {
     let newPayment = amountDetails.map((a) => {
       if (a.id === editpaymentId) {
@@ -1570,7 +1697,7 @@ const BookingRecord = () => {
   //   return days;
   // };
 
-  console.log('general', general);
+  // console.log('general', general);
 
   const renderItems = (step) => {
     switch (step) {
@@ -3149,7 +3276,7 @@ const BookingRecord = () => {
                       }
                     />
                   </div>
-                  <div className='generalInputt'>
+                  {/* <div className='generalInputt'>
                     <div className='generalInputtParti'>
                       <label>Reminder Time</label>
                       <div
@@ -3188,7 +3315,7 @@ const BookingRecord = () => {
                         </div>
                       ) : null}
                     </div>
-                  </div>
+                  </div> */}
 
                   <div className='generalbtns'>
                     <div className='generalInputtBtn'>
@@ -3199,11 +3326,11 @@ const BookingRecord = () => {
                         onClick={() => {
                           setReminderOpen(false);
                           setNewReminder({
+                            id: uuidv4(),
                             reminderDate: '',
                             title: '',
                             body: '',
-                            reminderTime: 0,
-                            isCompleted: false,
+                            isPending: false,
                           });
                         }}>
                         Cancel
@@ -3214,7 +3341,7 @@ const BookingRecord = () => {
               ) : null}
             </div>
 
-            {!reminders || reminders.length === 0 ? (
+            {!notifyss || notifyss.length === 0 ? (
               <div
                 style={{
                   display: 'flex',
@@ -3234,26 +3361,29 @@ const BookingRecord = () => {
               <div className='b-table scroll-table'>
                 <div className='paymentTableHead'>
                   <h5>Date</h5>
-                  <h5>Time</h5>
+                  {/* <h5>Time</h5> */}
                   <h5>Title</h5>
                   <h5>Message</h5>
                   <h5>Status</h5>
                   <h5>Mark as Complete</h5>
                 </div>
-                {reminders.map((c, i) => {
+                {notifyss.map((c, i) => {
                   return (
                     <div className='paymentTableBody'>
                       <h5>{c.reminderDate}</h5>
-                      <h5>{getTime(c.reminderTime)}</h5>
+                      {/* <h5>{getTime(c.reminderTime)}</h5> */}
                       <h5>{c.title}</h5>
                       <h5>{c.body}</h5>
-                      <h5>{c.isCompleted ? 'Completed' : 'Pending'}</h5>
+                      <h5>{c.isPending ? 'Pending' : 'Completed'}</h5>
                       <h5 style={{ alignSelf: 'center' }}>
                         <Input
                           type='checkbox'
-                          checked={c.isCompleted}
-                          onChange={() => setReminderComplete(c)}
-                          value={c.isCompleted}
+                          checked={!c.isPending}
+                          // onChange={() => setReminderComplete(c)}
+                          onChange={() =>
+                            setNotifyssComplete(c.key, c.isPending)
+                          }
+                          value={c.isPending}
                         />
                       </h5>
                       {/* <h5 onClick={() => setReminder(c)}>Set</h5> */}

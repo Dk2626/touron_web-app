@@ -101,10 +101,10 @@ const Home = () => {
           <div className='slider'>
             <SliderImage />
           </div>
-          <div className='categories'>
-            <Categories />
-          </div>
+          {/* <div className='categories'> */}
+          {/* </div> */}
         </div>
+        <Categories />
         <VirtualHome />
         <div className='populartours'>
           <PopularTours />

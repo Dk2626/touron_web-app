@@ -7,6 +7,13 @@
   background-size: cover;
   position: relative;
 }
+.slidess {
+  height: 100vh;
+  width: 100%;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+}
 .slide::after {
   opacity: 0.48;
   position: absolute;
@@ -16,6 +23,7 @@
   right: 0;
   bottom: 0;
   background: #000;
+  height: 100vh;
 }
 
 .slide0 {
@@ -33,6 +41,12 @@
 .slide4 {
   background-image: url(https://images.pexels.com/photos/4094981/pexels-photo-4094981.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500);
 }
+.slide5 {
+  background-image: url(https://firebasestorage.googleapis.com/v0/b/touronapp-248e4.appspot.com/o/slide1.png?alt=media&token=a8583e21-9925-45ee-bc4f-72c53c20869a);
+}
+.slide6 {
+  background-image: url(https://firebasestorage.googleapis.com/v0/b/touronapp-248e4.appspot.com/o/slide2.png?alt=media&token=cf6b9e8a-df38-49ee-946a-a04485b176dd);
+}
 .slider_title h1 {
   font-family: 'Dancing Script', cursive;
   /* font-family: "playscript"; */
@@ -45,7 +59,44 @@
   transform: translate(-50%, -50%);
   z-index: 1;
 }
-
+.slide1_btn {
+  position: absolute;
+  bottom: 5%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 100;
+}
+.slide1_btns {
+  position: absolute;
+  bottom: 20%;
+  left: 83%;
+  transform: translate(-50%, -50%);
+  z-index: 100;
+}
+.slide1_btn button {
+  border: 0;
+  outline: 0;
+  background-color: #ffffff;
+  color: black;
+  text-transform: uppercase;
+  font-family: 'Andika';
+  padding: 10px 30px;
+  font-weight: 800;
+  border-radius: 30px;
+  cursor: pointer;
+}
+.slide1_btns button {
+  border: 0;
+  outline: 0;
+  background-color: #d0434a;
+  color: #ffffff;
+  text-transform: uppercase;
+  font-family: 'Andika';
+  padding: 10px 30px;
+  font-weight: 800;
+  border-radius: 30px;
+  cursor: pointer;
+}
 @media screen and (max-width: 768px) {
   .slider_title h1 {
     font-size: 120px;

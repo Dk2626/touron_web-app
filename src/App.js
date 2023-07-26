@@ -61,6 +61,7 @@ import BookingDeletion from './BookingDeletion/BookingDeletion';
 import Virtual from './Virtual/Virtual';
 import Virtualdash from './Virtual/Virtualdash';
 import BookingRecordB2B from './SalesAdmin component/BookingRecordB2B';
+import Interakt from './Interakt/Interakt';
 // import LuckySeat from './Quiz/LuckySeat';
 // import LuckySeatAdmin from './Quiz/LuckySeatAdmin';
 // import LuckySeatAs from './Quiz/LuckySeatAs';
@@ -414,6 +415,7 @@ const App = () => {
                   </AdminRoute>
                 }
               />
+              <Route path='/interakt' element={<Interakt />} />
             </Routes>
           </ScrollToTop>
         </ToastProvider>

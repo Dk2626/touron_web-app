@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect, useContext } from 'react';
+import './BookingTable.css';
 import { firedb } from '../firebase';
 import { Link } from 'react-router-dom';
 import { Ellipsis } from 'react-spinners-css';
@@ -9,6 +10,7 @@ import { ApiContext } from './../Context/ApiContext';
 
 const BookingB2C = () => {
   const isMounted = useRef(false);
+  const isNotify = useRef(false);
   const [bookingDetails, setBookingDetails] = useState([]);
   const [loading1, setLoading1] = useState(false);
   const [currentPage, setCurrentpage] = useState(1);
@@ -19,6 +21,7 @@ const BookingB2C = () => {
   const [handleBy, setHandleBy] = useState('');
   const [search, setSearch] = useState('');
   const [bMonth, setBMonth] = useState('');
+  const [notifyss, setNotifyss] = useState([]);
 
   useEffect(() => {
     isMounted.current = true;
@@ -48,6 +51,21 @@ const BookingB2C = () => {
     return () => (isMounted.current = false);
   }, [currentPage, pageSize]);
 
+  const getRemindersCount = (reminders) => {
+    let remindersData = [];
+    if (reminders) {
+      let count = 0;
+      reminders.forEach((r) => {
+        if (r.isStarted && !r.isCompleted) {
+          count += 1;
+          remindersData.push(r.title);
+        }
+      });
+      return [count, remindersData];
+    }
+    return [0, remindersData];
+  };
+
   const getDepatureDate = (date) => {
     const countDate = Date.parse(date);
     const now = new Date().getTime();
@@ -60,6 +78,44 @@ const BookingB2C = () => {
     const d = Math.floor(gap / day);
     if (d >= 0) return d;
     return 0;
+  };
+
+  const getNotifictionss = () => {
+    let dds = [];
+    firedb.ref('alert').on('value', (data) => {
+      if (isNotify.current) {
+        data.forEach((d) => {
+          dds.push(d.val());
+        });
+        setNotifyss(dds);
+      }
+    });
+  };
+
+  useEffect(() => {
+    isNotify.current = true;
+    getNotifictionss();
+    return () => (isNotify.current = false);
+  }, []);
+
+  const getNotifyCount = (value) => {
+    let count = 0;
+    notifyss.forEach((n) => {
+      const currentDate = new Date(n.reminderDate);
+      const twoDaysAgo = new Date();
+      twoDaysAgo.setDate(currentDate.getDate() - 2);
+      const formattedDate = twoDaysAgo.toISOString().split('T')[0];
+      if (
+        n.email === value.email &&
+        n.destination === value.destination &&
+        n.onwardDate === value.onwardDate &&
+        n.isPending === true &&
+        formattedDate === new Date().toISOString().split('T')[0]
+      ) {
+        count = count + 1;
+      }
+    });
+    return count;
   };
 
   const render = (cat, val) => {
@@ -113,6 +169,31 @@ const BookingB2C = () => {
           return q3.push(s);
         });
         return q3;
+
+      case 'reminder':
+        let aler = [];
+        notifyss.forEach((n) => {
+          bookingLength.forEach((d) => {
+            const currentDate = new Date(n.reminderDate);
+            const twoDaysAgo = new Date();
+            twoDaysAgo.setDate(currentDate.getDate() - 2);
+            const formattedDate = twoDaysAgo.toISOString().split('T')[0];
+            if (
+              n.email === d.value?.general?.email &&
+              n.destination === d.value?.general?.destination &&
+              n.onwardDate === d.value?.general?.onwardDate &&
+              n.isPending === true &&
+              formattedDate === new Date().toISOString().split('T')[0]
+            ) {
+              aler.push(d);
+            }
+          });
+        });
+        const uniqueArray = Array.from(new Set(aler.map(JSON.stringify))).map(
+          JSON.parse
+        );
+        return [aler, uniqueArray];
+
       case 'current':
         let newReq = [];
         bookingLength.forEach((d) => {
@@ -244,6 +325,7 @@ const BookingB2C = () => {
     } else {
       if (bMonth === '' || bMonth === 'All' || bMonth === 'AllbMonth')
         return bookingLength;
+      if (bMonth === 'reminder') return render('reminder')[1];
       if (bMonth === 'current') return render('current');
       if (bMonth === '07') return render('week', 7);
       if (bMonth === '15') return render('week', 15);
@@ -354,6 +436,13 @@ const BookingB2C = () => {
               <span onClick={() => setBMonth(new Date().getMonth())}>Show</span>
             </div>
           </div>
+          <div className='booking-stats'>
+            <h3>Total Reminders</h3>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <h6>{render('reminder')[0].length}</h6>
+              <span onClick={() => setBMonth('reminder')}>Show</span>
+            </div>
+          </div>
         </div>
         <div className='filters'>
           <div className='month'>
@@ -450,6 +539,7 @@ const BookingB2C = () => {
             <h5>Return</h5>
             <h5>Departure in</h5>
             <h5>Handled By</h5>
+            <h5>Notification</h5>
           </div>
           {search === '' && bMonth === '' ? (
             <>
@@ -521,6 +611,43 @@ const BookingB2C = () => {
                                   <h5>
                                     {bookingDetails[c].general.salesHandleName}
                                   </h5>
+                                  <h5 className='notifyIcon'>
+                                    <IoMdNotifications size={25} />
+                                    {getNotifyCount(
+                                      bookingDetails[c].general
+                                    ) === 0 ? null : (
+                                      <span className='notifyValue'>
+                                        {getNotifyCount(
+                                          bookingDetails[c].general
+                                        )}
+                                      </span>
+                                    )}
+                                    {/* {getRemindersCount(
+                                      bookingDetails[c].reminders
+                                    )[0] === 0 ? null : (
+                                      <span className='notifyValue'>
+                                        {
+                                          getRemindersCount(
+                                            bookingDetails[c].reminders
+                                          )[0]
+                                        }
+                                      </span>
+                                    )}
+
+                                    {getRemindersCount(
+                                      bookingDetails[c].reminders
+                                    )[1].length > 0 && (
+                                      <div className='notifyReminder'>
+                                        {getRemindersCount(
+                                          bookingDetails[c].reminders
+                                        )[1].map((s, i) => (
+                                          <span>
+                                            {i + 1}.{s}
+                                          </span>
+                                        ))}
+                                      </div>
+                                    )} */}
+                                  </h5>
                                 </div>
                               </Link>
                             </div>
@@ -581,50 +708,105 @@ const BookingB2C = () => {
             </>
           ) : (
             <>
-              {filterBooking().map((c, i) => {
-                const { key, value } = c;
-                return (
-                  <div>
-                    <Link
-                      target='_blank'
-                      className='plink'
-                      key={i}
-                      to={{
-                        pathname: `/bookingrecord/${key}/${value?.general?.customerName}`,
-                      }}>
-                      <div
-                        style={{
-                          fontSize: 6,
-                          backgroundColor:
-                            value.general.tourType === 'International'
-                              ? '#E5D68A'
-                              : '#fff',
-                          position: 'relative',
-                        }}
-                        className={`table-heading-row  ${completedtRequest(
-                          value.general.returnDate,
-                          value.general.isBookingCancelled
-                        )}`}>
-                        <h5>{i + 1}</h5>
-                        <h5>{value?.surveyId}</h5>
-                        <h5>{value.general.customerName}</h5>
-                        <h5>{value.general.destination}</h5>
-                        <h5>
-                          {numeral(value.general.bookingValue).format('0,')}
-                        </h5>
+              {filterBooking()
+                .slice(
+                  (currentPage === 1 ? 0 : currentPage - 1) * pageSize,
+                  currentPage * pageSize
+                )
+                .map((c, i) => {
+                  const { key, value } = c;
+                  return (
+                    <div>
+                      <Link
+                        target='_blank'
+                        className='plink'
+                        key={i}
+                        to={{
+                          pathname: `/bookingrecord/${key}/${value?.general?.customerName}`,
+                        }}>
+                        <div
+                          style={{
+                            fontSize: 6,
+                            backgroundColor:
+                              value.general.tourType === 'International'
+                                ? '#E5D68A'
+                                : '#fff',
+                            position: 'relative',
+                          }}
+                          className={`table-heading-row  ${completedtRequest(
+                            value.general.returnDate,
+                            value.general.isBookingCancelled
+                          )}`}>
+                          <h5>{i + 1}</h5>
+                          <h5>{value?.surveyId}</h5>
+                          <h5>{value.general.customerName}</h5>
+                          <h5>{value.general.destination}</h5>
+                          <h5>
+                            {numeral(value.general.bookingValue).format('0,')}
+                          </h5>
 
-                        <h5>{value.general.onwardDate}</h5>
-                        <h5>{value.general.returnDate}</h5>
-                        <h5>
-                          {getDepatureDate(value.general.onwardDate)} days
-                        </h5>
-
-                        <h5>{value.general.salesHandleName}</h5>
-                      </div>
-                    </Link>
+                          <h5>{value.general.onwardDate}</h5>
+                          <h5>{value.general.returnDate}</h5>
+                          <h5>
+                            {getDepatureDate(value.general.onwardDate)} days
+                          </h5>
+                          <h5>{value.general.salesHandleName}</h5>
+                          <h5 className='notifyIcon'>
+                            <IoMdNotifications size={25} />
+                            {getNotifyCount(value.general) === 0 ? null : (
+                              <span className='notifyValue'>
+                                {getNotifyCount(value.general)}
+                              </span>
+                            )}
+                          </h5>
+                        </div>
+                      </Link>
+                    </div>
+                  );
+                })}
+              <div className='pagination-table'>
+                {currentPage === 1 ? null : (
+                  <div
+                    className='pag-count'
+                    onClick={(e) => {
+                      handleClick(e, currentPage - 1);
+                    }}
+                    style={{
+                      backgroundColor: '#0057ff',
+                      color: '#fff',
+                    }}>
+                    <h5>{'<'}</h5>
                   </div>
-                );
-              })}
+                )}
+                {new Array(pagesCount).fill('1').map((c, i) => {
+                  if (i + 1 < currentPage + 5 && i > currentPage - 2) {
+                    return (
+                      <div
+                        key={i}
+                        className='pag-count'
+                        onClick={(e) => handleClick(e, i + 1)}
+                        style={{
+                          backgroundColor:
+                            currentPage - 1 === i ? '#0057ff' : '#fff',
+                          color: currentPage - 1 === i ? '#fff' : '#333',
+                        }}>
+                        <h5>{i + 1}</h5>
+                      </div>
+                    );
+                  }
+                })}
+                {pagesCount - 1 === currentPage ? null : (
+                  <div
+                    className='pag-count'
+                    onClick={(e) => handleClick(e, currentPage + 1)}
+                    style={{
+                      backgroundColor: '#0057ff',
+                      color: '#fff',
+                    }}>
+                    <h5>{'>'}</h5>
+                  </div>
+                )}
+              </div>
             </>
           )}
         </div>

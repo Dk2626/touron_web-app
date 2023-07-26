@@ -44,7 +44,7 @@ export default function Categories() {
   return (
     <div className='categories'>
       {categories.map((c, index) => (
-        <Link to={c.route} key={index} className='plink'>
+        <Link to={c.route} key={index} style={{ textDecoration: 'none' }}>
           <div className='cat-body'>
             <img className='image' src={c.image} alt='' />
             <div className='title'>
