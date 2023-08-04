@@ -709,6 +709,7 @@ const BookingB2C = () => {
           ) : (
             <>
               {filterBooking()
+                .reverse()
                 .slice(
                   (currentPage === 1 ? 0 : currentPage - 1) * pageSize,
                   currentPage * pageSize

@@ -581,50 +581,99 @@ const BookingB2C = () => {
             </>
           ) : (
             <>
-              {filterBooking().map((c, i) => {
-                const { key, value } = c;
-                return (
-                  <div>
-                    <Link
-                      target='_blank'
-                      className='plink'
-                      key={i}
-                      to={{
-                        pathname: `/bookingrecordb2b/${key}/${value?.general?.customerName}`,
-                      }}>
-                      <div
-                        style={{
-                          fontSize: 6,
-                          backgroundColor:
-                            value.general.tourType === 'International'
-                              ? '#E5D68A'
-                              : '#fff',
-                          position: 'relative',
-                        }}
-                        className={`table-heading-row  ${completedtRequest(
-                          value.general.returnDate,
-                          value.general.isBookingCancelled
-                        )}`}>
-                        <h5>{i + 1}</h5>
-                        <h5>{value?.surveyId}</h5>
-                        <h5>{value.general.customerName}</h5>
-                        <h5>{value.general.destination}</h5>
-                        <h5>
-                          {numeral(value.general.bookingValue).format('0,')}
-                        </h5>
+              {filterBooking()
+                .reverse()
+                .slice(
+                  (currentPage === 1 ? 0 : currentPage - 1) * pageSize,
+                  currentPage * pageSize
+                )
+                .map((c, i) => {
+                  const { key, value } = c;
+                  return (
+                    <div>
+                      <Link
+                        target='_blank'
+                        className='plink'
+                        key={i}
+                        to={{
+                          pathname: `/bookingrecordb2b/${key}/${value?.general?.customerName}`,
+                        }}>
+                        <div
+                          style={{
+                            fontSize: 6,
+                            backgroundColor:
+                              value.general.tourType === 'International'
+                                ? '#E5D68A'
+                                : '#fff',
+                            position: 'relative',
+                          }}
+                          className={`table-heading-row  ${completedtRequest(
+                            value.general.returnDate,
+                            value.general.isBookingCancelled
+                          )}`}>
+                          <h5>{i + 1}</h5>
+                          <h5>{value?.surveyId}</h5>
+                          <h5>{value.general.customerName}</h5>
+                          <h5>{value.general.destination}</h5>
+                          <h5>
+                            {numeral(value.general.bookingValue).format('0,')}
+                          </h5>
 
-                        <h5>{value.general.onwardDate}</h5>
-                        <h5>{value.general.returnDate}</h5>
-                        <h5>
-                          {getDepatureDate(value.general.onwardDate)} days
-                        </h5>
+                          <h5>{value.general.onwardDate}</h5>
+                          <h5>{value.general.returnDate}</h5>
+                          <h5>
+                            {getDepatureDate(value.general.onwardDate)} days
+                          </h5>
 
-                        <h5>{value.general.salesHandleName}</h5>
-                      </div>
-                    </Link>
+                          <h5>{value.general.salesHandleName}</h5>
+                        </div>
+                      </Link>
+                    </div>
+                  );
+                })}
+              <div className='pagination-table'>
+                {currentPage === 1 ? null : (
+                  <div
+                    className='pag-count'
+                    onClick={(e) => {
+                      handleClick(e, currentPage - 1);
+                    }}
+                    style={{
+                      backgroundColor: '#0057ff',
+                      color: '#fff',
+                    }}>
+                    <h5>{'<'}</h5>
                   </div>
-                );
-              })}
+                )}
+                {new Array(pagesCount).fill('1').map((c, i) => {
+                  if (i + 1 < currentPage + 5 && i > currentPage - 2) {
+                    return (
+                      <div
+                        key={i}
+                        className='pag-count'
+                        onClick={(e) => handleClick(e, i + 1)}
+                        style={{
+                          backgroundColor:
+                            currentPage - 1 === i ? '#0057ff' : '#fff',
+                          color: currentPage - 1 === i ? '#fff' : '#333',
+                        }}>
+                        <h5>{i + 1}</h5>
+                      </div>
+                    );
+                  }
+                })}
+                {pagesCount - 1 === currentPage ? null : (
+                  <div
+                    className='pag-count'
+                    onClick={(e) => handleClick(e, currentPage + 1)}
+                    style={{
+                      backgroundColor: '#0057ff',
+                      color: '#fff',
+                    }}>
+                    <h5>{'>'}</h5>
+                  </div>
+                )}
+              </div>
             </>
           )}
         </div>
