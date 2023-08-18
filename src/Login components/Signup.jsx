@@ -61,7 +61,7 @@ const Signup = () => {
 
     axios
       .get(
-        `https://2factor.in/API/V1/8697a4f2-e821-11ea-9fa5-0200cd936042/SMS/+91${number}/AUTOGEN/touron`
+        `https://2factor.in/API/V1/8697a4f2-e821-11ea-9fa5-0200cd936042/SMS/+91${number}/AUTOGEN/tn`
       )
       .then((response) => {
         let session = response.data.Details;
@@ -259,7 +259,7 @@ const Signup = () => {
                     </div>
                   ) : (
                     <button className='signbutton' onClick={verifyOtp}>
-                      Verify OTP
+                      Verify OTP Call
                     </button>
                   )}
                 </div>
