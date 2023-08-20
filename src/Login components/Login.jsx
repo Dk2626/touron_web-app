@@ -39,7 +39,6 @@ export default function Login() {
   const signIn = (e, next) => {
     e.preventDefault();
     setLoaded(true);
-
     auth
       .signInWithEmailAndPassword(email, password)
       .then((user) => {

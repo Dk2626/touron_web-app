@@ -140,6 +140,66 @@ const Signup = () => {
         console.log(err, 'otp err');
       });
   };
+
+  const register = (e) => {
+    e.preventDefault();
+    setLoaded(true);
+    auth
+      .createUserWithEmailAndPassword(email, password)
+      .then((user) => {
+        storeAuthToken(user);
+        setUserInfo({
+          phoneNumber: number,
+          name: name,
+          address: '',
+          age: '',
+          gender: '',
+          aboutMe: '',
+          travellerType: '',
+          admin: false,
+          pushNotificationToken: '',
+          photoURL: '',
+          email: email,
+          profession: '',
+          userID: user.user.uid,
+        });
+        firedb.ref(`userGeneralInfo/${user.user.uid}`).set({
+          phoneNumber: number,
+          name: name,
+          address: '',
+          age: '',
+          gender: '',
+          aboutMe: '',
+          travellerType: '',
+          admin: false,
+          pushNotificationToken: '',
+          photoURL: '',
+          email: email,
+          profession: '',
+          userID: user.user.uid,
+        });
+        // storeAuthToken(user);
+      })
+      .catch((err) => {
+        console.log('err', err);
+        setLoaded(false);
+      });
+    setName('');
+    setNumber('');
+    setPassword('');
+    setEmail('');
+    setCode('');
+    setLoaded(false);
+    navigate('/');
+  };
+
+  const handlePhoneNumberChange = (event) => {
+    isEmailExist();
+    const input = event.target.value.replace(/\D/g, '');
+    const limitedInput = input.substring(0, 10);
+    setNumber(limitedInput);
+  };
+
   const renderform = () => {
     switch (step) {
       case 1:
@@ -180,11 +240,13 @@ const Signup = () => {
                   <input
                     type='text'
                     placeholder='Whatsapp no'
+                    onChange={handlePhoneNumberChange}
+                    maxLength={10}
                     value={number}
-                    onChange={(e) => {
-                      isEmailExist();
-                      setNumber(e.target.value);
-                    }}
+                    // onChange={(e) => {
+                    //   isEmailExist();
+                    //   setNumber(e.target.value);
+                    // }}
                   />
                 </div>
                 {number.length === 10 ||
@@ -224,10 +286,16 @@ const Signup = () => {
                   ) : (
                     <button
                       className='signbutton'
-                      onClick={sendOtp}
+                      onClick={register}
                       disabled={errorFields && !emailErr ? true : false}>
-                      Send OTP
+                      Register
                     </button>
+                    // <button
+                    //   className='signbutton'
+                    //   onClick={sendOtp}
+                    //   disabled={errorFields && !emailErr ? true : false}>
+                    //   Send OTP
+                    // </button>
                   )}
                 </div>
               </Form>
