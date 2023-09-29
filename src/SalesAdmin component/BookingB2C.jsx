@@ -168,7 +168,9 @@ const BookingB2C = () => {
         sort3.map((s, i) => {
           return q3.push(s);
         });
-        return q3;
+        let aaaa = [...new Set([...q3])];
+        // return q3;
+        return aaaa;
 
       case 'reminder':
         let aler = [];
@@ -290,9 +292,12 @@ const BookingB2C = () => {
         sort1.map((s, i) => {
           return q1.push(s);
         });
-        console.log('first', q1);
+        // console.log('first', q1);
 
-        return q1;
+        let aaa = [...new Set([...q1])];
+
+        // return q1;
+        return aaa;
     }
   };
 
