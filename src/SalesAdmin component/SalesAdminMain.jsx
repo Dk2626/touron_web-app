@@ -22,6 +22,7 @@ const SalesAdminMain = () => {
         'vikashmanoharan@touron.in',
         'sandy@touron.in',
         'rajeshp@touron.in',
+        'admin234@gmail.com',
       ];
       return sa.includes(JSON.parse(authToken).user.email);
     }
