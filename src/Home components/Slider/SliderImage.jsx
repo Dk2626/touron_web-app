@@ -1,19 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import Slider from 'react-slick';
 import './SliderImage.css';
-import { Link } from 'react-router-dom';
 
 export default function SliderImage() {
   const [show, setShow] = useState(false);
   var settings = {
     infinite: true,
     autoplay: true,
-    speed: 4000,
+    speed: 3000,
     slidesToShow: 1,
     slidesToScroll: 1,
     arrows: false,
     dots: false,
-    fade: true,
+    // fade: true,
   };
 
   const innerWidth = window.innerWidth;
@@ -58,16 +57,10 @@ export default function SliderImage() {
         </Slider>
       ) : (
         <Slider {...settings} accessibility pauseOnHover={false}>
-          <div className='slide5 slidess'>
-            <Link className='slide1_btn' to='/planned-tour'>
-              <button>Plan now</button>
-            </Link>
-          </div>
-          <div className='slide6 slidess'>
-            <Link className='slide1_btns' to='/planned-tour'>
-              <button>Plan now</button>
-            </Link>
-          </div>
+          <div className='slide5 slidess' />
+          <div className='slide6 slidess' />
+          <div className='slide7 slidess' />
+          <div className='slide8 slidess' />
         </Slider>
       )}
     </>
