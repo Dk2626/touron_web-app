@@ -7,7 +7,7 @@ export default function SliderImage() {
   var settings = {
     infinite: true,
     autoplay: true,
-    speed: 3000,
+    speed: 5000,
     slidesToShow: 1,
     slidesToScroll: 1,
     arrows: false,
