@@ -54,25 +54,25 @@ const Signup = () => {
     return emailErr;
   };
 
-  const sendOtp = (e) => {
-    e.preventDefault();
+  // const sendOtp = (e) => {
+  //   e.preventDefault();
 
-    setLoaded(true);
+  //   setLoaded(true);
 
-    axios
-      .get(
-        `https://2factor.in/API/V1/8697a4f2-e821-11ea-9fa5-0200cd936042/SMS/+91${number}/AUTOGEN/tn`
-      )
-      .then((response) => {
-        let session = response.data.Details;
-        setLoaded(false);
-        setSessionID(session);
-        nextStep();
-      })
-      .catch((err) => {
-        console.log(err, 'kjhk');
-      });
-  };
+  //   axios
+  //     .get(
+  //       `https://2factor.in/API/V1/8697a4f2-e821-11ea-9fa5-0200cd936042/SMS/+91${number}/AUTOGEN/tn`
+  //     )
+  //     .then((response) => {
+  //       let session = response.data.Details;
+  //       setLoaded(false);
+  //       setSessionID(session);
+  //       nextStep();
+  //     })
+  //     .catch((err) => {
+  //       console.log(err, 'kjhk');
+  //     });
+  // };
 
   const verifyOtp = (e) => {
     e.preventDefault();
