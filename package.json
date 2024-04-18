@@ -1,7 +1,7 @@
 {
   "name": "my-app",
   "version": "0.1.0",
-  "homepage": "https://www.codeficorp.in/",
+  "homepage": "https://www.touron.in/",
   "private": true,
   "dependencies": {
     "@ckeditor/ckeditor5-build-classic": "24.0.0",
@@ -27,7 +27,6 @@
     "react-chartjs-2": "^4.3.1",
     "react-datepicker": "^4.8.0",
     "react-dom": "^18.2.0",
-    "react-export-excel": "^0.5.3",
     "react-globe": "^5.0.2",
     "react-globe.gl": "^2.22.4",
     "react-google-stories": "^1.0.4",

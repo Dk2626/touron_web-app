@@ -22,12 +22,12 @@ import {
 import SalesAdmin from './SalesAdmin';
 import './SalesRequest.css';
 import { MdFlight, MdDirectionsBus, MdTrain } from 'react-icons/md';
-import ReactExport from 'react-export-excel';
+// import ReactExport from 'react-export-excel';
 import { ApiContext } from './../Context/ApiContext';
 
-const ExcelFile = ReactExport.ExcelFile;
-const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
-const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
+// const ExcelFile = ReactExport.ExcelFile;
+// const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
+// const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
 
 const SalesRequest = () => {
   const isMounted = useRef(false);
@@ -1429,7 +1429,7 @@ const SalesRequest = () => {
             </button>
           </div>
 
-          <ExcelFile
+          {/* <ExcelFile
             element={<button className='export'>Export to Excel</button>}>
             <ExcelSheet data={convert()} name='Queries'>
               <ExcelColumn label='Request ID' value='requestID' />
@@ -1451,7 +1451,7 @@ const SalesRequest = () => {
                 value={(col) => getTaskAssigne(col.requestID)}
               />
             </ExcelSheet>
-          </ExcelFile>
+          </ExcelFile> */}
         </div>
 
         <div className='b-table' style={{ height: 'auto' }}>

@@ -16,10 +16,10 @@ import { firedb } from '../firebase';
 import '../SalesAdmin component/SalesRequest.css';
 import './TotalSaleReport.css';
 import { IoIosArrowDown } from 'react-icons/io';
-import ReactExport from 'react-export-excel';
-const ExcelFile = ReactExport.ExcelFile;
-const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
-const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
+// import ReactExport from 'react-export-excel';
+// const ExcelFile = ReactExport.ExcelFile;
+// const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
+// const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
 ChartJS.register(
   ArcElement,
   Tooltip,
@@ -2271,7 +2271,7 @@ const TotalSaleReport = () => {
 
             {exportYear.length == 4 ? (
               <>
-                <div>
+                {/* <div>
                   <ExcelFile
                     element={
                       <button className='exports'>Export to Excel</button>
@@ -2293,7 +2293,7 @@ const TotalSaleReport = () => {
                       <ExcelColumn label='Dec' value='dec' />
                     </ExcelSheet>
                   </ExcelFile>
-                </div>
+                </div> */}
               </>
             ) : (
               <div style={{ display: 'flex', alignItems: 'center' }}>

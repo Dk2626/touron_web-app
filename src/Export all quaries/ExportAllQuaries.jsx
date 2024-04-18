@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { firedb } from '../firebase';
-import ReactExport from 'react-export-excel';
+// import ReactExport from 'react-export-excel';
 
-const ExcelFile = ReactExport.ExcelFile;
-const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
-const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
+// const ExcelFile = ReactExport.ExcelFile;
+// const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
+// const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
 
 const ExportAllQuaries = () => {
   const isMounted = useRef(false);
@@ -37,7 +37,7 @@ const ExportAllQuaries = () => {
 
   return (
     <div style={{ padding: 10 }}>
-      <div
+      {/* <div
         style={{
           display: 'flex',
           alignItems: 'flex-end',
@@ -76,8 +76,8 @@ const ExportAllQuaries = () => {
             padding: 10,
           }}>
           Export to Excel
-        </div> */}
-      </div>
+        </div> 
+      </div> */}
       <table>
         <thead>
           <tr>

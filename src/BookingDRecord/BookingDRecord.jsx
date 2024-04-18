@@ -2,11 +2,11 @@ import moment from 'moment';
 import React, { useEffect, useRef, useState } from 'react';
 import { firedb } from '../firebase';
 import './BookingDRecord.css';
-import ReactExport from 'react-export-excel';
+// import ReactExport from 'react-export-excel';
 
-const ExcelFile = ReactExport.ExcelFile;
-const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
-const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
+// const ExcelFile = ReactExport.ExcelFile;
+// const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
+// const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
 
 const BookingDRecord = () => {
   const isMounted = useRef(false);
@@ -94,7 +94,7 @@ const BookingDRecord = () => {
           })}
         </div>
       </div>
-      <div
+      {/* <div
         style={{
           display: 'flex',
           alignItems: 'flex-end',
@@ -117,7 +117,7 @@ const BookingDRecord = () => {
             <ExcelColumn label='Remark' value='remark' />
           </ExcelSheet>
         </ExcelFile>
-      </div>
+      </div> */}
       <table className='BookingDRecord___Main__table'>
         <thead>
           <tr>
