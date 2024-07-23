@@ -426,7 +426,8 @@ const BookingB2C = () => {
               {employees?.map((e, i) => {
                 if (
                   e.designation === 'CEO' ||
-                  e.designation == 'Travel Associate'
+                  e.designation == 'Travel Associate' ||
+                  e.designation == 'Travel Consultant'
                 )
                   return (
                     <option key={i} value={e.name}>

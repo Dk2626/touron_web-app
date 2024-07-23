@@ -881,7 +881,8 @@ const SalesRequest = () => {
                       if (
                         e.designation === 'CEO' ||
                         e.designation === 'Travel Associate' ||
-                        e.designation === 'Division Manager'
+                        e.designation === 'Division Manager' ||
+                        e.designation == 'Travel Consultant'
                       )
                         return (
                           <option key={i} value={e.name}>
